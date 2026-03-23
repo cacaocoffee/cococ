@@ -209,8 +209,8 @@ const deleteBtnCss = css({
 // ─── ApplicationRow ───────────────────────────────────────────
 function ApplicationRow({ app, onStatusChange, onDelete }) {
   const [expanded, setExpanded] = useState(false);
-  const cfg = STATUS_CFG[app.status];
-  const Icon = cfg.icon;
+  const statusConfig = STATUS_CFG[app.status];
+  const StatusIcon = statusConfig.icon;
 
   return (
     <motion.div
@@ -219,7 +219,7 @@ function ApplicationRow({ app, onStatusChange, onDelete }) {
       animate={{ opacity: 1, y: 0 }}
       className={cardCss}
     >
-      <div className={headerCss} onClick={() => setExpanded((e) => !e)}>
+      <div className={headerCss} onClick={() => setExpanded((prev) => !prev)}>
         <div className={avatarCss}>{app.name?.[0] ?? "?"}</div>
         <div className={infoCss}>
           <div className={nameRowCss}>
@@ -229,8 +229,8 @@ function ApplicationRow({ app, onStatusChange, onDelete }) {
               className={cx(
                 statusBtnBaseCss,
                 css({
-                  backgroundColor: cfg.bg,
-                  color: cfg.color,
+                  backgroundColor: statusConfig.bg,
+                  color: statusConfig.color,
                   borderColor: "transparent",
                   display: "inline-flex",
                   alignItems: "center",
@@ -238,7 +238,7 @@ function ApplicationRow({ app, onStatusChange, onDelete }) {
                 }),
               )}
             >
-              <Icon size={10} /> {cfg.label}
+              <StatusIcon size={10} /> {statusConfig.label}
             </span>
           </div>
           <div className={metaRowCss}>
@@ -250,23 +250,23 @@ function ApplicationRow({ app, onStatusChange, onDelete }) {
           </div>
         </div>
         <div className={actionsCss} onClick={(e) => e.stopPropagation()}>
-          {["pending", "pass", "fail"].map((s) => (
+          {["pending", "pass", "fail"].map((statusKey) => (
             <motion.button
-              key={s}
+              key={statusKey}
               whileTap={{ scale: 0.93 }}
-              onClick={() => onStatusChange(app.id, s)}
+              onClick={() => onStatusChange(app.id, statusKey)}
               className={cx(
                 statusBtnBaseCss,
-                app.status === s
+                app.status === statusKey
                   ? css({
-                      backgroundColor: STATUS_CFG[s].bg,
-                      color: STATUS_CFG[s].color,
+                      backgroundColor: STATUS_CFG[statusKey].bg,
+                      color: STATUS_CFG[statusKey].color,
                       borderColor: "transparent",
                     })
                   : statusBtnInactiveCss,
               )}
             >
-              {STATUS_CFG[s].label}
+              {STATUS_CFG[statusKey].label}
             </motion.button>
           ))}
           <motion.button
@@ -302,10 +302,10 @@ function ApplicationRow({ app, onStatusChange, onDelete }) {
                   ["SNS", app.sns || "—"],
                   ["MT 참가", app.mtAvailable],
                   ["주 소통수단", app.mainContact],
-                ].map(([l, v]) => (
-                  <div key={l} className={infoItemCss}>
-                    <p className={infoItemLabelCss}>{l}</p>
-                    <p className={infoItemValueCss}>{v || "—"}</p>
+                ].map(([label, value]) => (
+                  <div key={label} className={infoItemCss}>
+                    <p className={infoItemLabelCss}>{label}</p>
+                    <p className={infoItemValueCss}>{value || "—"}</p>
                   </div>
                 ))}
               </div>
@@ -314,10 +314,10 @@ function ApplicationRow({ app, onStatusChange, onDelete }) {
                 <div>
                   <p className={sectionLabelCss}>활동 가능 시간</p>
                   <div className={tagRowCss}>
-                    {app.availableTimes.map((k) => {
-                      const [day, time] = k.split("_");
+                    {app.availableTimes.map((timeKey) => {
+                      const [day, time] = timeKey.split("_");
                       return (
-                        <span key={k} className={timeTagCss}>
+                        <span key={timeKey} className={timeTagCss}>
                           {day} {time}
                         </span>
                       );
@@ -349,11 +349,11 @@ function ApplicationRow({ app, onStatusChange, onDelete }) {
                 ["Q3-2. 지원 이유", app.q3_2_reason],
                 ["기타 문의", app.qEtc],
               ]
-                .filter(([, v]) => v)
-                .map(([l, v]) => (
-                  <div key={l}>
-                    <p className={sectionLabelCss}>{l}</p>
-                    <p className={qaBodyCss}>{v}</p>
+                .filter(([, value]) => value)
+                .map(([label, value]) => (
+                  <div key={label}>
+                    <p className={sectionLabelCss}>{label}</p>
+                    <p className={qaBodyCss}>{value}</p>
                   </div>
                 ))}
             </div>
@@ -455,23 +455,23 @@ const searchIconCss = css({
 export default function ApplicationsTab() {
   const [apps, setApps] = useState(loadApplications);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatus] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const { confirmProps, openConfirm } = useConfirm();
 
   const counts = {
     total: apps.length,
-    pending: apps.filter((a) => a.status === "pending").length,
-    pass: apps.filter((a) => a.status === "pass").length,
-    fail: apps.filter((a) => a.status === "fail").length,
+    pending: apps.filter((app) => app.status === "pending").length,
+    pass: apps.filter((app) => app.status === "pass").length,
+    fail: apps.filter((app) => app.status === "fail").length,
   };
 
-  const filtered = apps.filter((a) => {
-    const matchStatus = statusFilter === "all" || a.status === statusFilter;
+  const filteredApps = apps.filter((app) => {
+    const matchStatus = statusFilter === "all" || app.status === statusFilter;
     const matchSearch =
       !search ||
-      a.name?.includes(search) ||
-      a.email?.includes(search) ||
-      a.phone?.includes(search);
+      app.name?.includes(search) ||
+      app.email?.includes(search) ||
+      app.phone?.includes(search);
     return matchStatus && matchSearch;
   });
 
@@ -495,32 +495,32 @@ export default function ApplicationsTab() {
       "상태",
       "접수일시",
     ];
-    const rows = apps.map((a) => [
-      a.name,
-      a.gender,
-      a.birthdate,
-      a.phone,
-      a.email,
-      a.sns,
-      a.mtAvailable,
-      a.mainContact,
-      a.scaleGourmet,
-      a.scalePeople,
-      a.q3_1_style,
-      `"${(a.q1_intro || "").replace(/"/g, '""')}"`,
-      `"${(a.q2_drink || "").replace(/"/g, '""')}"`,
-      `"${(a.q3_2_reason || "").replace(/"/g, '""')}"`,
-      `"${(a.qEtc || "").replace(/"/g, '""')}"`,
-      STATUS_CFG[a.status].label,
-      new Date(a.submittedAt).toLocaleString("ko-KR"),
+    const rows = apps.map((app) => [
+      app.name,
+      app.gender,
+      app.birthdate,
+      app.phone,
+      app.email,
+      app.sns,
+      app.mtAvailable,
+      app.mainContact,
+      app.scaleGourmet,
+      app.scalePeople,
+      app.q3_1_style,
+      `"${(app.q1_intro || "").replace(/"/g, '""')}"`,
+      `"${(app.q2_drink || "").replace(/"/g, '""')}"`,
+      `"${(app.q3_2_reason || "").replace(/"/g, '""')}"`,
+      `"${(app.qEtc || "").replace(/"/g, '""')}"`,
+      STATUS_CFG[app.status].label,
+      new Date(app.submittedAt).toLocaleString("ko-KR"),
     ]);
-    const csv = [header, ...rows].map((r) => r.join(",")).join("\n");
+    const csv = [header, ...rows].map((row) => row.join(",")).join("\n");
     const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "cococ_지원서.csv";
-    a.click();
+    const downloadLink = document.createElement("a");
+    downloadLink.href = url;
+    downloadLink.download = "cococ_지원서.csv";
+    downloadLink.click();
     URL.revokeObjectURL(url);
   };
 
@@ -551,11 +551,11 @@ export default function ApplicationsTab() {
           ["검토 중", counts.pending],
           ["합격", counts.pass],
           ["불합격", counts.fail],
-        ].map(([l, v], i) => (
-          <div key={l} className={statCardCss}>
-            <p className={statLabelCss}>{l}</p>
-            <p className={cx(statValueBaseCss, css({ color: statColors[i] }))}>
-              {v}
+        ].map(([label, value], index) => (
+          <div key={label} className={statCardCss}>
+            <p className={statLabelCss}>{label}</p>
+            <p className={cx(statValueBaseCss, css({ color: statColors[index] }))}>
+              {value}
             </p>
           </div>
         ))}
@@ -567,16 +567,16 @@ export default function ApplicationsTab() {
           ["pending", "검토 중"],
           ["pass", "합격"],
           ["fail", "불합격"],
-        ].map(([k, l]) => (
+        ].map(([statusKey, statusLabel]) => (
           <button
-            key={k}
-            onClick={() => setStatus(k)}
+            key={statusKey}
+            onClick={() => setStatusFilter(statusKey)}
             className={cx(
               chipBaseCss,
-              statusFilter === k ? chipActiveCss : chipInactiveCss,
+              statusFilter === statusKey ? chipActiveCss : chipInactiveCss,
             )}
           >
-            {l}
+            {statusLabel}
           </button>
         ))}
         <div className={searchWrapCss}>
@@ -593,7 +593,7 @@ export default function ApplicationsTab() {
         </div>
       </div>
 
-      {filtered.length === 0 ? (
+      {filteredApps.length === 0 ? (
         <div className={emptyStateCss}>
           <div className={emptyIconCss}>
             <Users size={40} />
@@ -606,11 +606,11 @@ export default function ApplicationsTab() {
         </div>
       ) : (
         <div className={listCss}>
-          {filtered.map((app) => (
+          {filteredApps.map((app) => (
             <ApplicationRow
               key={app.id}
               app={app}
-              onStatusChange={(id, s) => setApps(updateStatus(id, s))}
+              onStatusChange={(id, newStatus) => setApps(updateStatus(id, newStatus))}
               onDelete={(id) =>
                 openConfirm({
                   title: "지원서를 삭제하시겠습니까?",
