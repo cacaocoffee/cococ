@@ -67,6 +67,8 @@ const tabBarCss = css({
   marginBottom: "32px",
   borderBottom: `1px solid ${colors.borderMedium}`,
   overflowX: "auto",
+  scrollbarWidth: "none",
+  "::-webkit-scrollbar": { display: "none" },
 });
 const tabBtnBaseCss = css({
   display: "flex",
