@@ -1,4 +1,4 @@
-import { Instagram, Mail, ExternalLink } from 'lucide-react';
+import { Instagram, ExternalLink } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { css } from '../../lib/css';
 import { colors } from '../../lib/tokens';
@@ -62,7 +62,15 @@ const socialBtnCss = css({
   border: 'none',
   cursor: 'pointer',
   transition: 'all 0.2s',
+  textDecoration: 'none',
+  flexShrink: '0',
   _hover: { backgroundColor: colors.brand, color: colors.bgPage },
+});
+
+const naverLetterCss = css({
+  fontSize: '15px',
+  fontWeight: '900',
+  lineHeight: '1',
 });
 
 const colTitleCss = css({
@@ -137,11 +145,22 @@ export default function Footer() {
             2030세대의 취향 있는 주류 생활을 함께 만들어갑니다.
           </p>
           <div className={socialRowCss}>
-            {[Instagram, Mail].map((Icon, i) => (
-              <button key={i} className={socialBtnCss}>
-                <Icon size={17} />
-              </button>
-            ))}
+            <a
+              href="https://www.instagram.com/cococ_official/reels/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={socialBtnCss}
+            >
+              <Instagram size={17} />
+            </a>
+            <a
+              href="https://blog.naver.com/cococ_blog"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={socialBtnCss}
+            >
+              <span className={naverLetterCss}>N</span>
+            </a>
           </div>
         </div>
 
