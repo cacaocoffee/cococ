@@ -12,10 +12,10 @@ import {
   loadApplications,
   updateStatus,
   deleteApplication,
-} from "../../../hooks/useApplications";
-import { ConfirmModal, useConfirm } from "../../../components/ui/Modal";
-import { css, cx } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+} from "@/hooks/useApplications";
+import { ConfirmModal, useConfirm } from "@/components/ui/Modal";
+import { css, cx } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 import { STATUS_CFG } from "../constants";
 import {
   listCss,

@@ -1,9 +1,9 @@
 import { useParams } from "@tanstack/react-router";
-import { useMagazineList } from "../../../hooks/useMagazine";
-import PageWrapper from "../../../components/ui/PageWrapper";
-import BackButton from "../../../components/ui/BackButton";
-import { css } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+import { useMagazineList } from "@/hooks/useMagazine";
+import PageWrapper from "@/components/ui/PageWrapper";
+import BackButton from "@/components/ui/BackButton";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 import ArticleHero from "./components/ArticleHero";
 import ArticleHeader from "./components/ArticleHeader";
 import ArticleBody from "./components/ArticleBody";

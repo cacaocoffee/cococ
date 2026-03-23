@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { css } from "../../../../lib/css";
+import { css } from "@/lib/css";
 
 const gallerySectionCss = css({ marginBottom: "64px" });
 

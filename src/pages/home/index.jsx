@@ -1,5 +1,5 @@
-import { css } from "../../lib/css";
-import PageWrapper from "../../components/ui/PageWrapper";
+import { css } from "@/lib/css";
+import PageWrapper from "@/components/ui/PageWrapper";
 import HeroSection from "./sections/HeroSection";
 import PartnerBand from "./sections/PartnerBand";
 import MissionSection from "./sections/MissionSection";

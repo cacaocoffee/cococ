@@ -2,11 +2,11 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { ARCHIVE_DATA } from "../../../data";
-import SectionTitle from "../../../components/ui/SectionTitle";
-import ArchiveCard from "../../../components/ui/ArchiveCard";
-import { css } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+import { ARCHIVE_DATA } from "@/data";
+import SectionTitle from "@/components/ui/SectionTitle";
+import ArchiveCard from "@/components/ui/ArchiveCard";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 
 function FadeUp({ children, delay = 0, className = "" }) {
   const ref = useRef(null);

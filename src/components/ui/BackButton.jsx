@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from '@tanstack/react-router';
-import { css } from '../../lib/css';
-import { colors } from '../../lib/tokens';
+import { css } from '@/lib/css';
+import { colors } from '@/lib/tokens';
 
 const btnCss = css({
   display: 'inline-flex',

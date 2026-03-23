@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { css } from "../../../lib/css";
-import { colors, shadows } from "../../../lib/tokens";
+import { css } from "@/lib/css";
+import { colors, shadows } from "@/lib/tokens";
 
 const heroSectionCss = css({
   position: "relative",

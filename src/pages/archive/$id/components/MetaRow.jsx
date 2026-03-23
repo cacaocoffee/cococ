@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { MapPin, Users } from "lucide-react";
-import TagBadge from "../../../../components/ui/TagBadge";
-import { css } from "../../../../lib/css";
-import { colors } from "../../../../lib/tokens";
+import TagBadge from "@/components/ui/TagBadge";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 
 const metaRowCss = css({
   display: "flex",

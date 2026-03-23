@@ -1,4 +1,4 @@
-import { css, cx } from "../../../lib/css";
+import { css, cx } from "@/lib/css";
 import { radioBaseCss, radioActiveCss } from "../styles";
 
 export default function RadioGroup({ name, options, value, onChange }) {

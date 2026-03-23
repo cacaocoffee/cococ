@@ -1,7 +1,7 @@
 import { AlertCircle } from "lucide-react";
-import { cx } from "../../../lib/css";
-import { css } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+import { cx } from "@/lib/css";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 import {
   fieldGroupCss,
   stepTitleCss,

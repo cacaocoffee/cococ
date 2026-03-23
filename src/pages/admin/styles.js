@@ -1,5 +1,5 @@
-import { css } from "../../lib/css";
-import { colors } from "../../lib/tokens";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 
 // ─── Form ─────────────────────────────────────────────────────
 export const inputCss = css({

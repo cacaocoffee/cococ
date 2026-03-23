@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react';
 import { ImagePlus, X, Loader } from 'lucide-react';
-import { uploadApi } from '../../api/upload';
-import { css, cx } from '../../lib/css';
-import { colors } from '../../lib/tokens';
+import { uploadApi } from '@/api/upload';
+import { css, cx } from '@/lib/css';
+import { colors } from '@/lib/tokens';
 
 const wrapCss = css({ display: 'flex', flexDirection: 'column', gap: '8px' });
 

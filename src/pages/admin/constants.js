@@ -1,5 +1,5 @@
 import { CheckCircle, XCircle, Clock } from "lucide-react";
-import { colors } from "../../lib/tokens";
+import { colors } from "@/lib/tokens";
 
 export const ADMIN_PASSWORD = "cococ2024";
 

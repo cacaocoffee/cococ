@@ -12,7 +12,7 @@ import InterviewMatrix from "../components/InterviewMatrix";
 import {
   loadInterviewSettings,
   DEFAULT_INTERVIEW_SETTINGS,
-} from "../../../hooks/useApplications";
+} from "@/hooks/useApplications";
 
 export default function Step2Activity({ form, set, setV }) {
   const settings = loadInterviewSettings() ?? DEFAULT_INTERVIEW_SETTINGS;

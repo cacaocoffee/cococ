@@ -1,5 +1,5 @@
-import { css } from "../../lib/css";
-import { colors, shadows } from "../../lib/tokens";
+import { css } from "@/lib/css";
+import { colors, shadows } from "@/lib/tokens";
 
 export const inputCss = css({
   backgroundColor: "rgba(0,0,0,0.3)",

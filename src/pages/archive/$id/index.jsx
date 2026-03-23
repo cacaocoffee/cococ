@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 import { useParams } from "@tanstack/react-router";
-import { useArchiveList } from "../../../hooks/useArchive";
-import PageWrapper from "../../../components/ui/PageWrapper";
-import BackButton from "../../../components/ui/BackButton";
-import { css } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+import { useArchiveList } from "@/hooks/useArchive";
+import PageWrapper from "@/components/ui/PageWrapper";
+import BackButton from "@/components/ui/BackButton";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 import HeroSection from "./components/HeroSection";
 import MetaRow from "./components/MetaRow";
 import Gallery from "./components/Gallery";

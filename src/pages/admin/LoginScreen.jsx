@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
-import { css, cx } from "../../lib/css";
-import { colors } from "../../lib/tokens";
+import { css, cx } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 import { ADMIN_PASSWORD } from "./constants";
 import { inputCss, inputErrorCss } from "./styles";
 

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { magazineApi } from '../api/magazine';
+import { magazineApi } from '@/api/magazine';
 
 export const magazineKeys = {
   all: ['magazine'],

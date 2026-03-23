@@ -2,8 +2,8 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { css } from '../../lib/css';
-import { colors } from '../../lib/tokens';
+import { css } from '@/lib/css';
+import { colors } from '@/lib/tokens';
 
 const linkCss = css({
   display: 'grid',

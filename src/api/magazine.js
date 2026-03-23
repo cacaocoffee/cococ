@@ -2,10 +2,10 @@
  * Mock API — magazine
  * 실제 서버 연동 시 이 파일의 함수 본문만 fetch() 로 교체하면 됩니다.
  *
- * @import { MagazineItem } from '../dto/magazine'
+ * @import { MagazineItem } from '@/dto/magazine'
  */
 
-import { MAGAZINE_DATA } from '../data';
+import { MAGAZINE_DATA } from '@/data';
 
 const KEY = 'cococ_magazine';
 

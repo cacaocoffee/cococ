@@ -6,17 +6,17 @@ import {
   useAddArchive,
   useUpdateArchive,
   useDeleteArchive,
-} from "../../../hooks/useArchive";
+} from "@/hooks/useArchive";
 import {
   ConfirmModal,
   AlertModal,
   useConfirm,
   useAlert,
-} from "../../../components/ui/Modal";
-import ImageUpload from "../../../components/ui/ImageUpload";
-import GalleryUpload from "../../../components/ui/GalleryUpload";
-import { css } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+} from "@/components/ui/Modal";
+import ImageUpload from "@/components/ui/ImageUpload";
+import GalleryUpload from "@/components/ui/GalleryUpload";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 import { ARCHIVE_CATS, EMPTY_ARCHIVE } from "../constants";
 import {
   inputCss,

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, ChevronDown } from "lucide-react";
-import { useArchiveList } from "../../hooks/useArchive";
-import PageWrapper from "../../components/ui/PageWrapper";
-import SectionTitle from "../../components/ui/SectionTitle";
-import ArchiveCard from "../../components/ui/ArchiveCard";
-import FilterButton from "../../components/ui/FilterButton";
-import { css } from "../../lib/css";
-import { colors } from "../../lib/tokens";
+import { useArchiveList } from "@/hooks/useArchive";
+import PageWrapper from "@/components/ui/PageWrapper";
+import SectionTitle from "@/components/ui/SectionTitle";
+import ArchiveCard from "@/components/ui/ArchiveCard";
+import FilterButton from "@/components/ui/FilterButton";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 
 const CATEGORIES = ["전체", "정기 클래스", "MT/파티", "외부 협업"];
 

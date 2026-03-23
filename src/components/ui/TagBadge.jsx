@@ -1,6 +1,6 @@
 import { Tag } from 'lucide-react';
-import { css, cx } from '../../lib/css';
-import { colors } from '../../lib/tokens';
+import { css, cx } from '@/lib/css';
+import { colors } from '@/lib/tokens';
 
 const baseCss = css({
   fontSize: '11px',

@@ -1,8 +1,8 @@
 import { Instagram, ExternalLink } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { css } from '../../lib/css';
-import { colors } from '../../lib/tokens';
-import CococLogo from '../ui/CococLogo';
+import { css } from '@/lib/css';
+import { colors } from '@/lib/tokens';
+import CococLogo from '@/components/ui/CococLogo';
 
 const TABS = [
   { label: 'Home',     to: '/' },

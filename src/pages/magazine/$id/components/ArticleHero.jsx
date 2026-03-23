@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import BackButton from "../../../../components/ui/BackButton";
-import { css } from "../../../../lib/css";
+import BackButton from "@/components/ui/BackButton";
+import { css } from "@/lib/css";
 
 const heroSectionCss = css({
   position: "relative",

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { css } from '../../lib/css';
+import { css } from '@/lib/css';
 
 const baseBtnCss = css({
   paddingInline: '20px',

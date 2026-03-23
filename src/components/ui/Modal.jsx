@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, AlertCircle, CheckCircle, Info } from 'lucide-react';
-import { css, cx } from '../../lib/css';
-import { colors, shadows } from '../../lib/tokens';
+import { css, cx } from '@/lib/css';
+import { colors, shadows } from '@/lib/tokens';
 
 const BACKDROP = {
   hidden:  { opacity: 0 },

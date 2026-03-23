@@ -1,4 +1,4 @@
-import { css, cx } from "../../../lib/css";
+import { css, cx } from "@/lib/css";
 import {
   checkBtnBaseCss,
   checkBtnActiveCss,

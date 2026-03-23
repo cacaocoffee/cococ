@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
-import { loadApplyPeriod } from "../../hooks/useApplications";
-import { css } from "../../lib/css";
-import { colors } from "../../lib/tokens";
+import { loadApplyPeriod } from "@/hooks/useApplications";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 
 const closedWrapCss = css({
   minHeight: "60vh",

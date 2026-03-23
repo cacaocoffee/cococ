@@ -8,9 +8,9 @@ import {
   loadInterviewSettings,
   saveInterviewSettings,
   DEFAULT_INTERVIEW_SETTINGS,
-} from "../../../hooks/useApplications";
-import { css, cx } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+} from "@/hooks/useApplications";
+import { css, cx } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 import { inputCss } from "../styles";
 import DatePicker from "../components/DatePicker";
 

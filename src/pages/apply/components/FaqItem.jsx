@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { css, cx } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+import { css, cx } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 
 const faqItemBaseCss = css({
   backgroundColor: colors.bgSection,

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LogOut, Users, Archive, BookOpen, CalendarClock } from "lucide-react";
-import { css, cx } from "../../lib/css";
-import { colors } from "../../lib/tokens";
+import { css, cx } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 import LoginScreen from "./LoginScreen";
 import ApplicationsTab from "./tabs/ApplicationsTab";
 import PeriodTab from "./tabs/PeriodTab";

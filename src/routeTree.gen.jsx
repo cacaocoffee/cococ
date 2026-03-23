@@ -4,8 +4,8 @@ import {
   createRootRoute,
   Outlet,
 } from "@tanstack/react-router";
-import Navbar from "./components/layout/Navbar";
-import Footer from "./components/layout/Footer";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import HomePage from "./pages/home/index";
 import ArchivePage from "./pages/archive/index";
 import ArchiveDetailPage from "./pages/archive/$id/index";
@@ -13,7 +13,7 @@ import MagazinePage from "./pages/magazine/index";
 import MagazineDetailPage from "./pages/magazine/$id/index";
 import ApplyPage from "./pages/apply/index";
 import AdminPage from "./pages/admin/index";
-import { ARCHIVE_DATA, MAGAZINE_DATA } from "./data";
+import { ARCHIVE_DATA, MAGAZINE_DATA } from "@/data";
 
 const marqueeStyle = `
   @keyframes marquee {

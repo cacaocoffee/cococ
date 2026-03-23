@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Link, useLocation } from '@tanstack/react-router';
-import { css, cx } from '../../lib/css';
-import { colors } from '../../lib/tokens';
-import CococLogo from '../ui/CococLogo';
+import { css, cx } from '@/lib/css';
+import { colors } from '@/lib/tokens';
+import CococLogo from '@/components/ui/CococLogo';
 
 const TABS = [
   { label: 'Home',     to: '/' },

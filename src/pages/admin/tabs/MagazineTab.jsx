@@ -6,16 +6,16 @@ import {
   useAddMagazine,
   useUpdateMagazine,
   useDeleteMagazine,
-} from "../../../hooks/useMagazine";
+} from "@/hooks/useMagazine";
 import {
   ConfirmModal,
   AlertModal,
   useConfirm,
   useAlert,
-} from "../../../components/ui/Modal";
-import ImageUpload from "../../../components/ui/ImageUpload";
-import { css } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+} from "@/components/ui/Modal";
+import ImageUpload from "@/components/ui/ImageUpload";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 import { EMPTY_MAG } from "../constants";
 import {
   inputCss,

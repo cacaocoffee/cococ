@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { archiveApi } from '../api/archive';
+import { archiveApi } from '@/api/archive';
 
 export const archiveKeys = {
   all: ['archive'],

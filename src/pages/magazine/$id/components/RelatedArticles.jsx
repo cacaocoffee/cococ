@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "@tanstack/react-router";
-import { css } from "../../../../lib/css";
-import { colors } from "../../../../lib/tokens";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 
 const dividerCss = css({
   marginBlock: "80px",

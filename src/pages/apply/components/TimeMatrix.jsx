@@ -1,6 +1,6 @@
-import { cx } from "../../../lib/css";
-import { css } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+import { cx } from "@/lib/css";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 import { DAYS, TIMES } from "../constants";
 
 const matrixWrapCss = css({ overflowX: "auto" });

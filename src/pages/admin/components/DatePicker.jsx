@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
-import { css, cx } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+import { css, cx } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 
 const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 const MONTHS = [

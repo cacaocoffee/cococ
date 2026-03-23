@@ -1,6 +1,6 @@
-import { PARTNERS } from "../../../data";
-import { css } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+import { PARTNERS } from "@/data";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 
 const bandSectionCss = css({
   paddingBlock: "28px",

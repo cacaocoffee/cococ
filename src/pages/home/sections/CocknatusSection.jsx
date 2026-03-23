@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { css } from "../../../lib/css";
-import { colors } from "../../../lib/tokens";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 
 function FadeUp({ children, delay = 0, className = "" }) {
   const ref = useRef(null);

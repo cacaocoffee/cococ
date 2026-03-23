@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { Calendar, GlassWater } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { css } from '../../lib/css';
-import { colors } from '../../lib/tokens';
+import { css } from '@/lib/css';
+import { colors } from '@/lib/tokens';
 
 const linkCss = css({
   display: 'block',
