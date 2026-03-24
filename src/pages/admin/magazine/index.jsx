@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Plus, Pencil, Trash2, BookOpen, Type, Image, X, ChevronUp, ChevronDown } from "lucide-react";
+import { Plus, Pencil, Trash2, BookOpen, Type, Image, X, ChevronUp, ChevronDown, GalleryHorizontal, FileText } from "lucide-react";
 import {
   useMagazineList,
   useAddMagazine,
@@ -44,6 +44,44 @@ import {
   emptyTextCss,
 } from "../styles";
 
+// ─── 타입 탭 스타일 ──────────────────────────────────────────
+const typeTabRowCss = css({
+  display: "flex",
+  gap: "8px",
+  marginBottom: "20px",
+});
+const typeTabCss = (active) => css({
+  flex: "1",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "7px",
+  paddingBlock: "10px",
+  borderRadius: "0.75rem",
+  fontSize: "13px",
+  fontWeight: "700",
+  border: `1px solid ${active ? colors.brand : colors.borderInput}`,
+  background: active ? `${colors.brand}18` : "none",
+  color: active ? colors.brand : colors.textDimmer,
+  cursor: "pointer",
+  transition: "all 0.15s",
+});
+
+// ─── 슬라이드 에디터 스타일 ───────────────────────────────────
+const slideRowCss = css({
+  display: "flex",
+  alignItems: "center",
+  gap: "8px",
+});
+const slideNumCss = css({
+  fontSize: "11px",
+  fontWeight: "900",
+  color: colors.textDimmer,
+  width: "20px",
+  textAlign: "right",
+  flexShrink: "0",
+});
+
 // ─── 블록 에디터 스타일 ────────────────────────────────────────
 const blockWrapCss = css({
   border: `1px solid ${colors.borderInput}`,
@@ -78,18 +116,19 @@ const addBlockBtnCss = css({
 
 // ─── MagazineForm ─────────────────────────────────────────────
 function MagazineForm({ initial = EMPTY_MAG, onSave, onCancel, onAlert }) {
-  const [f, setF] = useState(initial);
+  const [f, setF] = useState({ magazineType: "blog", slides: [], ...initial });
   const set = (k) => (e) => setF((p) => ({ ...p, [k]: e.target.value }));
   const setV = (k) => (v) => setF((p) => ({ ...p, [k]: v }));
 
+  const magType = f.magazineType || "blog";
+  const setMagType = (t) => setF((p) => ({ ...p, magazineType: t }));
+
+  // 블로그 블록
   const blocks = Array.isArray(f.content) ? f.content : [];
   const setBlocks = (next) => setF((p) => ({ ...p, content: next }));
-
   const addBlock = (type) =>
     setBlocks([...blocks, type === "text" ? { type: "text", heading: "", body: "" } : { type: "image", url: "", caption: "" }]);
-
   const removeBlock = (i) => setBlocks(blocks.filter((_, idx) => idx !== i));
-
   const moveBlock = (i, dir) => {
     const next = [...blocks];
     const j = i + dir;
@@ -97,19 +136,56 @@ function MagazineForm({ initial = EMPTY_MAG, onSave, onCancel, onAlert }) {
     [next[i], next[j]] = [next[j], next[i]];
     setBlocks(next);
   };
-
   const updateBlock = (i, patch) =>
     setBlocks(blocks.map((b, idx) => (idx === i ? { ...b, ...patch } : b)));
+
+  // 카드뉴스 — 인스타그램 URL 목록
+  const instagramUrls = Array.isArray(f.instagramUrls) ? f.instagramUrls : [];
+  const setInstagramUrls = (next) => setF((p) => ({ ...p, instagramUrls: next }));
+  const addInstagramUrl = () => setInstagramUrls([...instagramUrls, ""]);
+  const removeInstagramUrl = (i) => setInstagramUrls(instagramUrls.filter((_, idx) => idx !== i));
+  const moveInstagramUrl = (i, dir) => {
+    const next = [...instagramUrls];
+    const j = i + dir;
+    if (j < 0 || j >= next.length) return;
+    [next[i], next[j]] = [next[j], next[i]];
+    setInstagramUrls(next);
+  };
+  const updateInstagramUrl = (i, val) => setInstagramUrls(instagramUrls.map((s, idx) => (idx === i ? val : s)));
+
+  // 카드뉴스 첫 번째 URL에서 썸네일 자동 추출
+  const firstUrl = magType === "cardnews" ? (instagramUrls[0] || "") : "";
+  useEffect(() => {
+    if (!firstUrl || !firstUrl.includes("instagram.com")) return;
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(firstUrl)}`);
+        const json = await res.json();
+        if (json.status === "success" && json.data?.image?.url) {
+          setF((p) => ({ ...p, img: json.data.image.url }));
+        }
+      } catch {
+        // 네트워크 오류 시 무시
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [firstUrl]);
 
   const handleSave = () => {
     if (!f.title || !f.excerpt) {
       onAlert("제목과 요약은 필수입니다.");
       return;
     }
+    if (magType === "cardnews" && instagramUrls.filter(Boolean).length === 0) {
+      onAlert("인스타그램 URL을 1개 이상 추가해주세요.");
+      return;
+    }
     onSave({
       ...f,
+      magazineType: magType,
       tags: f.tags ? f.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
-      content: blocks,
+      content: magType === "blog" ? blocks : [],
+      instagramUrls: magType === "cardnews" ? instagramUrls.filter(Boolean) : [],
       date: f.date || new Date().toLocaleDateString("ko-KR"),
     });
   };
@@ -120,6 +196,19 @@ function MagazineForm({ initial = EMPTY_MAG, onSave, onCancel, onAlert }) {
       animate={{ opacity: 1, y: 0 }}
       className={formCardCss}
     >
+      {/* 타입 선택 */}
+      <div>
+        <label className={labelCss}>매거진 타입</label>
+        <div className={typeTabRowCss}>
+          <button className={typeTabCss(magType === "blog")} onClick={() => setMagType("blog")}>
+            <FileText size={14} /> 블로그 글
+          </button>
+          <button className={typeTabCss(magType === "cardnews")} onClick={() => setMagType("cardnews")}>
+            <GalleryHorizontal size={14} /> 카드 뉴스
+          </button>
+        </div>
+      </div>
+
       <div className={formGrid2Css}>
         <div style={{ gridColumn: "span 2" }}>
           <label className={labelCss}>제목 *</label>
@@ -148,62 +237,91 @@ function MagazineForm({ initial = EMPTY_MAG, onSave, onCancel, onAlert }) {
         <textarea rows={3} value={f.excerpt} onChange={set("excerpt")} className={inputCss} style={{ resize: "none" }} />
       </div>
 
-      {/* 블록 에디터 */}
-      <div>
-        <label className={labelCss}>본문 블록</label>
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          {blocks.map((block, i) => (
-            <div key={i} className={blockWrapCss}>
-              <div className={blockHeaderCss}>
-                <span className={blockTypeLabelCss}>
-                  {block.type === "image" ? <><Image size={11} /> 이미지</> : <><Type size={11} /> 텍스트</>}
-                </span>
-                <button className={blockIconBtnCss} onClick={() => moveBlock(i, -1)} disabled={i === 0}><ChevronUp size={13} /></button>
-                <button className={blockIconBtnCss} onClick={() => moveBlock(i, 1)} disabled={i === blocks.length - 1}><ChevronDown size={13} /></button>
-                <button className={css({ ...blockIconBtnCss, _hover: { color: "#f87171", backgroundColor: "rgba(239,68,68,0.1)" } })} onClick={() => removeBlock(i)}><X size={13} /></button>
+      {/* 블로그 블록 에디터 */}
+      {magType === "blog" && (
+        <div>
+          <label className={labelCss}>본문 블록</label>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {blocks.map((block, i) => (
+              <div key={i} className={blockWrapCss}>
+                <div className={blockHeaderCss}>
+                  <span className={blockTypeLabelCss}>
+                    {block.type === "image" ? <><Image size={11} /> 이미지</> : <><Type size={11} /> 텍스트</>}
+                  </span>
+                  <button className={blockIconBtnCss} onClick={() => moveBlock(i, -1)} disabled={i === 0}><ChevronUp size={13} /></button>
+                  <button className={blockIconBtnCss} onClick={() => moveBlock(i, 1)} disabled={i === blocks.length - 1}><ChevronDown size={13} /></button>
+                  <button className={css({ ...blockIconBtnCss, _hover: { color: "#f87171", backgroundColor: "rgba(239,68,68,0.1)" } })} onClick={() => removeBlock(i)}><X size={13} /></button>
+                </div>
+                <div className={blockBodyCss}>
+                  {block.type === "text" ? (
+                    <>
+                      <input
+                        value={block.heading}
+                        onChange={(e) => updateBlock(i, { heading: e.target.value })}
+                        placeholder="소제목 (선택)"
+                        className={inputCss}
+                      />
+                      <textarea
+                        rows={4}
+                        value={block.body}
+                        onChange={(e) => updateBlock(i, { body: e.target.value })}
+                        placeholder={"본문 내용...\n\n**굵게** *기울임* [링크](url)\n- 목록 항목\n> 인용구"}
+                        className={inputCss}
+                        style={{ resize: "vertical", fontFamily: "monospace", fontSize: "12px" }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <ImageUpload value={block.url} onChange={(v) => updateBlock(i, { url: v })} />
+                      <input
+                        value={block.caption}
+                        onChange={(e) => updateBlock(i, { caption: e.target.value })}
+                        placeholder="캡션 (선택)"
+                        className={inputCss}
+                      />
+                    </>
+                  )}
+                </div>
               </div>
-              <div className={blockBodyCss}>
-                {block.type === "text" ? (
-                  <>
-                    <input
-                      value={block.heading}
-                      onChange={(e) => updateBlock(i, { heading: e.target.value })}
-                      placeholder="소제목 (선택)"
-                      className={inputCss}
-                    />
-                    <textarea
-                      rows={4}
-                      value={block.body}
-                      onChange={(e) => updateBlock(i, { body: e.target.value })}
-                      placeholder={"본문 내용...\n\n**굵게** *기울임* [링크](url)\n- 목록 항목\n> 인용구"}
-                      className={inputCss}
-                      style={{ resize: "vertical", fontFamily: "monospace", fontSize: "12px" }}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <ImageUpload value={block.url} onChange={(v) => updateBlock(i, { url: v })} />
-                    <input
-                      value={block.caption}
-                      onChange={(e) => updateBlock(i, { caption: e.target.value })}
-                      placeholder="캡션 (선택)"
-                      className={inputCss}
-                    />
-                  </>
-                )}
-              </div>
+            ))}
+            <div className={addBlockRowCss}>
+              <button className={addBlockBtnCss} onClick={() => addBlock("text")}>
+                <Type size={13} /> 텍스트 블록 추가
+              </button>
+              <button className={addBlockBtnCss} onClick={() => addBlock("image")}>
+                <Image size={13} /> 이미지 블록 추가
+              </button>
             </div>
-          ))}
-          <div className={addBlockRowCss}>
-            <button className={addBlockBtnCss} onClick={() => addBlock("text")}>
-              <Type size={13} /> 텍스트 블록 추가
-            </button>
-            <button className={addBlockBtnCss} onClick={() => addBlock("image")}>
-              <Image size={13} /> 이미지 블록 추가
+          </div>
+        </div>
+      )}
+
+      {/* 카드뉴스 — 인스타그램 URL 에디터 */}
+      {magType === "cardnews" && (
+        <div>
+          <label className={labelCss}>인스타그램 게시물 URL</label>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {instagramUrls.map((url, i) => (
+              <div key={i} className={slideRowCss}>
+                <span className={slideNumCss}>{i + 1}</span>
+                <input
+                  value={url}
+                  onChange={(e) => updateInstagramUrl(i, e.target.value)}
+                  placeholder="https://www.instagram.com/p/..."
+                  className={inputCss}
+                  style={{ flex: 1 }}
+                />
+                <button className={blockIconBtnCss} onClick={() => moveInstagramUrl(i, -1)} disabled={i === 0}><ChevronUp size={13} /></button>
+                <button className={blockIconBtnCss} onClick={() => moveInstagramUrl(i, 1)} disabled={i === instagramUrls.length - 1}><ChevronDown size={13} /></button>
+                <button className={css({ ...blockIconBtnCss, _hover: { color: "#f87171", backgroundColor: "rgba(239,68,68,0.1)" } })} onClick={() => removeInstagramUrl(i)}><X size={13} /></button>
+              </div>
+            ))}
+            <button className={addBlockBtnCss} onClick={addInstagramUrl} style={{ width: "100%" }}>
+              <GalleryHorizontal size={13} /> URL 추가
             </button>
           </div>
         </div>
-      </div>
+      )}
 
       <div className={formBtnRowCss}>
         <button onClick={onCancel} className={cancelBtnCss}>취소</button>
@@ -217,6 +335,8 @@ function MagazineForm({ initial = EMPTY_MAG, onSave, onCancel, onAlert }) {
 
 // ─── MagazineTab ──────────────────────────────────────────────
 const toForm = (item) => ({
+  magazineType: "blog",
+  instagramUrls: [],
   ...item,
   tags: Array.isArray(item.tags) ? item.tags.join(", ") : (item.tags || ""),
   // 구버전 {heading,body} 배열은 text 블록으로 마이그레이션

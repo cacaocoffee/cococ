@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { css } from "@/lib/css";
@@ -76,6 +77,58 @@ const captionCss = css({
   marginTop: "12px",
 });
 
+// ─── 인스타그램 embed ─────────────────────────────────────────
+const instagramWrapCss = css({
+  display: "flex",
+  flexDirection: "column",
+  gap: "32px",
+  alignItems: "center",
+});
+
+function InstagramEmbed({ urls }) {
+  useEffect(() => {
+    const process = () => {
+      if (window.instgrm) {
+        window.instgrm.Embeds.process();
+      }
+    };
+    if (window.instgrm) {
+      process();
+    } else {
+      const script = document.createElement("script");
+      script.src = "https://www.instagram.com/embed.js";
+      script.async = true;
+      script.onload = process;
+      document.body.appendChild(script);
+    }
+  }, [urls]);
+
+  return (
+    <div className={instagramWrapCss}>
+      {urls.map((url, i) => (
+        <blockquote
+          key={i}
+          className="instagram-media"
+          data-instgrm-permalink={url}
+          data-instgrm-captioned
+          data-instgrm-version="14"
+          style={{
+            background: "#fff",
+            border: 0,
+            borderRadius: "3px",
+            boxShadow: "0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)",
+            margin: "1px",
+            maxWidth: "540px",
+            minWidth: "326px",
+            padding: 0,
+            width: "calc(100% - 2px)",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 // 텍스트 블록 순번을 세기 위해 텍스트 블록만 카운트
 function ArticleBlock({ block, textIndex }) {
   // 구버전 호환: type 없으면 text로 처리
@@ -121,6 +174,7 @@ function ArticleBlock({ block, textIndex }) {
 
 export default function ArticleBody({ item }) {
   let textCount = 0;
+  const isCardNews = item.magazineType === "cardnews";
 
   return (
     <>
@@ -133,22 +187,32 @@ export default function ArticleBody({ item }) {
         {item.excerpt}
       </motion.p>
 
-      <div className={contentListCss}>
-        {(item.content || []).map((block, i) => {
-          const type = block.type ?? "text";
-          if (type === "text") textCount++;
-          return (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.45 + i * 0.08, duration: 0.55 }}
-            >
-              <ArticleBlock block={block} textIndex={textCount} />
-            </motion.div>
-          );
-        })}
-      </div>
+      {isCardNews ? (
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45, duration: 0.55 }}
+        >
+          <InstagramEmbed urls={item.instagramUrls || []} />
+        </motion.div>
+      ) : (
+        <div className={contentListCss}>
+          {(item.content || []).map((block, i) => {
+            const type = block.type ?? "text";
+            if (type === "text") textCount++;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45 + i * 0.08, duration: 0.55 }}
+              >
+                <ArticleBlock block={block} textIndex={textCount} />
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
     </>
   );
 }

@@ -2,11 +2,10 @@ export const ARCHIVE_DATA = [
   {
     id: 1,
     year: "2024",
-    semester: "1학기",
     category: "정기 클래스",
     title: "클래식 칵테일 마스터리",
     date: "2024.03.15",
-    base: "Jin",
+    base: "Gin",
     img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=800",
     participants: 18,
     location: "신촌 Bar Lune",
@@ -22,21 +21,24 @@ export const ARCHIVE_DATA = [
       {
         name: "Negroni",
         ingredients: "Gin 30ml · Campari 30ml · Sweet Vermouth 30ml",
+        img: "https://images.unsplash.com/photo-1614313512903-5e3e9be40dc4?auto=format&fit=crop&q=80&w=800",
       },
       {
         name: "Dry Martini",
         ingredients: "Gin 60ml · Dry Vermouth 10ml · Orange Bitters",
+        img: "https://images.unsplash.com/photo-1574634534894-89d7576c8259?auto=format&fit=crop&q=80&w=800",
       },
       {
         name: "Aviation",
         ingredients: "Gin 45ml · Maraschino 15ml · Crème de Violette 7.5ml",
+        img: "https://images.unsplash.com/photo-1541614101331-1a5a3a194e92?auto=format&fit=crop&q=80&w=800",
       },
     ],
+    content: [],
   },
   {
     id: 2,
     year: "2024",
-    semester: "1학기",
     category: "외부 협업",
     title: "성수 팝업 게스트 바텐딩",
     date: "2024.04.10",
@@ -56,17 +58,19 @@ export const ARCHIVE_DATA = [
       {
         name: "Smoky Highball",
         ingredients: "Scotch 45ml · Soda Water 120ml · Lemon Peel",
+        img: "https://images.unsplash.com/photo-1527281400683-1aae777175f8?auto=format&fit=crop&q=80&w=800",
       },
       {
         name: "Honey Bourbon Fizz",
         ingredients: "Bourbon 45ml · Honey Syrup 15ml · Lemon 20ml · Soda",
+        img: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&q=80&w=800",
       },
     ],
+    content: [],
   },
   {
     id: 3,
     year: "2023",
-    semester: "2학기",
     category: "MT/파티",
     title: "COCOC 연말 네트워킹 파티",
     date: "2023.12.20",
@@ -83,11 +87,11 @@ export const ARCHIVE_DATA = [
       "https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&q=80&w=800",
     ],
     recipes: [],
+    content: [],
   },
   {
     id: 4,
     year: "2023",
-    semester: "2학기",
     category: "정기 클래스",
     title: "티 칵테일 오마카세",
     date: "2023.11.05",
@@ -107,17 +111,19 @@ export const ARCHIVE_DATA = [
       {
         name: "Earl Grey Martini",
         ingredients: "Earl Grey Vodka 50ml · Lemon 20ml · Simple Syrup 10ml",
+        img: "https://images.unsplash.com/photo-1574634534894-89d7576c8259?auto=format&fit=crop&q=80&w=800",
       },
       {
         name: "Matcha Mule",
         ingredients: "Matcha Vodka 45ml · Ginger Beer 100ml · Lime 15ml",
+        img: "https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&q=80&w=800",
       },
     ],
+    content: [],
   },
   {
     id: 5,
     year: "2024",
-    semester: "1학기",
     category: "MT/파티",
     title: "신입 OT 환영 파티",
     date: "2024.03.01",
@@ -133,11 +139,11 @@ export const ARCHIVE_DATA = [
       "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=800",
     ],
     recipes: [],
+    content: [],
   },
   {
     id: 6,
     year: "2023",
-    semester: "2학기",
     category: "외부 협업",
     title: "홍대 팝업 칵테일 바",
     date: "2023.10.15",
@@ -156,17 +162,34 @@ export const ARCHIVE_DATA = [
       {
         name: "Jungle Bird",
         ingredients: "Rum 45ml · Campari 15ml · Pineapple 45ml · Lime 15ml",
+        img: "https://images.unsplash.com/photo-1541614101331-1a5a3a194e92?auto=format&fit=crop&q=80&w=800",
       },
       {
         name: "Painkiller",
-        ingredients:
-          "Rum 60ml · Pineapple 120ml · OJ 30ml · Cream of Coconut 30ml",
+        ingredients: "Rum 60ml · Pineapple 120ml · OJ 30ml · Cream of Coconut 30ml",
+        img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=800",
       },
     ],
+    content: [],
   },
 ];
 
 export const MAGAZINE_DATA = [
+  {
+    id: 3,
+    title: "인스타그램 카드뉴스",
+    author: "에디터 콕",
+    date: "2026.03.24",
+    readTime: "1분",
+    excerpt: "코콕의 인스타그램 카드뉴스를 확인해보세요.",
+    img: "",
+    tags: ["카드뉴스", "인스타그램"],
+    magazineType: "cardnews",
+    content: [],
+    instagramUrls: [
+      "https://www.instagram.com/p/DV_SRkgEyv_/",
+    ],
+  },
   {
     id: 1,
     title: "홈텐딩을 위한 필수 기물 5가지",
