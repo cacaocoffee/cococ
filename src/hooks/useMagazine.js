@@ -1,37 +1,10 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { magazineApi } from '@/api/magazine';
+import { createCRUDHooks } from './useCRUD';
 
-export const magazineKeys = {
-  all: ['magazine'],
-};
+const { keys, useList, useAdd, useUpdate, useRemove } = createCRUDHooks(magazineApi, 'magazine');
 
-export function useMagazineList() {
-  return useQuery({
-    queryKey: magazineKeys.all,
-    queryFn: magazineApi.getAll,
-  });
-}
-
-export function useAddMagazine() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (data) => magazineApi.add(data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: magazineKeys.all }),
-  });
-}
-
-export function useUpdateMagazine() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, data }) => magazineApi.update(id, data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: magazineKeys.all }),
-  });
-}
-
-export function useDeleteMagazine() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (id) => magazineApi.remove(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: magazineKeys.all }),
-  });
-}
+export const magazineKeys = keys;
+export const useMagazineList = useList;
+export const useAddMagazine = useAdd;
+export const useUpdateMagazine = useUpdate;
+export const useDeleteMagazine = useRemove;

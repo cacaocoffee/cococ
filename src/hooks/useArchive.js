@@ -1,37 +1,10 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { archiveApi } from '@/api/archive';
+import { createCRUDHooks } from './useCRUD';
 
-export const archiveKeys = {
-  all: ['archive'],
-};
+const { keys, useList, useAdd, useUpdate, useRemove } = createCRUDHooks(archiveApi, 'archive');
 
-export function useArchiveList() {
-  return useQuery({
-    queryKey: archiveKeys.all,
-    queryFn: archiveApi.getAll,
-  });
-}
-
-export function useAddArchive() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (data) => archiveApi.add(data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: archiveKeys.all }),
-  });
-}
-
-export function useUpdateArchive() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, data }) => archiveApi.update(id, data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: archiveKeys.all }),
-  });
-}
-
-export function useDeleteArchive() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (id) => archiveApi.remove(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: archiveKeys.all }),
-  });
-}
+export const archiveKeys = keys;
+export const useArchiveList = useList;
+export const useAddArchive = useAdd;
+export const useUpdateArchive = useUpdate;
+export const useDeleteArchive = useRemove;
