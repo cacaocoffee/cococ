@@ -21,6 +21,11 @@ export function deleteApplication(id) {
   localStorage.setItem(APP_KEY, JSON.stringify(updated));
   return updated;
 }
+export function updateApplicationField(id, fields) {
+  const updated = loadApplications().map((a) => (a.id === id ? { ...a, ...fields } : a));
+  localStorage.setItem(APP_KEY, JSON.stringify(updated));
+  return updated;
+}
 
 // ─── 면접/MT 설정 ─────────────────────────────────────────────
 const INTERVIEW_KEY = 'cococ_interview_settings';

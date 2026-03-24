@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle, Clock } from "lucide-react";
+import { CheckCircle, XCircle, Clock, Star } from "lucide-react";
 import { colors } from "@/lib/tokens";
 
 export const ADMIN_PASSWORD = "cococ2024";
@@ -10,11 +10,17 @@ export const STATUS_CFG = {
     bg: "rgba(250,204,21,0.1)",
     icon: Clock,
   },
-  pass: {
-    label: "합격",
-    color: colors.successMuted,
-    bg: colors.successBg,
+  pass1: {
+    label: "1차 합격",
+    color: "#34d399",
+    bg: "rgba(52,211,153,0.1)",
     icon: CheckCircle,
+  },
+  pass2: {
+    label: "2차 합격",
+    color: "#10b981",
+    bg: "rgba(16,185,129,0.15)",
+    icon: Star,
   },
   fail: {
     label: "불합격",
