@@ -1,9 +1,28 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { css } from '@/lib/css';
 import { colors } from '@/lib/tokens';
+
+function useInstagramThumbnail(post) {
+  const [thumb, setThumb] = useState(post.img || "");
+  useEffect(() => {
+    if (post.img) return;
+    if (post.magazineType !== "cardnews") return;
+    const firstUrl = post.instagramUrls?.[0];
+    if (!firstUrl) return;
+    fetch(`https://api.microlink.io/?url=${encodeURIComponent(firstUrl)}`)
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.status === "success" && json.data?.image?.url) {
+          setThumb(json.data.image.url);
+        }
+      })
+      .catch(() => {});
+  }, [post.img, post.magazineType, post.instagramUrls?.[0]]);
+  return thumb;
+}
 
 const linkCss = css({
   display: 'grid',
@@ -71,6 +90,7 @@ const readMoreCss = css({
 export default function MagazineCard({ post, index = 0 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
+  const thumb = useInstagramThumbnail(post);
 
   return (
     <motion.article
@@ -86,7 +106,7 @@ export default function MagazineCard({ post, index = 0 }) {
       >
         <div className={imgWrapCss}>
           <motion.img
-            src={post.img}
+            src={thumb}
             alt={post.title}
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.6 }}

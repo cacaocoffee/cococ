@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import BackButton from "@/components/ui/BackButton";
 import { css } from "@/lib/css";
@@ -24,10 +25,26 @@ const heroBackBtnCss = css({
 });
 
 export default function ArticleHero({ item }) {
+  const [thumb, setThumb] = useState(item.img || "");
+  useEffect(() => {
+    if (item.img) return;
+    if (item.magazineType !== "cardnews") return;
+    const firstUrl = item.instagramUrls?.[0];
+    if (!firstUrl) return;
+    fetch(`https://api.microlink.io/?url=${encodeURIComponent(firstUrl)}`)
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.status === "success" && json.data?.image?.url) {
+          setThumb(json.data.image.url);
+        }
+      })
+      .catch(() => {});
+  }, [item.img, item.magazineType, item.instagramUrls?.[0]]);
+
   return (
     <div className={heroSectionCss}>
       <motion.img
-        src={item.img}
+        src={thumb}
         alt={item.title}
         className={heroImgCss}
         initial={{ scale: 1.08 }}
