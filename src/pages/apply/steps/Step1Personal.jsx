@@ -1,14 +1,22 @@
+import { cx } from "@/lib/css";
 import {
   fieldGroupCss,
   gridCols2Css,
   stepTitleCss,
   inputCss,
+  inputErrorCss,
   labelCss,
   sublabelCss,
+  errorTextCss,
 } from "../styles";
 import RadioGroup from "../components/RadioGroup";
 
-export default function Step1Personal({ form, set, setV }) {
+function Err({ msg }) {
+  if (!msg) return null;
+  return <p className={errorTextCss}>⚠ {msg}</p>;
+}
+
+export default function Step1Personal({ form, set, setV, errors = {} }) {
   return (
     <div className={fieldGroupCss}>
       <h3 className={stepTitleCss}>인적사항</h3>
@@ -19,8 +27,9 @@ export default function Step1Personal({ form, set, setV }) {
             value={form.name}
             onChange={set("name")}
             placeholder="홍길동"
-            className={inputCss}
+            className={cx(inputCss, errors.name ? inputErrorCss : "")}
           />
+          <Err msg={errors.name} />
         </div>
         <div>
           <label className={labelCss}>성별 *</label>
@@ -30,6 +39,7 @@ export default function Step1Personal({ form, set, setV }) {
             value={form.gender}
             onChange={setV("gender")}
           />
+          <Err msg={errors.gender} />
         </div>
       </div>
       <div className={gridCols2Css}>
@@ -39,8 +49,9 @@ export default function Step1Personal({ form, set, setV }) {
             value={form.birthdate}
             onChange={set("birthdate")}
             placeholder="ex) 001231 (6자리)"
-            className={inputCss}
+            className={cx(inputCss, errors.birthdate ? inputErrorCss : "")}
           />
+          <Err msg={errors.birthdate} />
         </div>
         <div>
           <label className={labelCss}>연락처 *</label>
@@ -49,8 +60,9 @@ export default function Step1Personal({ form, set, setV }) {
             value={form.phone}
             onChange={set("phone")}
             placeholder="ex) 010-1234-5678"
-            className={inputCss}
+            className={cx(inputCss, errors.phone ? inputErrorCss : "")}
           />
+          <Err msg={errors.phone} />
         </div>
       </div>
       <div>
@@ -72,8 +84,9 @@ export default function Step1Personal({ form, set, setV }) {
           value={form.email}
           onChange={set("email")}
           placeholder="example@email.com"
-          className={inputCss}
+          className={cx(inputCss, errors.email ? inputErrorCss : "")}
         />
+        <Err msg={errors.email} />
       </div>
     </div>
   );

@@ -4,9 +4,9 @@ import {
   inputCss,
   labelCss,
   sublabelCss,
+  errorTextCss,
 } from "../styles";
 import RadioGroup from "../components/RadioGroup";
-import CheckGroup from "../components/CheckGroup";
 import Scale from "../components/Scale";
 import InterviewMatrix from "../components/InterviewMatrix";
 import {
@@ -14,7 +14,12 @@ import {
   DEFAULT_INTERVIEW_SETTINGS,
 } from "@/hooks/useApplications";
 
-export default function Step2Activity({ form, set, setV }) {
+function Err({ msg }) {
+  if (!msg) return null;
+  return <p className={errorTextCss}>⚠ {msg}</p>;
+}
+
+export default function Step2Activity({ form, set, setV, errors = {} }) {
   const settings = loadInterviewSettings() ?? DEFAULT_INTERVIEW_SETTINGS;
   const { mtDate, interviewDates, interviewTimes } = settings;
 
@@ -33,6 +38,7 @@ export default function Step2Activity({ form, set, setV }) {
           value={form.interviewTimes}
           onChange={setV("interviewTimes")}
         />
+        <Err msg={errors.interviewTimes} />
       </div>
 
       <div>
@@ -44,6 +50,7 @@ export default function Step2Activity({ form, set, setV }) {
           value={form.mtAvailable}
           onChange={setV("mtAvailable")}
         />
+        <Err msg={errors.mtAvailable} />
       </div>
 
       <div>
@@ -79,6 +86,7 @@ export default function Step2Activity({ form, set, setV }) {
           value={form.scaleDesignTool}
           onChange={setV("scaleDesignTool")}
         />
+        <Err msg={errors.scaleDesignTool} />
       </div>
 
       <div>
@@ -106,6 +114,7 @@ export default function Step2Activity({ form, set, setV }) {
           value={form.scaleCameraTool}
           onChange={setV("scaleCameraTool")}
         />
+        <Err msg={errors.scaleCameraTool} />
       </div>
 
       <div>

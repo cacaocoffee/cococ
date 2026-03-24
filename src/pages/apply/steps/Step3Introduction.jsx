@@ -1,10 +1,13 @@
+import { cx } from "@/lib/css";
 import RadioGroup from "../components/RadioGroup";
 import {
   fieldGroupCss,
   stepTitleCss,
   inputCss,
+  inputErrorCss,
   labelCss,
   sublabelCss,
+  errorTextCss,
 } from "../styles";
 
 const VISIONS = [
@@ -14,7 +17,12 @@ const VISIONS = [
   "경험을 통한 개인 역량 강화",
 ];
 
-export default function Step3Introduction({ form, set, setV }) {
+function Err({ msg }) {
+  if (!msg) return null;
+  return <p className={errorTextCss}>⚠ {msg}</p>;
+}
+
+export default function Step3Introduction({ form, set, setV, errors = {} }) {
   return (
     <div className={fieldGroupCss}>
       <h3 className={stepTitleCss}>자기소개</h3>
@@ -27,9 +35,10 @@ export default function Step3Introduction({ form, set, setV }) {
           rows={4}
           value={form.q1_intro}
           onChange={set("q1_intro")}
-          className={inputCss}
+          className={cx(inputCss, errors.q1_intro ? inputErrorCss : "")}
           style={{ resize: "none" }}
         />
+        <Err msg={errors.q1_intro} />
       </div>
 
       <div>
@@ -41,9 +50,10 @@ export default function Step3Introduction({ form, set, setV }) {
           value={form.q2_motivation}
           onChange={set("q2_motivation")}
           placeholder="여러가지도 가능!"
-          className={inputCss}
+          className={cx(inputCss, errors.q2_motivation ? inputErrorCss : "")}
           style={{ resize: "none" }}
         />
+        <Err msg={errors.q2_motivation} />
       </div>
 
       <div>
@@ -60,6 +70,7 @@ export default function Step3Introduction({ form, set, setV }) {
           value={form.q3_drink}
           onChange={setV("q3_drink")}
         />
+        <Err msg={errors.q3_drink} />
       </div>
 
       {form.q3_drink && (
@@ -69,9 +80,10 @@ export default function Step3Introduction({ form, set, setV }) {
             rows={4}
             value={form.q4_contribution}
             onChange={set("q4_contribution")}
-            className={inputCss}
+            className={cx(inputCss, errors.q4_contribution ? inputErrorCss : "")}
             style={{ resize: "none" }}
           />
+          <Err msg={errors.q4_contribution} />
         </div>
       )}
 

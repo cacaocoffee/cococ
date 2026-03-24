@@ -16,6 +16,21 @@ export const inputCss = css({
   _placeholder: { color: colors.textFaint },
 });
 
+export const inputErrorCss = css({
+  borderColor: "#f87171",
+  _focus: { borderColor: "#f87171" },
+});
+
+export const errorTextCss = css({
+  fontSize: "11px",
+  color: "#f87171",
+  fontWeight: "700",
+  marginTop: "4px",
+  display: "flex",
+  alignItems: "center",
+  gap: "4px",
+});
+
 export const labelCss = css({
   fontSize: "12px",
   fontWeight: "700",

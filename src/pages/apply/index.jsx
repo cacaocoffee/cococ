@@ -199,25 +199,51 @@ export default function ApplyPage() {
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const setV = (k) => (v) => setForm((f) => ({ ...f, [k]: v }));
 
-  const step1Valid = !!(
-    form.name &&
-    form.gender &&
-    form.birthdate &&
-    form.phone &&
-    form.email
-  );
-  const step3Valid = !!(
-    form.q1_intro &&
-    form.q2_motivation &&
-    form.q3_drink &&
-    form.q4_contribution
-  );
-  const canNext = (step !== 1 || step1Valid) && (step !== 3 || step3Valid);
+  const [showErrors, setShowErrors] = useState(false);
+
+  const validate = (s) => {
+    if (s === 1) return {
+      name:      !form.name.trim()      ? "이름을 입력해주세요" : "",
+      gender:    !form.gender           ? "성별을 선택해주세요" : "",
+      birthdate: !form.birthdate.trim() ? "생년월일을 입력해주세요"
+                 : !/^\d{6}$/.test(form.birthdate.replace(/\D/g, "")) ? "6자리 숫자로 입력해주세요 (예: 001231)" : "",
+      phone:     !form.phone.trim()     ? "연락처를 입력해주세요"
+                 : !/^01[016789][-\s]?\d{3,4}[-\s]?\d{4}$/.test(form.phone.replace(/\s/g, "")) ? "올바른 형식으로 입력해주세요 (예: 010-1234-5678)" : "",
+      email:     !form.email.trim()     ? "이메일을 입력해주세요"
+                 : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) ? "올바른 이메일 주소를 입력해주세요" : "",
+    };
+    if (s === 2) return {
+      interviewTimes: form.interviewTimes.length === 0 ? "면접 가능 시간을 1개 이상 선택해주세요" : "",
+      mtAvailable:    !form.mtAvailable                ? "MT 참가 여부를 선택해주세요" : "",
+      scaleDesignTool: form.scaleDesignTool === null   ? "디자인 툴 활용 능력을 선택해주세요" : "",
+      scaleCameraTool: form.scaleCameraTool === null   ? "사진/영상 촬영 능력을 선택해주세요" : "",
+    };
+    if (s === 3) return {
+      q1_intro:        !form.q1_intro.trim()        ? "자기소개를 작성해주세요" : "",
+      q2_motivation:   !form.q2_motivation.trim()   ? "지원 동기를 작성해주세요" : "",
+      q3_drink:        !form.q3_drink               ? "비전을 선택해주세요" : "",
+      q4_contribution: !form.q4_contribution.trim() ? "선택한 이유를 작성해주세요" : "",
+    };
+    return {};
+  };
+
+  const errors = showErrors ? validate(step) : {};
+  const hasError = Object.values(errors).some(Boolean);
 
   const TOTAL = 4;
   const goTo = (next) => {
     setDirection(next > step ? 1 : -1);
     setStep(Math.max(1, Math.min(TOTAL, next)));
+  };
+
+  const handleNext = () => {
+    const errs = validate(step);
+    if (Object.values(errs).some(Boolean)) {
+      setShowErrors(true);
+      return;
+    }
+    setShowErrors(false);
+    goTo(step + 1);
   };
 
   const handleSubmit = () => {
@@ -342,13 +368,13 @@ export default function ApplyPage() {
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
                   {step === 1 && (
-                    <Step1Personal form={form} set={set} setV={setV} />
+                    <Step1Personal form={form} set={set} setV={setV} errors={errors} />
                   )}
                   {step === 2 && (
-                    <Step2Activity form={form} set={set} setV={setV} />
+                    <Step2Activity form={form} set={set} setV={setV} errors={errors} />
                   )}
                   {step === 3 && (
-                    <Step3Introduction form={form} set={set} setV={setV} />
+                    <Step3Introduction form={form} set={set} setV={setV} errors={errors} />
                   )}
                   {step === 4 && <Step4Confirm form={form} setForm={setForm} />}
                 </motion.div>
@@ -366,12 +392,10 @@ export default function ApplyPage() {
               </motion.button>
               {step < TOTAL ? (
                 <motion.button
-                  onClick={() => canNext && goTo(step + 1)}
-                  whileHover={canNext ? { scale: 1.03 } : {}}
-                  whileTap={canNext ? { scale: 0.97 } : {}}
-                  className={
-                    canNext ? nextBtnCss : `${nextBtnCss} ${nextBtnDisabledCss}`
-                  }
+                  onClick={handleNext}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className={nextBtnCss}
                 >
                   다음
                 </motion.button>
