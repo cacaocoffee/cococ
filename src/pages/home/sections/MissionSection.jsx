@@ -21,9 +21,9 @@ function FadeUp({ children, delay = 0, className = "" }) {
 
 const VALUES = [
   {
-    keyword: "미식",
-    title: "취향을 아는 것",
-    desc: "코콕은 2030세대가 본인의 취향을 알고 주류를 선택하는 것을 지향합니다. 이것이 미식의 정착점이라 믿습니다.",
+    keyword: "소속감",
+    title: "좋은 사람, 좋은 술",
+    desc: "COCOC은 특정 목적을 가진 자발적 결사체입니다. '좋은 사람' 그리고 '좋은 술'과 함께라면, 즐겁지 않을 이유가 없습니다.",
   },
   {
     keyword: "콕나투스",
@@ -33,12 +33,7 @@ const VALUES = [
   {
     keyword: "성장",
     title: "경험이 역량이 된다",
-    desc: "COCOC에서의 체험은 자연스럽게 지식이 되고, 지식은 내면화되어 미식을 추구하게 합니다. 아는 만큼 맛있으니까요.",
-  },
-  {
-    keyword: "소속감",
-    title: "좋은 사람, 좋은 술",
-    desc: "COCOC은 특정 목적을 가진 자발적 결사체입니다. 하나의 팀으로서 느끼는 유대감 — 즐겁지 않을 이유가 없습니다.",
+    desc: "COCOC에서 수행하는 업무를 통해 개인이 성장하는 과정을 추구합니다. COCOC에서 얻어가는 경험은 개인의 역량 강화에 큰 기여가 될 것입니다.",
   },
 ];
 
@@ -111,7 +106,7 @@ const valuesGridCss = css({
   gridTemplateColumns: "1fr",
   gap: "16px",
   "@sm": { gridTemplateColumns: "repeat(2,1fr)" },
-  "@lg": { gridTemplateColumns: "repeat(4,1fr)" },
+  "@lg": { gridTemplateColumns: "repeat(3,1fr)" },
 });
 
 const valueCardCss = css({
