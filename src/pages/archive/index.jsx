@@ -108,14 +108,16 @@ export default function ArchivePage() {
   const [filter, setFilter] = useState("전체");
   const [search, setSearch] = useState("");
   const [yearFilter, setYearFilter] = useState("전체");
+  const [baseFilter, setBaseFilter] = useState("전체");
   const { data: items = [] } = useArchiveList();
 
   const filtered = items.filter((d) => {
     const catOk = filter === "전체" || d.category === filter;
     const yearOk = yearFilter === "전체" || d.year === yearFilter;
+    const baseOk = baseFilter === "전체" || d.base === baseFilter;
     const searchOk =
       !search || d.title.toLowerCase().includes(search.toLowerCase());
-    return catOk && yearOk && searchOk;
+    return catOk && yearOk && baseOk && searchOk;
   });
 
   return (
@@ -149,6 +151,21 @@ export default function ArchivePage() {
           <div className={filterRightCss}>
             <div className={selectWrapCss}>
               <select
+                value={baseFilter}
+                onChange={(e) => setBaseFilter(e.target.value)}
+                className={selectCss}
+              >
+                <option value="전체">전체 베이스</option>
+                {[...new Set(items.map((d) => d.base).filter(Boolean))].sort().map((b) => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
+              <span className={selectIconCss}>
+                <ChevronDown size={14} />
+              </span>
+            </div>
+            <div className={selectWrapCss}>
+              <select
                 value={yearFilter}
                 onChange={(e) => setYearFilter(e.target.value)}
                 className={selectCss}
@@ -157,9 +174,7 @@ export default function ArchivePage() {
                 {[...new Set(items.map((d) => d.year))]
                   .sort((a, b) => b - a)
                   .map((y) => (
-                    <option key={y} value={y}>
-                      {y}
-                    </option>
+                    <option key={y} value={y}>{y}</option>
                   ))}
               </select>
               <span className={selectIconCss}>

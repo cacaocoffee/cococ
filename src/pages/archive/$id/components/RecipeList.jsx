@@ -2,54 +2,69 @@ import { motion } from "framer-motion";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 
-const recipesSectionCss = css({ marginBottom: "64px" });
+const sectionCss = css({ marginBottom: "64px" });
 
-const recipesTitleCss = css({
+const titleCss = css({
   fontSize: "20px",
   fontWeight: "900",
   color: colors.textPrimary,
   marginBottom: "24px",
 });
 
-const recipesGridCss = css({
+const gridCss = css({
   display: "grid",
   gridTemplateColumns: "1fr",
-  gap: "16px",
+  gap: "20px",
   "@sm": { gridTemplateColumns: "repeat(2,1fr)" },
+  "@lg": { gridTemplateColumns: "repeat(3,1fr)" },
 });
 
-const recipeCardCss = css({
+const cardCss = css({
   backgroundColor: colors.bgCard,
   border: `1px solid ${colors.borderLight}`,
   borderRadius: "1rem",
-  padding: "24px",
+  overflow: "hidden",
 });
 
-const recipeNumCss = css({
-  width: "32px",
-  height: "32px",
-  backgroundColor: "rgba(245,158,11,0.1)",
-  color: colors.brand,
-  borderRadius: "9999px",
+const imgWrapCss = css({
+  width: "100%",
+  aspectRatio: "4/3",
+  backgroundColor: "rgba(0,0,0,0.3)",
+  overflow: "hidden",
+});
+
+const imgCss = css({
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+  transition: "transform 0.4s ease",
+  _hover: { transform: "scale(1.04)" },
+});
+
+const imgPlaceholderCss = css({
+  width: "100%",
+  height: "100%",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  fontSize: "12px",
-  fontWeight: "900",
-  marginBottom: "16px",
+  fontSize: "40px",
+  opacity: "0.3",
 });
 
-const recipeNameCss = css({
+const bodyCss = css({ padding: "20px" });
+
+const nameCss = css({
   color: colors.textPrimary,
   fontWeight: "900",
   fontSize: "18px",
-  marginBottom: "8px",
+  marginBottom: "10px",
 });
 
-const recipeIngCss = css({
+const ingredientsCss = css({
   color: colors.textFaint,
-  fontSize: "14px",
-  lineHeight: "1.625",
+  fontSize: "13px",
+  lineHeight: "1.7",
+  whiteSpace: "pre-line",
 });
 
 export default function RecipeList({ recipes }) {
@@ -60,16 +75,30 @@ export default function RecipeList({ recipes }) {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.6 }}
-      className={recipesSectionCss}
+      className={sectionCss}
     >
-      <h2 className={recipesTitleCss}>이날의 레시피</h2>
-      <div className={recipesGridCss}>
+      <h2 className={titleCss}>이날의 레시피</h2>
+      <div className={gridCss}>
         {recipes.map((r, i) => (
-          <div key={i} className={recipeCardCss}>
-            <div className={recipeNumCss}>{i + 1}</div>
-            <h4 className={recipeNameCss}>{r.name}</h4>
-            <p className={recipeIngCss}>{r.ingredients}</p>
-          </div>
+          <motion.div
+            key={i}
+            className={cardCss}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65 + i * 0.07 }}
+          >
+            <div className={imgWrapCss}>
+              {r.img ? (
+                <img src={r.img} alt={r.name} className={imgCss} />
+              ) : (
+                <div className={imgPlaceholderCss}>🍸</div>
+              )}
+            </div>
+            <div className={bodyCss}>
+              <h4 className={nameCss}>{r.name}</h4>
+              <p className={ingredientsCss}>{r.ingredients}</p>
+            </div>
+          </motion.div>
         ))}
       </div>
     </motion.div>
