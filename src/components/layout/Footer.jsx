@@ -187,6 +187,15 @@ export default function Footer() {
       <div className={bottomCss}>
         <p className={copyCss}>© 2024 COCOC. All Rights Reserved.</p>
         <p className={mottosCss}>콕나투스 — COCOC은 궁극적으로 즐거움을 추구함으로써 존재한다.</p>
+        <Link
+          to="/admin"
+          className={css({
+            fontSize: '10px', color: colors.textDimmest, textDecoration: 'none',
+            _hover: { color: colors.textDimmer },
+          })}
+        >
+          Admin
+        </Link>
       </div>
     </footer>
   );
