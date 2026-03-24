@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Plus, Pencil, Trash2, BookOpen, Type, Image, X, ChevronUp, ChevronDown, GalleryHorizontal, FileText } from "lucide-react";
+import { useMagazineList } from "@/domain/magazine/magazine-query-options";
 import {
-  useMagazineList,
   useAddMagazine,
   useUpdateMagazine,
   useDeleteMagazine,
-} from "@/hooks/useMagazine";
+} from "@/domain/magazine/magazine-mutation-options";
 import {
   ConfirmModal,
   AlertModal,

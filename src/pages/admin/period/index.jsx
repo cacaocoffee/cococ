@@ -2,14 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ToggleLeft, ToggleRight, Calendar, Clock, Plus, X } from "lucide-react";
 
-import {
-  loadApplyPeriod,
-  saveApplyPeriod,
-  isApplyOpen,
-  loadInterviewSettings,
-  saveInterviewSettings,
-  DEFAULT_INTERVIEW_SETTINGS,
-} from "@/hooks/useApplications";
+import { applyService } from "@/domain/apply/apply-service";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 import { inputCss } from "../styles";
@@ -273,20 +266,20 @@ const combine = (d, t) => (d ? `${d}T${t || "00:00"}` : "");
 // ─── Component ────────────────────────────────────────────────
 export default function PeriodTab() {
   const [period, setPeriod] = useState(
-    () => loadApplyPeriod() || { start: "", end: "", enabled: true },
+    () => applyService.loadApplyPeriod() || { start: "", end: "", enabled: true },
   );
   const [interview, setInterview] = useState(
-    () => loadInterviewSettings() ?? DEFAULT_INTERVIEW_SETTINGS,
+    () => applyService.loadInterviewSettings() ?? applyService.DEFAULT_INTERVIEW_SETTINGS,
   );
   const [saved, setSaved] = useState(false);
 
   const [dateInput, setDateInput] = useState("");
 
-  const open = isApplyOpen();
+  const open = applyService.isApplyOpen();
 
   const save = () => {
-    saveApplyPeriod(period);
-    saveInterviewSettings(interview);
+    applyService.saveApplyPeriod(period);
+    applyService.saveInterviewSettings(interview);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };

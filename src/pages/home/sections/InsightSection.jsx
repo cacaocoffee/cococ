@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "@tanstack/react-router";
-import { useMagazineList } from "@/hooks/useMagazine";
+import { useMagazineList } from "@/domain/magazine/magazine-query-options";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";

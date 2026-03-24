@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useParams } from "@tanstack/react-router";
-import { useArchiveList } from "@/hooks/useArchive";
+import { useArchiveList } from "@/domain/archive/archive-query-options";
 import PageWrapper from "@/components/ui/PageWrapper";
 import BackButton from "@/components/ui/BackButton";
 import { css } from "@/lib/css";

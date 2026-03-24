@@ -1,4 +1,12 @@
 import { MAGAZINE_DATA } from '@/data';
-import { createLocalStorageAPI } from '@/api/factory';
+import { createLocalStorageAPI } from '@/lib/local-storage';
 
-export const magazineService = createLocalStorageAPI('cococ_magazine', MAGAZINE_DATA);
+const magazineStorage = createLocalStorageAPI('cococ_magazine', MAGAZINE_DATA);
+
+export const magazineService = {
+  fetchList: () => magazineStorage.getAll(),
+  fetchById: (id) => magazineStorage.getById(id),
+  create: (data) => magazineStorage.add(data),
+  update: (id, data) => magazineStorage.update(id, data),
+  delete: (id) => magazineStorage.remove(id),
+};

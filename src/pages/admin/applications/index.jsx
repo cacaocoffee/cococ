@@ -4,14 +4,7 @@ import {
   Users, Trash2, ChevronDown, ChevronUp,
   Download, Search, ArrowUpDown, Calendar,
 } from "lucide-react";
-import {
-  loadApplications,
-  updateStatus,
-  updateApplicationField,
-  deleteApplication,
-  loadInterviewSettings,
-  DEFAULT_INTERVIEW_SETTINGS,
-} from "@/hooks/useApplications";
+import { applyService } from "@/domain/apply/apply-service";
 import { ConfirmModal, useConfirm } from "@/components/ui/Modal";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
@@ -133,7 +126,7 @@ const deleteBtnCss = css({
 
 // ─── 면접 일정 그리드 (when2meet 스타일) ──────────────────────
 function InterviewScheduleEditor({ app, onSave }) {
-  const settings = loadInterviewSettings() ?? DEFAULT_INTERVIEW_SETTINGS;
+  const settings = applyService.loadInterviewSettings() ?? applyService.DEFAULT_INTERVIEW_SETTINGS;
   const { interviewDates: dates, interviewTimes: times } = settings;
   const available = new Set(app.interviewTimes ?? []);
   const confirmed = app.interviewSchedule;
@@ -616,13 +609,13 @@ export default function ApplicationsTab() {
             <ApplicationRow
               key={app.id}
               app={app}
-              onStatusChange={(id, newStatus) => setApps(updateStatus(id, newStatus))}
-              onSaveField={(id, fields) => setApps(updateApplicationField(id, fields))}
+              onStatusChange={(id, newStatus) => setApps(applyService.updateStatus(id, newStatus))}
+              onSaveField={(id, fields) => setApps(applyService.updateFields(id, fields))}
               onDelete={(id) =>
                 openConfirm({
                   title: "지원서를 삭제하시겠습니까?",
                   description: "삭제한 지원서는 복구할 수 없습니다.",
-                  onConfirm: () => setApps(deleteApplication(id)),
+                  onConfirm: () => setApps(applyService.deleteApplication(id)),
                 })
               }
             />

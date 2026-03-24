@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, Pencil, Trash2, Search, Archive, Type, Image, X, ChevronUp, ChevronDown } from "lucide-react";
+import { useArchiveList } from "@/domain/archive/archive-query-options";
 import {
-  useArchiveList,
   useAddArchive,
   useUpdateArchive,
   useDeleteArchive,
-} from "@/hooks/useArchive";
+} from "@/domain/archive/archive-mutation-options";
 import {
   ConfirmModal,
   AlertModal,

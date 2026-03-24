@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FAQ_DATA } from "@/data";
 import PageWrapper from "@/components/ui/PageWrapper";
 import SectionTitle from "@/components/ui/SectionTitle";
-import { saveApplication, isApplyOpen } from "@/hooks/useApplications";
+import { applyService } from "@/domain/apply/apply-service";
 import { AlertModal, useAlert } from "@/components/ui/Modal";
 import { css } from "@/lib/css";
 import { colors, shadows } from "@/lib/tokens";
@@ -188,7 +188,7 @@ const faqListCss = css({
 
 // ─── Main ─────────────────────────────────────────────────────
 export default function ApplyPage() {
-  const open = isApplyOpen();
+  const open = applyService.isApplyOpen();
   const { alertProps, openAlert } = useAlert();
 
   const [step, setStep] = useState(1);
@@ -255,7 +255,7 @@ export default function ApplyPage() {
       });
       return;
     }
-    saveApplication(form);
+    applyService.saveApplication(form);
     setSubmitted(true);
   };
 

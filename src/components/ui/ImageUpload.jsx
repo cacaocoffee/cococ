@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { ImagePlus, X, Loader } from 'lucide-react';
-import { uploadApi } from '@/api/upload';
+import { uploadService } from '@/lib/upload';
 import { css, cx } from '@/lib/css';
 import { colors } from '@/lib/tokens';
 
@@ -112,7 +112,7 @@ export default function ImageUpload({ label, value, onChange, required = false }
     if (!file) return;
     setLoading(true);
     try {
-      const url = await uploadApi.upload(file);
+      const url = await uploadService.upload(file);
       onChange(url);
     } finally {
       setLoading(false);

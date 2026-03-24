@@ -1,5 +1,5 @@
 import { useParams } from "@tanstack/react-router";
-import { useMagazineList } from "@/hooks/useMagazine";
+import { useMagazineList } from "@/domain/magazine/magazine-query-options";
 import PageWrapper from "@/components/ui/PageWrapper";
 import BackButton from "@/components/ui/BackButton";
 import { css } from "@/lib/css";

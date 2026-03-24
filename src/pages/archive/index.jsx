@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, ChevronDown } from "lucide-react";
-import { useArchiveList } from "@/hooks/useArchive";
+import { useArchiveList } from "@/domain/archive/archive-query-options";
 import PageWrapper from "@/components/ui/PageWrapper";
 import SectionTitle from "@/components/ui/SectionTitle";
 import ArchiveCard from "@/components/ui/ArchiveCard";

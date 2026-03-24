@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { ImagePlus, X, Loader } from 'lucide-react';
-import { uploadApi } from '@/api/upload';
+import { uploadService } from '@/lib/upload';
 import { css } from '@/lib/css';
 import { colors } from '@/lib/tokens';
 
@@ -85,7 +85,7 @@ export default function GalleryUpload({ label, value = [], onChange }) {
     if (!files?.length) return;
     setLoading(true);
     try {
-      const urls = await Promise.all(Array.from(files).map((f) => uploadApi.upload(f)));
+      const urls = await Promise.all(Array.from(files).map((f) => uploadService.upload(f)));
       onChange([...value, ...urls]);
     } finally {
       setLoading(false);

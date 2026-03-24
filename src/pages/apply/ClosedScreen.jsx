@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
-import { loadApplyPeriod } from "@/hooks/useApplications";
+import { applyService } from "@/domain/apply/apply-service";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 
@@ -41,7 +41,7 @@ const closedDescCss = css({
 const closedAccentCss = css({ color: colors.brand, fontWeight: "700" });
 
 export default function ClosedScreen() {
-  const period = loadApplyPeriod();
+  const period = applyService.loadApplyPeriod();
   return (
     <div className={closedWrapCss}>
       <motion.div

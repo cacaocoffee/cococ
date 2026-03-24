@@ -9,10 +9,7 @@ import {
 import RadioGroup from "../components/RadioGroup";
 import Scale from "../components/Scale";
 import InterviewMatrix from "../components/InterviewMatrix";
-import {
-  loadInterviewSettings,
-  DEFAULT_INTERVIEW_SETTINGS,
-} from "@/hooks/useApplications";
+import { applyService } from "@/domain/apply/apply-service";
 
 function Err({ msg }) {
   if (!msg) return null;
@@ -20,7 +17,7 @@ function Err({ msg }) {
 }
 
 export default function Step2Activity({ form, set, setV, errors = {} }) {
-  const settings = loadInterviewSettings() ?? DEFAULT_INTERVIEW_SETTINGS;
+  const settings = applyService.loadInterviewSettings() ?? applyService.DEFAULT_INTERVIEW_SETTINGS;
   const { mtDate, interviewDates, interviewTimes } = settings;
 
   return (

@@ -1,10 +1,10 @@
 /**
  * localStorage 기반 CRUD API 팩토리
- * 실제 서버 연동 시 이 팩토리 함수의 반환 객체 메서드를 fetch()로 교체하면 됩니다.
+ * 실제 서버 연동 시 반환 객체의 각 메서드를 fetch()로 교체하면 됩니다.
  *
  * @template T
  * @param {string} key - localStorage 키
- * @param {T[]} defaultData - 데이터가 없을 때 사용할 시드 데이터
+ * @param {T[]} defaultData - 데이터 없을 때 사용할 시드 데이터
  * @returns {{ getAll, getById, add, update, remove }}
  */
 export function createLocalStorageAPI(key, defaultData) {
@@ -40,7 +40,7 @@ export function createLocalStorageAPI(key, defaultData) {
     update: async (id, data) => {
       const base = read() ?? defaultData;
       const updated = base.map((item) =>
-        String(item.id) === String(id) ? { ...item, ...data } : item
+        String(item.id) === String(id) ? { ...item, ...data } : item,
       );
       write(updated);
       return updated;

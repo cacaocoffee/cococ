@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useMagazineList } from "@/hooks/useMagazine";
+import { useMagazineList } from "@/domain/magazine/magazine-query-options";
 import PageWrapper from "@/components/ui/PageWrapper";
 import SectionTitle from "@/components/ui/SectionTitle";
 import MagazineCard from "@/components/ui/MagazineCard";
