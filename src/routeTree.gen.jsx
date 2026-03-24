@@ -3,10 +3,69 @@ import {
   createRoute,
   createRootRoute,
   Outlet,
+  Link,
   redirect,
+  useRouter,
 } from "@tanstack/react-router";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
+
+// ─── 전역 404 / 에러 컴포넌트 ───────────────────────────────────
+const notFoundPageCss = css({
+  paddingTop: "160px",
+  paddingBottom: "96px",
+  textAlign: "center",
+  color: colors.textFaint,
+});
+const notFoundTitleCss = css({
+  fontSize: "18px",
+  fontWeight: "700",
+  marginBottom: "16px",
+  color: colors.textMuted,
+});
+const notFoundLinkCss = css({
+  display: "inline-block",
+  marginTop: "8px",
+  paddingInline: "24px",
+  paddingBlock: "10px",
+  border: `1.5px solid ${colors.brand}`,
+  color: colors.brand,
+  borderRadius: "9999px",
+  fontSize: "13px",
+  fontWeight: "700",
+  textDecoration: "none",
+  transition: "all 0.2s",
+  _hover: { backgroundColor: colors.brand, color: colors.bgPage },
+});
+
+function NotFoundPage() {
+  return (
+    <div className={notFoundPageCss}>
+      <p className={notFoundTitleCss}>페이지를 찾을 수 없습니다.</p>
+      <Link to="/" className={notFoundLinkCss}>홈으로 돌아가기</Link>
+    </div>
+  );
+}
+
+function ErrorPage({ error }) {
+  const router = useRouter();
+  return (
+    <div className={notFoundPageCss}>
+      <p className={notFoundTitleCss}>오류가 발생했습니다.</p>
+      <p style={{ fontSize: "13px", color: colors.textDimmer, marginBottom: "24px" }}>
+        {error?.message}
+      </p>
+      <button
+        className={notFoundLinkCss}
+        onClick={() => router.invalidate()}
+      >
+        다시 시도
+      </button>
+    </div>
+  );
+}
 import HomePage from "./pages/home/index";
 import ArchivePage from "./pages/archive/index";
 import ArchiveDetailPage from "./pages/archive/$id/index";
@@ -38,6 +97,8 @@ const rootRoute = createRootRoute({
       <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
     </div>
   ),
+  notFoundComponent: NotFoundPage,
+  errorComponent: ErrorPage,
 });
 
 // ─── Routes ───
