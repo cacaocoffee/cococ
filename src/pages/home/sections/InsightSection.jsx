@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "@tanstack/react-router";
-import { MAGAZINE_DATA } from "@/data";
+import { useMagazineList } from "@/hooks/useMagazine";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
@@ -108,20 +108,42 @@ const insightBtnCss = css({
 });
 
 export default function InsightSection() {
+  const { data: items = [] } = useMagazineList();
+  const latest = items[0];
+
+  const [thumb, setThumb] = useState("");
+  useEffect(() => {
+    if (!latest) return;
+    if (latest.img) { setThumb(latest.img); return; }
+    if (latest.magazineType !== "cardnews") return;
+    const firstUrl = latest.instagramUrls?.[0];
+    if (!firstUrl) return;
+    fetch(`https://api.microlink.io/?url=${encodeURIComponent(firstUrl)}`)
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.status === "success" && json.data?.image?.url) {
+          setThumb(json.data.image.url);
+        }
+      })
+      .catch(() => {});
+  }, [latest?.id, latest?.img, latest?.instagramUrls?.[0]]);
+
+  if (!latest) return null;
+
   return (
     <section className={insightSectionCss}>
       <div className={insightInnerCss}>
         <FadeUp>
           <div className={insightImgWrapCss}>
             <img
-              src={MAGAZINE_DATA[0].img}
+              src={thumb}
               alt="Insight"
               className={insightImgCss}
             />
             <div className={insightGradCss} />
             <div className={insightBottomCss}>
               <span className={insightBadgeCss}>New Magazine</span>
-              <h4 className={insightTitleCss}>{MAGAZINE_DATA[0].title}</h4>
+              <h4 className={insightTitleCss}>{latest.title}</h4>
             </div>
           </div>
         </FadeUp>
