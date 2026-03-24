@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { css } from "@/lib/css";
 import { colors, shadows } from "@/lib/tokens";
+import CococLogo from "@/components/ui/CococLogo";
 
 const heroSectionCss = css({
   position: "relative",
@@ -113,6 +114,14 @@ export default function HeroSection() {
         <div className={heroGradCss} />
       </div>
       <div className={heroContentCss}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.05 }}
+          style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}
+        >
+          <CococLogo size={180} color={colors.brand} />
+        </motion.div>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

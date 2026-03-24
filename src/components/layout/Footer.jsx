@@ -137,7 +137,7 @@ export default function Footer() {
       <div className={innerCss}>
         <div className={brandColCss}>
           <Link to="/" style={{ display: 'inline-block', color: colors.brand }}>
-            <CococLogo size={80} color={colors.brand} />
+            <CococLogo size={120} color={colors.brand} />
           </Link>
           <p className={descCss}>Creations Over Cocktail &amp; Offbeat Culture.</p>
           <p className={subDescCss}>

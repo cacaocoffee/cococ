@@ -116,7 +116,7 @@ export default function Navbar() {
   return (
     <nav className={navCss}>
       <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', color: colors.brand }}>
-        <CococLogo size={36} color={colors.brand} />
+        <CococLogo size={44} color={colors.brand} compact />
       </Link>
 
       <div className={desktopNavCss}>
