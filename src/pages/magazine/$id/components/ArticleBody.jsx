@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import ReactMarkdown from "react-markdown";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 
@@ -17,8 +18,6 @@ const contentListCss = css({
   flexDirection: "column",
   gap: "48px",
 });
-
-const sectionCss = css({});
 
 const sectionHeaderCss = css({
   display: "flex",
@@ -47,9 +46,82 @@ const sectionBodyCss = css({
   lineHeight: "1.9",
   fontSize: "16px",
   paddingLeft: "36px",
+  "& p": { marginBottom: "1em" },
+  "& strong": { color: colors.textPrimary, fontWeight: "700" },
+  "& em": { fontStyle: "italic" },
+  "& ul": { listStyleType: "disc", paddingLeft: "1.5em", marginBottom: "1em" },
+  "& ol": { listStyleType: "decimal", paddingLeft: "1.5em", marginBottom: "1em" },
+  "& li": { marginBottom: "0.25em" },
+  "& a": { color: colors.brand, textDecoration: "underline" },
+  "& blockquote": {
+    borderLeft: `3px solid ${colors.brand}`,
+    paddingLeft: "1em",
+    color: colors.textDimmer,
+    fontStyle: "italic",
+    margin: "1em 0",
+  },
 });
 
+const blockImageCss = css({
+  width: "100%",
+  borderRadius: "1rem",
+  objectFit: "cover",
+  maxHeight: "480px",
+});
+
+const captionCss = css({
+  textAlign: "center",
+  color: colors.textDimmer,
+  fontSize: "13px",
+  marginTop: "12px",
+});
+
+// 텍스트 블록 순번을 세기 위해 텍스트 블록만 카운트
+function ArticleBlock({ block, textIndex }) {
+  // 구버전 호환: type 없으면 text로 처리
+  const type = block.type ?? "text";
+
+  if (type === "image") {
+    return (
+      <figure style={{ margin: 0 }}>
+        <img src={block.url} alt={block.caption || ""} className={blockImageCss} />
+        {block.caption && <figcaption className={captionCss}>{block.caption}</figcaption>}
+      </figure>
+    );
+  }
+
+  return (
+    <div>
+      <div className={sectionHeaderCss}>
+        {block.heading && (
+          <>
+            <span className={sectionNumCss}>
+              {String(textIndex).padStart(2, "0")}
+            </span>
+            <h2 className={sectionTitleCss}>{block.heading}</h2>
+          </>
+        )}
+      </div>
+      <div className={block.heading ? sectionBodyCss : css({
+        color: colors.textMuted, lineHeight: "1.9", fontSize: "16px",
+        "& p": { marginBottom: "1em" },
+        "& strong": { color: colors.textPrimary, fontWeight: "700" },
+        "& em": { fontStyle: "italic" },
+        "& ul": { listStyleType: "disc", paddingLeft: "1.5em", marginBottom: "1em" },
+        "& ol": { listStyleType: "decimal", paddingLeft: "1.5em", marginBottom: "1em" },
+        "& li": { marginBottom: "0.25em" },
+        "& a": { color: colors.brand, textDecoration: "underline" },
+        "& blockquote": { borderLeft: `3px solid ${colors.brand}`, paddingLeft: "1em", color: colors.textDimmer, fontStyle: "italic", margin: "1em 0" },
+      })}>
+        <ReactMarkdown>{block.body}</ReactMarkdown>
+      </div>
+    </div>
+  );
+}
+
 export default function ArticleBody({ item }) {
+  let textCount = 0;
+
   return (
     <>
       <motion.p
@@ -62,23 +134,20 @@ export default function ArticleBody({ item }) {
       </motion.p>
 
       <div className={contentListCss}>
-        {(item.content || []).map((section, i) => (
-          <motion.div
-            key={i}
-            className={sectionCss}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45 + i * 0.08, duration: 0.55 }}
-          >
-            <div className={sectionHeaderCss}>
-              <span className={sectionNumCss}>
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h2 className={sectionTitleCss}>{section.heading}</h2>
-            </div>
-            <p className={sectionBodyCss}>{section.body}</p>
-          </motion.div>
-        ))}
+        {(item.content || []).map((block, i) => {
+          const type = block.type ?? "text";
+          if (type === "text") textCount++;
+          return (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45 + i * 0.08, duration: 0.55 }}
+            >
+              <ArticleBlock block={block} textIndex={textCount} />
+            </motion.div>
+          );
+        })}
       </div>
     </>
   );
