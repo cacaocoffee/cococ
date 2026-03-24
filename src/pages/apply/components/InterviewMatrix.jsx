@@ -1,15 +1,25 @@
-import { cx } from "@/lib/css";
-import { css } from "@/lib/css";
+import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 
 const wrapCss = css({ overflowX: "auto" });
+
 const tableCss = css({
   width: "100%",
-  fontSize: "12px",
+  fontSize: "11px",
   borderCollapse: "collapse",
-  minWidth: "480px",
+  tableLayout: "fixed",
 });
-const thCss = css({
+
+const thTimeCss = css({
+  width: "90px",
+  textAlign: "left",
+  color: colors.textFaint,
+  fontWeight: "700",
+  paddingBottom: "8px",
+  whiteSpace: "nowrap",
+});
+
+const thDateCss = css({
   textAlign: "center",
   color: colors.textMuted,
   fontWeight: "700",
@@ -17,45 +27,40 @@ const thCss = css({
   paddingInline: "4px",
   whiteSpace: "nowrap",
 });
-const thDateCss = css({
-  width: "100px",
-  textAlign: "left",
-  color: colors.textFaint,
-  fontWeight: "700",
-  paddingBottom: "8px",
-});
-const tdDateCss = css({
+
+const tdTimeCss = css({
   color: colors.textFaint,
   paddingRight: "12px",
-  paddingBlock: "6px",
+  paddingBlock: "4px",
   fontSize: "11px",
-  whiteSpace: "nowrap",
   fontWeight: "700",
+  whiteSpace: "nowrap",
 });
+
 const tdCss = css({
   textAlign: "center",
-  paddingBlock: "6px",
+  paddingBlock: "4px",
   paddingInline: "4px",
 });
 
 const btnBaseCss = css({
-  width: "36px",
-  height: "36px",
-  borderRadius: "0.5rem",
+  width: "100%",
+  height: "32px",
+  borderRadius: "6px",
   border: `1px solid ${colors.borderInput}`,
-  transition: "all 0.2s",
+  transition: "all 0.15s",
   cursor: "pointer",
   background: "none",
-  color: colors.textDimmer,
-  fontSize: "13px",
-  _hover: { borderColor: "rgba(245,158,11,0.4)" },
+  fontSize: "11px",
+  fontWeight: "800",
+  color: "transparent",
+  _hover: { borderColor: "rgba(245,158,11,0.5)", backgroundColor: "rgba(245,158,11,0.08)" },
 });
 
 const btnActiveCss = css({
-  backgroundColor: colors.brand,
-  borderColor: colors.brand,
-  color: colors.bgPage,
-  fontWeight: "900",
+  backgroundColor: "rgba(245,158,11,0.18)",
+  borderColor: "rgba(245,158,11,0.5)",
+  color: "rgba(245,158,11,0.9)",
 });
 
 const emptyMsgCss = css({
@@ -68,15 +73,9 @@ const emptyMsgCss = css({
 });
 
 /**
- * 면접 가능 시간 매트릭스
- * @param {{ dates: string[], times: string[], value: string[], onChange: (v: string[]) => void }} props
+ * 면접 가능 시간 매트릭스 (날짜=열, 시간=행)
  */
-export default function InterviewMatrix({
-  dates = [],
-  times = [],
-  value,
-  onChange,
-}) {
+export default function InterviewMatrix({ dates = [], times = [], value, onChange }) {
   if (!dates.length || !times.length) {
     return (
       <p className={emptyMsgCss}>
@@ -91,6 +90,7 @@ export default function InterviewMatrix({
     next.has(key) ? next.delete(key) : next.add(key);
     onChange([...next]);
   };
+
   const isChecked = (date, time) => value.includes(`${date}__${time}`);
 
   return (
@@ -98,30 +98,24 @@ export default function InterviewMatrix({
       <table className={tableCss}>
         <thead>
           <tr>
-            <th className={thDateCss} />
-            {times.map((t) => (
-              <th key={t} className={thCss}>
-                {t}
-              </th>
+            <th className={thTimeCss} />
+            {dates.map((d) => (
+              <th key={d} className={thDateCss}>{d}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {dates.map((date) => (
-            <tr key={date}>
-              <td className={tdDateCss}>{date}</td>
-              {times.map((time) => (
-                <td key={time} className={tdCss}>
+          {times.map((time) => (
+            <tr key={time}>
+              <td className={tdTimeCss}>{time}</td>
+              {dates.map((date) => (
+                <td key={date} className={tdCss}>
                   <button
                     type="button"
                     onClick={() => toggle(date, time)}
-                    className={cx(
-                      btnBaseCss,
-                      isChecked(date, time) ? btnActiveCss : "",
-                    )}
-                  >
-                    {isChecked(date, time) ? "✓" : ""}
-                  </button>
+                    className={cx(btnBaseCss, isChecked(date, time) ? btnActiveCss : "")}
+                  />
+
                 </td>
               ))}
             </tr>
