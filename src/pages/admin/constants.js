@@ -44,6 +44,7 @@ export const EMPTY_ARCHIVE = {
   tags: "",
   gallery: [],
   recipes: "",
+  recipePdfs: [],
   year: "",
   semester: "",
 };
@@ -56,5 +57,5 @@ export const EMPTY_MAG = {
   excerpt: "",
   img: "",
   tags: "",
-  content: "",
+  content: [],
 };

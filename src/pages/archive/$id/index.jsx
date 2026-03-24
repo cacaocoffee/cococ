@@ -8,6 +8,7 @@ import { colors } from "@/lib/tokens";
 import HeroSection from "./components/HeroSection";
 import MetaRow from "./components/MetaRow";
 import Gallery from "./components/Gallery";
+import RecipeCards from "./components/RecipeCards";
 import RecipeList from "./components/RecipeList";
 
 const notFoundCss = css({
@@ -71,6 +72,7 @@ export default function ArchiveDetailPage() {
           </motion.p>
 
           <Gallery gallery={item.gallery} />
+          <RecipeCards recipePdfs={item.recipePdfs} />
           <RecipeList recipes={item.recipes} />
 
           <BackButton label="전체 아카이브 보기" />

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Pencil, Trash2, Search, Archive } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Archive, FileText, X } from "lucide-react";
 import {
   useArchiveList,
   useAddArchive,
@@ -51,9 +51,15 @@ import {
 
 // ─── ArchiveForm ──────────────────────────────────────────────
 function ArchiveForm({ initial = EMPTY_ARCHIVE, onSave, onCancel, onAlert }) {
-  const [f, setF] = useState(initial);
+  const [f, setF] = useState({ recipePdfs: [], ...initial });
   const set = (k) => (e) => setF((p) => ({ ...p, [k]: e.target.value }));
   const setV = (k) => (v) => setF((p) => ({ ...p, [k]: v }));
+
+  const pdfs = f.recipePdfs ?? [];
+  const addPdf = () => setF((p) => ({ ...p, recipePdfs: [...pdfs, { title: "", url: "" }] }));
+  const removePdf = (i) => setF((p) => ({ ...p, recipePdfs: pdfs.filter((_, idx) => idx !== i) }));
+  const updatePdf = (i, patch) =>
+    setF((p) => ({ ...p, recipePdfs: pdfs.map((pdf, idx) => (idx === i ? { ...pdf, ...patch } : pdf)) }));
 
   const handleSave = () => {
     if (!f.title || !f.date || !f.description) {
@@ -70,6 +76,7 @@ function ArchiveForm({ initial = EMPTY_ARCHIVE, onSave, onCancel, onAlert }) {
             .filter(Boolean)
         : [],
       gallery: Array.isArray(f.gallery) ? f.gallery : [],
+      recipePdfs: (f.recipePdfs ?? []).filter((p) => p.url.trim()),
       recipes: f.recipes
         ? f.recipes
             .split("\n")
@@ -199,6 +206,61 @@ function ArchiveForm({ initial = EMPTY_ARCHIVE, onSave, onCancel, onAlert }) {
           placeholder="Negroni | Gin 30ml · Campari 30ml"
         />
       </div>
+
+      {/* 레시피 카드 PDF */}
+      <div>
+        <label className={labelCss}>레시피 카드 PDF</label>
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          {pdfs.map((pdf, i) => (
+            <div
+              key={i}
+              style={{
+                display: "flex", gap: "8px", alignItems: "center",
+                backgroundColor: "rgba(0,0,0,0.2)", borderRadius: "0.75rem", padding: "10px 12px",
+              }}
+            >
+              <FileText size={16} style={{ color: colors.brand, flexShrink: 0 }} />
+              <input
+                value={pdf.title}
+                onChange={(e) => updatePdf(i, { title: e.target.value })}
+                placeholder="카드 제목 (예: Blackthorn)"
+                className={inputCss}
+                style={{ flex: "1" }}
+              />
+              <input
+                value={pdf.url}
+                onChange={(e) => updatePdf(i, { url: e.target.value })}
+                placeholder="PDF URL"
+                className={inputCss}
+                style={{ flex: "2" }}
+              />
+              <button
+                onClick={() => removePdf(i)}
+                style={{
+                  width: "28px", height: "28px", borderRadius: "0.5rem", border: "none",
+                  backgroundColor: "rgba(239,68,68,0.1)", color: "#f87171",
+                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <X size={13} />
+              </button>
+            </div>
+          ))}
+          <button
+            onClick={addPdf}
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
+              paddingBlock: "10px", borderRadius: "0.75rem", fontSize: "12px", fontWeight: "700",
+              border: `1px dashed ${colors.borderInput}`, cursor: "pointer", background: "none",
+              color: colors.textDimmer, transition: "all 0.15s",
+            }}
+          >
+            <Plus size={13} /> PDF 추가
+          </button>
+        </div>
+      </div>
+
       <div className={formBtnRowCss}>
         <button onClick={onCancel} className={cancelBtnCss}>
           취소
@@ -313,7 +375,7 @@ export default function ArchiveTab() {
             </div>
             <div className={itemActionsCss}>
               <motion.button
-                onClick={() => setMode(toForm(item))}
+                onClick={() => setMode(item)}
                 whileTap={{ scale: 0.93 }}
                 className={editBtnCss}
               >
