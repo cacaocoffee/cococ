@@ -1,19 +1,16 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { LogOut, Users, Archive, BookOpen, CalendarClock } from "lucide-react";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 import LoginScreen from "./LoginScreen";
-import ApplicationsTab from "./tabs/ApplicationsTab";
-import PeriodTab from "./tabs/PeriodTab";
-import ArchiveTab from "./tabs/ArchiveTab";
-import MagazineTab from "./tabs/MagazineTab";
 
 const TABS = [
-  { key: "applications", label: "지원서", icon: Users },
-  { key: "period", label: "접수 기간", icon: CalendarClock },
-  { key: "archive", label: "아카이브", icon: Archive },
-  { key: "magazine", label: "매거진", icon: BookOpen },
+  { key: "applications", label: "지원서",    icon: Users,         to: "/admin/applications" },
+  { key: "period",       label: "접수 기간", icon: CalendarClock, to: "/admin/period" },
+  { key: "archive",      label: "아카이브",  icon: Archive,       to: "/admin/archive" },
+  { key: "magazine",     label: "매거진",    icon: BookOpen,      to: "/admin/magazine" },
 ];
 
 const pageCss = css({
@@ -100,7 +97,10 @@ export default function AdminPage() {
   const [authed, setAuthed] = useState(
     () => sessionStorage.getItem("cococ_admin") === "1",
   );
-  const [tab, setTab] = useState("applications");
+  const navigate = useNavigate();
+  const { location } = useRouterState();
+
+  const activeKey = TABS.find((t) => location.pathname.startsWith(t.to))?.key ?? "applications";
 
   if (!authed) return <LoginScreen onLogin={() => setAuthed(true)} />;
 
@@ -125,13 +125,13 @@ export default function AdminPage() {
       </div>
 
       <div className={tabBarCss}>
-        {TABS.map(({ key, label, icon: Icon }) => (
+        {TABS.map(({ key, label, icon: Icon, to }) => (
           <button
             key={key}
-            onClick={() => setTab(key)}
+            onClick={() => navigate({ to })}
             className={cx(
               tabBtnBaseCss,
-              tab === key ? tabBtnActiveCss : tabBtnInactiveCss,
+              activeKey === key ? tabBtnActiveCss : tabBtnInactiveCss,
             )}
           >
             <Icon size={15} /> {label}
@@ -141,16 +141,13 @@ export default function AdminPage() {
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={tab}
+          key={activeKey}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.25 }}
         >
-          {tab === "applications" && <ApplicationsTab />}
-          {tab === "period" && <PeriodTab />}
-          {tab === "archive" && <ArchiveTab />}
-          {tab === "magazine" && <MagazineTab />}
+          <Outlet />
         </motion.div>
       </AnimatePresence>
     </div>
