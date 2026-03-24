@@ -50,7 +50,7 @@ const typeTabRowCss = css({
   gap: "8px",
   marginBottom: "20px",
 });
-const typeTabCss = (active) => css({
+const typeTabBaseCss = css({
   flex: "1",
   display: "flex",
   alignItems: "center",
@@ -60,11 +60,16 @@ const typeTabCss = (active) => css({
   borderRadius: "0.75rem",
   fontSize: "13px",
   fontWeight: "700",
-  border: `1px solid ${active ? colors.brand : colors.borderInput}`,
-  background: active ? `${colors.brand}18` : "none",
-  color: active ? colors.brand : colors.textDimmer,
   cursor: "pointer",
   transition: "all 0.15s",
+  border: `1px solid ${colors.borderInput}`,
+  background: "none",
+  color: colors.textDimmer,
+});
+const typeTabActiveCss = css({
+  border: `1px solid ${colors.brand}`,
+  background: `${colors.brand}18`,
+  color: colors.brand,
 });
 
 // ─── 슬라이드 에디터 스타일 ───────────────────────────────────
@@ -200,10 +205,10 @@ function MagazineForm({ initial = EMPTY_MAG, onSave, onCancel, onAlert }) {
       <div>
         <label className={labelCss}>매거진 타입</label>
         <div className={typeTabRowCss}>
-          <button className={typeTabCss(magType === "blog")} onClick={() => setMagType("blog")}>
+          <button className={`${typeTabBaseCss} ${magType === "blog" ? typeTabActiveCss : ""}`} onClick={() => setMagType("blog")}>
             <FileText size={14} /> 블로그 글
           </button>
-          <button className={typeTabCss(magType === "cardnews")} onClick={() => setMagType("cardnews")}>
+          <button className={`${typeTabBaseCss} ${magType === "cardnews" ? typeTabActiveCss : ""}`} onClick={() => setMagType("cardnews")}>
             <GalleryHorizontal size={14} /> 카드 뉴스
           </button>
         </div>
