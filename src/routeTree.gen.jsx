@@ -18,7 +18,6 @@ import ApplicationsTab from "./pages/admin/applications";
 import PeriodTab from "./pages/admin/period";
 import ArchiveTab from "./pages/admin/archive";
 import MagazineTab from "./pages/admin/magazine";
-import { ARCHIVE_DATA, MAGAZINE_DATA } from "@/data";
 
 const marqueeStyle = `
   @keyframes marquee {
@@ -55,11 +54,6 @@ const archiveRoute = createRoute({
 const archiveDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/archive/$id",
-  loader: ({ params }) => {
-    const item = ARCHIVE_DATA.find((d) => String(d.id) === params.id);
-    if (!item) throw new Error("Not found");
-    return { item };
-  },
   component: ArchiveDetailPage,
 });
 const magazineRoute = createRoute({
@@ -70,11 +64,6 @@ const magazineRoute = createRoute({
 const magazineDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/magazine/$id",
-  loader: ({ params }) => {
-    const item = MAGAZINE_DATA.find((m) => String(m.id) === params.id);
-    if (!item) throw new Error("Not found");
-    return { item };
-  },
   component: MagazineDetailPage,
 });
 const applyRoute = createRoute({
