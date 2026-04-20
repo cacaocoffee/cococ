@@ -2,7 +2,20 @@
   "permissions": {
     "allow": [
       "Bash(node -e \":*)",
-      "Bash(node scripts/apply-service-migrate.cjs)"
+      "Bash(node scripts/apply-service-migrate.cjs)",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); print\\(data[0][''''text'''']\\)\")",
+      "Bash(mv domain/archive/archive-dto.js domain/archive/archive-dto.ts)",
+      "Bash(mv domain/archive/archive-service.js domain/archive/archive-service.ts)",
+      "Bash(mv domain/archive/archive-query-options.js domain/archive/archive-query-options.ts)",
+      "Bash(mv domain/archive/archive-mutation-options.js domain/archive/archive-mutation-options.ts)",
+      "Bash(mv domain/magazine/magazine-dto.js domain/magazine/magazine-dto.ts)",
+      "Bash(mv admin/index.jsx admin/index.tsx)",
+      "Bash(mv admin/LoginScreen.jsx admin/LoginScreen.tsx)",
+      "Bash(mv admin/constants.js admin/constants.ts)",
+      "Bash(mv admin/styles.js admin/styles.ts)",
+      "Bash(mv admin/components/DatePicker.jsx admin/components/DatePicker.tsx)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(bash /tmp/git-me-help-install.sh)"
     ]
   }
 }
