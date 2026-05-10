@@ -5,6 +5,7 @@ import { LogOut, Users, Archive, BookOpen, CalendarClock } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
+import { apiFetch, clearAdminToken, getAdminToken } from "@/lib/api";
 import LoginScreen from "./LoginScreen";
 
 interface Tab {
@@ -102,9 +103,7 @@ const tabBtnInactiveCss = css({
 });
 
 export default function AdminPage() {
-  const [authed, setAuthed] = useState<boolean>(
-    () => sessionStorage.getItem("cococ_admin") === "1",
-  );
+  const [authed, setAuthed] = useState<boolean>(() => Boolean(getAdminToken()));
   const navigate = useNavigate();
   const { location } = useRouterState();
 
@@ -120,8 +119,13 @@ export default function AdminPage() {
           <h1 className={titleCss}>COCOC 관리자</h1>
         </div>
         <motion.button
-          onClick={() => {
-            sessionStorage.removeItem("cococ_admin");
+          onClick={async () => {
+            try {
+              await apiFetch("/api/admin/logout", { method: "POST" });
+            } catch {
+              // 네트워크 실패해도 클라 토큰은 제거
+            }
+            clearAdminToken();
             setAuthed(false);
           }}
           whileHover={{ scale: 1.03 }}
