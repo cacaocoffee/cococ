@@ -1,15 +1,6 @@
 import type { ArchiveItem } from '@/domain/archive/archive-dto';
 import type { MagazineItem } from '@/domain/magazine/magazine-dto';
 
-export interface ScheduleEvent {
-  id: number;
-  title: string;
-  date: string;
-  endDate?: string;
-  type: '클래스' | '내부행사';
-  archiveId: number | null;
-}
-
 export interface FaqItem {
   q: string;
   a: string;
@@ -165,28 +156,6 @@ export const ARCHIVE_DATA: ArchiveItem[] = [
     ],
     content: [],
   },
-];
-
-export const SCHEDULE_DATA: ScheduleEvent[] = [
-  { id: 1,  title: "첫번째 클래스, 시음회",    date: "2025-12-06", type: "클래스",   archiveId: 7 },
-  { id: 2,  title: "클래스 A팀",               date: "2025-12-20", type: "클래스",   archiveId: null },
-  { id: 3,  title: "친해지길 바래 주간",        date: "2025-12-14", endDate: "2026-01-03", type: "내부행사", archiveId: null },
-  { id: 4,  title: "클래스 B팀",               date: "2026-01-03", type: "클래스",   archiveId: null },
-  { id: 5,  title: "신년회, 친해지길 바래 발표", date: "2026-01-17", type: "클래스",   archiveId: null },
-  { id: 6,  title: "클래스 A팀",               date: "2026-02-07", type: "클래스",   archiveId: null },
-  { id: 7,  title: "클래스 B팀",               date: "2026-02-21", type: "클래스",   archiveId: null },
-  { id: 8,  title: "개강총회",                 date: "2026-03-07", type: "내부행사", archiveId: null },
-  { id: 9,  title: "클래스 A팀",               date: "2026-03-21", type: "클래스",   archiveId: null },
-  { id: 10, title: "클래스 B팀",               date: "2026-04-04", type: "클래스",   archiveId: null },
-  { id: 11, title: "내부 행사",                date: "2026-04-18", type: "내부행사", archiveId: null },
-  { id: 12, title: "클래스 A팀",               date: "2026-05-16", type: "클래스",   archiveId: null },
-  { id: 13, title: "방학식",                   date: "2026-05-30", type: "내부행사", archiveId: null },
-  { id: 14, title: "방학 특강",                date: "2026-07-18", type: "내부행사", archiveId: null },
-  { id: 15, title: "클래스 B팀",               date: "2026-08-08", type: "클래스",   archiveId: null },
-  { id: 16, title: "클래스 A팀",               date: "2026-08-22", type: "클래스",   archiveId: null },
-  { id: 17, title: "클래스 B팀",               date: "2026-09-05", type: "클래스",   archiveId: null },
-  { id: 18, title: "클래스 A팀",               date: "2026-09-19", type: "클래스",   archiveId: null },
-  { id: 19, title: "엔딩파티",                 date: "2026-10-03", type: "내부행사", archiveId: null },
 ];
 
 export const MAGAZINE_DATA: MagazineItem[] = [

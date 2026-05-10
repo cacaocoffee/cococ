@@ -2,20 +2,12 @@ import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, CalendarDays, ExternalLink } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { SCHEDULE_DATA } from '@/data';
 import PageWrapper from '@/components/ui/PageWrapper';
 import SectionTitle from '@/components/ui/SectionTitle';
 import { css, cx } from '@/lib/css';
 import { colors } from '@/lib/tokens';
-
-interface ScheduleEvent {
-  id: number;
-  title: string;
-  date: string;
-  endDate?: string;
-  type: '클래스' | '내부행사';
-  archiveId: number | null;
-}
+import { useScheduleList } from '@/domain/schedule/schedule-query-options';
+import type { ScheduleEvent } from '@/domain/schedule/schedule-dto';
 
 const DAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -268,6 +260,9 @@ export default function SchedulePage() {
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
 
+  const { data: schedules, isLoading, isError } = useScheduleList();
+  const allEvents = useMemo<ScheduleEvent[]>(() => schedules ?? [], [schedules]);
+
   const prevMonth = () => {
     if (month === 0) { setYear(y => y - 1); setMonth(11); }
     else setMonth(m => m - 1);
@@ -302,18 +297,18 @@ export default function SchedulePage() {
 
   // 해당 월의 이벤트
   const monthEvents = useMemo(() => {
-    return (SCHEDULE_DATA as ScheduleEvent[]).filter(ev => {
+    return allEvents.filter(ev => {
       const start = dateFromStr(ev.date);
       const end = ev.endDate ? dateFromStr(ev.endDate) : start;
       const mStart = new Date(year, month, 1);
       const mEnd = new Date(year, month + 1, 0);
       return start <= mEnd && end >= mStart;
     }).sort((a, b) => a.date.localeCompare(b.date));
-  }, [year, month]);
+  }, [allEvents, year, month]);
 
   // 셀별 이벤트
   const eventsForDate = (date: Date): ScheduleEvent[] =>
-    (SCHEDULE_DATA as ScheduleEvent[]).filter(ev => isInRange(date, ev));
+    allEvents.filter(ev => isInRange(date, ev));
 
   return (
     <PageWrapper>
@@ -436,7 +431,13 @@ export default function SchedulePage() {
                 <CalendarDays size={13} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
                 {formatMonthTitle(year, month)} 일정
               </div>
-              {monthEvents.length === 0 ? (
+              {isLoading ? (
+                <div className={emptyListCss}>일정을 불러오는 중...</div>
+              ) : isError ? (
+                <div className={emptyListCss} style={{ color: '#f87171' }}>
+                  일정을 불러올 수 없습니다.
+                </div>
+              ) : monthEvents.length === 0 ? (
                 <div className={emptyListCss}>이번 달 일정이 없습니다.</div>
               ) : (
                 monthEvents.map(ev => {
