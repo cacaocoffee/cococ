@@ -1,0 +1,124 @@
+// ──────────────────────────────────────────────────────────
+// Prisma 스키마 파일
+// 이 파일은 데이터베이스의 "설계도"입니다.
+// 테이블(모델)과 각 컬럼(필드)을 정의합니다.
+// ──────────────────────────────────────────────────────────
+
+// "generator"는 Prisma가 TypeScript 코드를 자동 생성하는 설정입니다.
+// npx prisma generate 명령을 실행하면 @prisma/client 라이브러리가
+// 이 스키마를 읽고, 타입이 포함된 DB 접근 코드를 만들어줍니다.
+generator client {
+  provider = "prisma-client-js"
+}
+
+// "datasource"는 어떤 데이터베이스를 사용할지 지정합니다.
+// provider = "sqlite" → SQLite 파일 기반 DB 사용
+// url → 데이터베이스 파일 경로 (file:./dev.db 면 prisma 폴더 안에 dev.db 파일 생성)
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// ──────────────────────────────────────────────────────────
+// 아카이브 (과거 행사/클래스 기록)
+// ──────────────────────────────────────────────────────────
+model Archive {
+  id          Int      @id @default(autoincrement()) // 고유 번호 (자동 증가)
+  year        String                                  // 연도 ("2024")
+  semester    String   @default("")                   // 학기 ("1학기")
+  category    String                                  // 카테고리 ("정기 클래스", "외부 협업" 등)
+  title       String                                  // 제목
+  date        String                                  // 날짜 ("2024.03.15")
+  base        String                                  // 베이스 주류 ("Gin", "Whiskey" 등)
+  img         String   @default("")                   // 대표 이미지 URL
+  participants Int     @default(0)                    // 참가 인원
+  location    String   @default("")                   // 장소
+  description String   @default("")                   // 설명
+  tags        String   @default("[]")                 // 태그 (JSON 문자열로 저장)
+  gallery     String   @default("[]")                 // 갤러리 이미지들 (JSON 문자열)
+  recipes     String   @default("[]")                 // 레시피들 (JSON 문자열)
+  content     String   @default("[]")                 // 본문 콘텐츠 블록 (JSON 문자열)
+  createdAt   DateTime @default(now())                // 생성일시 (자동)
+}
+
+// ──────────────────────────────────────────────────────────
+// 매거진 (아티클, 카드뉴스)
+// ──────────────────────────────────────────────────────────
+model Magazine {
+  id            Int      @id @default(autoincrement())
+  title         String
+  author        String
+  date          String
+  readTime      String   @default("")
+  excerpt       String   @default("")
+  img           String   @default("")
+  tags          String   @default("[]")             // JSON 문자열
+  magazineType  String   @default("")               // "cardnews" 또는 "article"
+  instagramUrls String   @default("[]")             // JSON 문자열
+  content       String   @default("[]")             // JSON 문자열
+  createdAt     DateTime @default(now())
+}
+
+// ──────────────────────────────────────────────────────────
+// 지원서 (멤버 가입 신청)
+// ──────────────────────────────────────────────────────────
+model Application {
+  id             Int      @id @default(autoincrement())
+  submittedAt    DateTime @default(now())            // 제출 일시
+  status         String   @default("pending")        // "pending" | "pass" | "fail"
+
+  // 개인 정보
+  name           String
+  gender         String
+  birthdate      String
+  phone          String
+  email          String
+  sns            String   @default("")
+
+  // 활동 관련
+  mtAvailable    String   @default("")               // MT 참석 가능 여부
+  mainContact    String   @default("")               // 주 연락 수단
+  availableTimes String   @default("[]")             // JSON 문자열
+  interviewTimes String   @default("[]")             // JSON 문자열
+
+  // 질문 응답
+  scaleGourmet   Int      @default(0)                // 미식 관심도 (1~5)
+  scalePeople    Int      @default(0)                // 사교 관심도 (1~5)
+  q3_1_style     String   @default("")
+  q1_intro       String   @default("")
+  q2_drink       String   @default("")
+  q3_2_reason    String   @default("")
+  qEtc           String   @default("")
+}
+
+// ──────────────────────────────────────────────────────────
+// 일정 (스케줄)
+// ──────────────────────────────────────────────────────────
+model Schedule {
+  id        Int      @id @default(autoincrement())
+  title     String
+  date      String                                    // "2026-03-21"
+  endDate   String   @default("")                    // 기간 행사용 종료일
+  type      String                                    // "클래스" | "내부행사"
+  archiveId Int?                                      // 연결된 아카이브 ID (없으면 null)
+}
+
+// ──────────────────────────────────────────────────────────
+// 면접 설정
+// ──────────────────────────────────────────────────────────
+model InterviewSetting {
+  id             Int    @id @default(1)               // 항상 1개만 존재
+  mtDate         String @default("")
+  interviewDates String @default("[]")                // JSON 문자열
+  interviewTimes String @default("[]")                // JSON 문자열
+}
+
+// ──────────────────────────────────────────────────────────
+// 지원 기간 설정
+// ──────────────────────────────────────────────────────────
+model ApplyPeriod {
+  id          Int     @id @default(1)                 // 항상 1개만 존재
+  start       String  @default("")
+  end         String  @default("")
+  forceClosed Boolean @default(false)
+}
