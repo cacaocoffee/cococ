@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
-import { ADMIN_PASSWORD } from "./constants";
+import { apiFetch, setAdminToken } from "@/lib/api";
 import { inputCss, inputErrorCss } from "./styles";
 
 const wrapCss = css({
@@ -53,12 +53,6 @@ const errorCss = css({
   fontSize: "12px",
   paddingInline: "4px",
 });
-const hintCss = css({
-  textAlign: "center",
-  color: colors.textDimmest,
-  fontSize: "12px",
-  marginTop: "24px",
-});
 
 interface Props {
   onLogin: () => void;
@@ -68,12 +62,16 @@ export default function LoginScreen({ onLogin }: Props) {
   const [pw, setPw] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
 
-  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (pw === ADMIN_PASSWORD) {
-      sessionStorage.setItem("cococ_admin", "1");
+    try {
+      const { token } = await apiFetch<{ token: string; expiresAt: number }>(
+        "/api/admin/login",
+        { method: "POST", body: JSON.stringify({ password: pw }) },
+      );
+      setAdminToken(token);
       onLogin();
-    } else {
+    } catch {
       setError(true);
       setPw("");
       setTimeout(() => setError(false), 2000);
@@ -112,7 +110,6 @@ export default function LoginScreen({ onLogin }: Props) {
             로그인
           </motion.button>
         </form>
-        <p className={hintCss}>기본 비밀번호: cococ2024</p>
       </motion.div>
     </div>
   );

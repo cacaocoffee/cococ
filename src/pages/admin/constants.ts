@@ -2,8 +2,6 @@ import { CheckCircle, XCircle, Clock, Star } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { colors } from "@/lib/tokens";
 
-export const ADMIN_PASSWORD = "cococ2024";
-
 interface StatusConfig {
   label: string;
   color: string;
