@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { LogOut, Users, Archive, BookOpen, CalendarClock } from "lucide-react";
+import { LogOut, Users, Archive, BookOpen, CalendarClock, CalendarDays } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
@@ -17,6 +17,7 @@ interface Tab {
 const TABS: Tab[] = [
   { key: "applications", label: "지원서",    icon: Users,         to: "/admin/applications" },
   { key: "period",       label: "접수 기간", icon: CalendarClock, to: "/admin/period" },
+  { key: "schedule",     label: "일정",      icon: CalendarDays,  to: "/admin/schedule" },
   { key: "archive",      label: "아카이브",  icon: Archive,       to: "/admin/archive" },
   { key: "magazine",     label: "매거진",    icon: BookOpen,      to: "/admin/magazine" },
 ];

@@ -2,19 +2,19 @@ import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, CalendarDays, ExternalLink } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { SCHEDULE_DATA } from '@/data';
+import { useScheduleList } from '@/domain/schedule/schedule-query-options';
 import PageWrapper from '@/components/ui/PageWrapper';
 import SectionTitle from '@/components/ui/SectionTitle';
 import { css, cx } from '@/lib/css';
 import { colors } from '@/lib/tokens';
 
 interface ScheduleEvent {
-  id: number;
+  id: string | number;
   title: string;
   date: string;
   endDate?: string;
   type: '클래스' | '내부행사';
-  archiveId: number | null;
+  archiveId: string | number | null;
 }
 
 const DAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
@@ -267,6 +267,8 @@ export default function SchedulePage() {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
+  const { data: scheduleData = [] } = useScheduleList();
+  const events = scheduleData as ScheduleEvent[];
 
   const prevMonth = () => {
     if (month === 0) { setYear(y => y - 1); setMonth(11); }
@@ -302,18 +304,18 @@ export default function SchedulePage() {
 
   // 해당 월의 이벤트
   const monthEvents = useMemo(() => {
-    return (SCHEDULE_DATA as ScheduleEvent[]).filter(ev => {
+    return events.filter(ev => {
       const start = dateFromStr(ev.date);
       const end = ev.endDate ? dateFromStr(ev.endDate) : start;
       const mStart = new Date(year, month, 1);
       const mEnd = new Date(year, month + 1, 0);
       return start <= mEnd && end >= mStart;
     }).sort((a, b) => a.date.localeCompare(b.date));
-  }, [year, month]);
+  }, [year, month, events]);
 
   // 셀별 이벤트
   const eventsForDate = (date: Date): ScheduleEvent[] =>
-    (SCHEDULE_DATA as ScheduleEvent[]).filter(ev => isInRange(date, ev));
+    events.filter(ev => isInRange(date, ev));
 
   return (
     <PageWrapper>
