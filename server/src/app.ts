@@ -86,7 +86,27 @@ app.get('/api', (_req, res) => {
   });
 });
 
-// ④ 에러 처리 미들웨어 (가장 마지막에 등록해야 합니다)
+// ──────────────────────────────────────────────────────────
+// ④ 프로덕션 정적 호스팅 + SPA fallback
+// ──────────────────────────────────────────────────────────
+// NODE_ENV=production일 때만 동작. Vite가 빌드한 `/dist`(레포 루트)를
+// Express가 정적 호스팅하고, 매칭되지 않은 모든 GET 요청은 index.html로
+// 떨어뜨려 SPA 라우팅이 동작하도록 한다. /api/*, /uploads/* 라우트보다
+// 뒤에 위치하므로 API/업로드 경로가 먼저 매칭된다.
+if (process.env.NODE_ENV === 'production') {
+  const distPath = path.join(__dirname, '../../dist');
+  app.use(express.static(distPath));
+  app.get('*', (req, res, next) => {
+    // /api/* 와 /uploads/* 경로의 미매칭은 SPA로 떨어뜨리지 않고
+    // 다음 핸들러(404)로 넘긴다. SPA 라우팅은 그 외 경로에만 적용.
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+      return next();
+    }
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
+
+// ⑤ 에러 처리 미들웨어 (가장 마지막에 등록해야 합니다)
 app.use(errorHandler);
 
 export { app };
