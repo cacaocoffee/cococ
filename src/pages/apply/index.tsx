@@ -4,12 +4,14 @@ import { FAQ_DATA } from "@/data";
 import PageWrapper from "@/components/ui/PageWrapper";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { applyService } from "@/domain/apply/apply-service";
+import type { ApplyPeriod } from "@/domain/apply/apply-dto";
 import { AlertModal, useAlert } from "@/components/ui/Modal";
 import { css } from "@/lib/css";
 import { colors, shadows } from "@/lib/tokens";
 import { INIT, stepVariants } from "./constants";
 import { summaryRowCss, summaryLabelCss, summaryValueCss } from "./styles";
 import ClosedScreen from "./ClosedScreen";
+import ApplyFormSkeleton from "./ApplyFormSkeleton";
 import FaqItem from "./components/FaqItem";
 import Step1Personal from "./steps/Step1Personal";
 import Step2Activity from "./steps/Step2Activity";
@@ -189,23 +191,20 @@ const faqListCss = css({
 // ─── Main ─────────────────────────────────────────────────────
 export default function ApplyPage() {
   const [open, setOpen] = useState<boolean | null>(null);
-  const [generation, setGeneration] = useState<number | null>(null);
+  const [period, setPeriod] = useState<ApplyPeriod | null>(null);
+  const generation = period?.generation ?? null;
   const { alertProps, openAlert } = useAlert();
 
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      try {
-        const [isOpen, period] = await Promise.all([
-          applyService.isApplyOpen().catch(() => true),
-          applyService.loadApplyPeriod().catch(() => null),
-        ]);
-        if (cancelled) return;
-        setOpen(isOpen);
-        setGeneration(period?.generation ?? null);
-      } catch {
-        if (!cancelled) setOpen(true);
-      }
+      const [isOpen, p] = await Promise.all([
+        applyService.isApplyOpen().catch(() => true),
+        applyService.loadApplyPeriod().catch(() => null),
+      ]);
+      if (cancelled) return;
+      setPeriod(p);
+      setOpen(isOpen);
     })();
     return () => { cancelled = true; };
   }, []);
@@ -287,12 +286,25 @@ export default function ApplyPage() {
   };
 
   if (open === null)
-    return <PageWrapper><div style={{ minHeight: "60vh" }} /></PageWrapper>;
+    return (
+      <PageWrapper>
+        <div className={pageCss}>
+          <div className={headerCss}>
+            <p className={eyebrowCss}>Recruitment</p>
+            <h2 className={pageTitleCss}>COCOC 지원서</h2>
+            <p className={pageSubCss}>
+              즐겁게 임하는 것, 코콕이 추구하는 가장 핵심적인 가치입니다.
+            </p>
+          </div>
+          <ApplyFormSkeleton />
+        </div>
+      </PageWrapper>
+    );
 
   if (!open)
     return (
       <PageWrapper>
-        <ClosedScreen />
+        <ClosedScreen period={period} />
       </PageWrapper>
     );
 

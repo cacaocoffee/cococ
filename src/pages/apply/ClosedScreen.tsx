@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
-import { applyService } from "@/domain/apply/apply-service";
 import type { ApplyPeriod } from "@/domain/apply/apply-dto";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
@@ -42,22 +40,11 @@ const closedDescCss = css({
 });
 const closedAccentCss = css({ color: colors.brand, fontWeight: "700" });
 
-export default function ClosedScreen() {
-  const [period, setPeriod] = useState<ApplyPeriod | null>(null);
+interface Props {
+  period: ApplyPeriod | null;
+}
 
-  useEffect(() => {
-    let cancelled = false;
-    void applyService
-      .loadApplyPeriod()
-      .then((p) => {
-        if (!cancelled) setPeriod(p);
-      })
-      .catch(() => {
-        // P2022 등 서버 에러 시 period 없이 기본 메시지로 렌더
-      });
-    return () => { cancelled = true; };
-  }, []);
-
+export default function ClosedScreen({ period }: Props) {
   const generation = period?.generation;
   const title = generation
     ? `${generation}기 모집은 종료되었습니다`
