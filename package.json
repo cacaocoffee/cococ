@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "engines": {
-    "node": "24.0"
-  },
   "scripts": {
     "dev": "vite",
     "dev:api": "tsx watch server/src/index.ts",
