@@ -21,10 +21,33 @@
 // ──────────────────────────────────────────────────────────
 
 import { Router } from 'express';
+import { z } from 'zod';
 import { prisma } from '../prisma.js';
 import { requireAdmin } from '../middleware/require-admin.js';
+import { validate } from '../lib/validate.js';
 
 export const applyRouter = Router();
+
+// 새 지원서 제출 시 검증 스키마 (공개 라우트이므로 입력을 신뢰할 수 없다)
+const applicationSchema = z.object({
+  name: z.string().trim().min(1).max(50),
+  gender: z.string().trim().min(1),
+  birthdate: z.string().trim().min(1),
+  phone: z.string().trim().regex(/^[0-9-]{9,13}$/, 'Invalid phone format'),
+  email: z.string().trim().email(),
+  sns: z.string().optional().default(''),
+  mtAvailable: z.string().optional().default(''),
+  mainContact: z.string().optional().default(''),
+  availableTimes: z.array(z.string()).optional().default([]),
+  interviewTimes: z.array(z.string()).optional().default([]),
+  scaleGourmet: z.coerce.number().int().min(1).max(5),
+  scalePeople: z.coerce.number().int().min(1).max(5),
+  q3_1_style: z.string().optional().default(''),
+  q1_intro: z.string().optional().default(''),
+  q2_drink: z.string().optional().default(''),
+  q3_2_reason: z.string().optional().default(''),
+  qEtc: z.string().optional().default(''),
+});
 
 // DB 레코드 → 프론트엔드 형식 변환
 function appToResponse(item: any) {
@@ -52,7 +75,7 @@ applyRouter.get('/applications', async (_req, res, next) => {
 });
 
 // 새 지원서 제출
-applyRouter.post('/applications', async (req, res, next) => {
+applyRouter.post('/applications', validate(applicationSchema), async (req, res, next) => {
   try {
     const body = req.body;
     const item = await prisma.application.create({
