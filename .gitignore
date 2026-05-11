@@ -1,1 +1,20 @@
-node_modules/*
+node_modules/
+dist/
+
+# 서버 (레거시 — Vercel로 이전 후 단계적으로 정리 예정)
+server/node_modules/
+server/dist/
+server/prisma/dev.db
+server/prisma/dev.db-journal
+
+# Vercel
+.vercel
+.turbo
+
+# Prisma 생성물
+prisma/migrations/dev.db*
+
+# 환경변수
+.env
+.env.local
+.env.*.local

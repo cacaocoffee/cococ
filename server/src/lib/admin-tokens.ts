@@ -1,26 +1,26 @@
-// 어드민 토큰 인메모리 저장소
-// 단일 서버 + SQLite 가정. JWT 미사용. 12시간 TTL의 랜덤 토큰을 발급/검증한다.
-// 서버 재시작 시 모든 토큰이 사라지므로 운영자는 다시 로그인해야 한다.
+// 어드민 토큰 저장소 (Postgres / Prisma).
+// 서버리스 환경에서는 인스턴스 간 메모리가 공유되지 않으므로 DB에 영속화한다.
+// TTL 12시간. 만료된 토큰은 검증 시점에 정리한다.
+
+import { prisma } from '../prisma.js';
 
 const TTL_MS = 12 * 60 * 60 * 1000;
 
-const store = new Map<string, number>();
-
-export function issue(token: string): number {
-  const expiresAt = Date.now() + TTL_MS;
-  store.set(token, expiresAt);
-  return expiresAt;
+export async function issue(token: string): Promise<number> {
+  const expiresAt = new Date(Date.now() + TTL_MS);
+  await prisma.adminToken.create({ data: { token, expiresAt } });
+  return expiresAt.getTime();
 }
 
-export function revoke(token: string): void {
-  store.delete(token);
+export async function revoke(token: string): Promise<void> {
+  await prisma.adminToken.deleteMany({ where: { token } });
 }
 
-export function isValid(token: string): boolean {
-  const expiresAt = store.get(token);
-  if (expiresAt === undefined) return false;
-  if (expiresAt <= Date.now()) {
-    store.delete(token);
+export async function isValid(token: string): Promise<boolean> {
+  const row = await prisma.adminToken.findUnique({ where: { token } });
+  if (!row) return false;
+  if (row.expiresAt.getTime() <= Date.now()) {
+    await prisma.adminToken.deleteMany({ where: { token } });
     return false;
   }
   return true;

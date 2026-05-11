@@ -1,3 +1,14 @@
+// ──────────────────────────────────────────────────────────
+// 파일 업로드 서비스 (API 연동 버전)
+// ──────────────────────────────────────────────────────────
+// 기존: URL.createObjectURL()로 브라우저 메모리에 임시 URL 생성
+//       → 페이지를 새로고침하면 이미지가 사라짐
+// 변경: 서버에 파일을 업로드하고, 영구적인 URL을 받아옴
+//       → 서버에 저장되므로 새로고침해도 이미지가 유지됨
+// ──────────────────────────────────────────────────────────
+
+import { apiUploadFile } from './api';
+
 export const uploadService = {
-  upload: async (file: File): Promise<string> => URL.createObjectURL(file),
+  upload: async (file: File): Promise<string> => apiUploadFile(file),
 };

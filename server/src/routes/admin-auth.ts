@@ -4,7 +4,7 @@ import { issue, revoke } from '../lib/admin-tokens.js';
 
 export const adminAuthRouter = Router();
 
-adminAuthRouter.post('/login', (req, res) => {
+adminAuthRouter.post('/login', async (req, res) => {
   const expected = process.env.ADMIN_PASSWORD;
   if (!expected) {
     console.error('❌ ADMIN_PASSWORD 환경변수가 설정되지 않았습니다');
@@ -19,13 +19,13 @@ adminAuthRouter.post('/login', (req, res) => {
   }
 
   const token = randomBytes(32).toString('hex');
-  const expiresAt = issue(token);
+  const expiresAt = await issue(token);
   res.json({ token, expiresAt });
 });
 
-adminAuthRouter.post('/logout', (req, res) => {
+adminAuthRouter.post('/logout', async (req, res) => {
   const header = req.headers.authorization ?? '';
   const match = /^Bearer\s+(.+)$/.exec(header);
-  if (match) revoke(match[1]);
+  if (match) await revoke(match[1]);
   res.status(200).json({ ok: true });
 });
