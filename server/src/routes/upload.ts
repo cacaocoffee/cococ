@@ -24,6 +24,10 @@ const __dirname = path.dirname(__filename);
 
 export const uploadRouter = Router();
 
+// 업로드 허용 mimetype 화이트리스트.
+// multer fileFilter와 라우트 핸들러 양쪽에서 같은 목록을 참조한다.
+const ALLOWED_MIME = new Set(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+
 // ──────────────────────────────────────────────────────────
 // multer 설정
 // ──────────────────────────────────────────────────────────
@@ -47,8 +51,7 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
   fileFilter: (_req, file, cb) => {
     // 이미지 파일만 허용
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    if (allowedTypes.includes(file.mimetype)) {
+    if (ALLOWED_MIME.has(file.mimetype)) {
       cb(null, true);
     } else {
       cb(new Error('이미지 파일만 업로드할 수 있습니다 (jpg, png, gif, webp)'));
@@ -61,7 +64,14 @@ const upload = multer({
 // 프론트엔드에서 FormData에 append('file', ...) 로 보내야 합니다.
 uploadRouter.post('/', requireAdmin, upload.single('file'), (req, res) => {
   if (!req.file) {
-    res.status(400).json({ error: '파일이 없습니다' });
+    res.status(400).json({ error: 'Invalid input', details: { file: 'required' } });
+    return;
+  }
+
+  // multer fileFilter가 이미 거르지만, 변조된 헤더나 다른 진입 경로를
+  // 대비해 라우트에서도 한 번 더 화이트리스트를 검증한다.
+  if (!ALLOWED_MIME.has(req.file.mimetype)) {
+    res.status(400).json({ error: 'Invalid input', details: { mimetype: req.file.mimetype } });
     return;
   }
 
