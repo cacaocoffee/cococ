@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api-client';
+import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api';
 import type { ScheduleEvent } from './schedule-dto';
 
 export const scheduleService = {

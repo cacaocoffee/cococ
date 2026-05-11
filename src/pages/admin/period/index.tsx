@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ToggleLeft, ToggleRight, Calendar, Clock, Plus, X } from "lucide-react";
 
@@ -265,21 +265,36 @@ const combine = (d, t) => (d ? `${d}T${t || "00:00"}` : "");
 
 // ─── Component ────────────────────────────────────────────────
 export default function PeriodTab() {
-  const [period, setPeriod] = useState(
-    () => applyService.loadApplyPeriod() || { start: "", end: "", enabled: true },
-  );
-  const [interview, setInterview] = useState(
-    () => applyService.loadInterviewSettings() ?? applyService.DEFAULT_INTERVIEW_SETTINGS,
-  );
+  const [period, setPeriod] = useState<{ start: string; end: string; enabled?: boolean }>({
+    start: "",
+    end: "",
+    enabled: true,
+  });
+  const [interview, setInterview] = useState(applyService.DEFAULT_INTERVIEW_SETTINGS);
+  const [open, setOpen] = useState(false);
   const [saved, setSaved] = useState(false);
-
   const [dateInput, setDateInput] = useState("");
 
-  const open = applyService.isApplyOpen();
+  useEffect(() => {
+    void (async () => {
+      const [p, i, isOpen] = await Promise.all([
+        applyService.loadApplyPeriod(),
+        applyService.loadInterviewSettings(),
+        applyService.isApplyOpen(),
+      ]);
+      if (p) setPeriod({ start: p.start ?? "", end: p.end ?? "", enabled: !p.forceClosed });
+      if (i) setInterview(i);
+      setOpen(isOpen);
+    })();
+  }, []);
 
-  const save = () => {
-    applyService.saveApplyPeriod(period);
-    applyService.saveInterviewSettings(interview);
+  const save = async () => {
+    await applyService.saveApplyPeriod({
+      start: period.start,
+      end: period.end,
+      forceClosed: period.enabled === false,
+    });
+    await applyService.saveInterviewSettings(interview);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
