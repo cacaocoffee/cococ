@@ -19,7 +19,24 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? 'http://localhost:5173')
   .split(',')
   .map((s) => s.trim())
   .filter(Boolean);
-app.use(cors({ origin: allowedOrigins, credentials: false }));
+
+// 같은 오리진(헤더 없음), 명시 허용 도메인, 그리고 *.vercel.app 미리보기 도메인을 모두 허용.
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true);
+      if (allowedOrigins.includes(origin)) return cb(null, true);
+      try {
+        const host = new URL(origin).hostname;
+        if (host === 'localhost' || host.endsWith('.vercel.app')) return cb(null, true);
+      } catch {
+        /* ignore */
+      }
+      cb(new Error(`CORS: origin not allowed (${origin})`));
+    },
+    credentials: false,
+  }),
+);
 
 app.use(express.json({ limit: '10mb' }));
 
