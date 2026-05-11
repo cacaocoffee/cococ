@@ -469,6 +469,30 @@ npx prisma studio
 
 ## 10. 배포하기
 
+### 단일 포트 프로덕션 빌드 (단일 서버 + SQLite 가정)
+
+Vite로 빌드한 프론트(`/dist`)와 Express 백엔드를 같은 프로세스에서 서비스하면 포트 하나만으로 풀스택 운영이 가능합니다. 절차는 다음과 같습니다:
+
+1. **빌드**
+   ```bash
+   npm run build:all
+   # → 프론트는 레포 루트 `/dist`, 서버는 `server/dist`에 컴파일됩니다.
+   ```
+
+2. **실행**
+   ```bash
+   NODE_ENV=production \
+   ADMIN_PASSWORD=비밀번호 \
+   ALLOWED_ORIGINS=https://your-domain.com \
+   PORT=4000 \
+   npm run start
+   ```
+
+3. **동작 방식**
+   - `NODE_ENV=production`일 때 Express가 레포 루트 `/dist`를 정적 호스팅하고, `/api/*`·`/uploads/*`로 매칭되지 않는 모든 GET 요청을 `index.html`로 떨어뜨려 SPA 라우팅이 동작합니다.
+   - 모든 트래픽이 동일 오리진을 사용하므로 `ALLOWED_ORIGINS`는 운영 도메인 한 개만 지정해도 충분합니다(CORS 우회 위험 감소).
+   - 외부에 노출되는 포트는 4000번 하나뿐 — 리버스 프록시(nginx/Caddy)나 PaaS 라우터에서 80/443 → 4000으로 연결하면 됩니다.
+
 ### Railway 배포 (추천)
 
 Railway는 GitHub 저장소를 연결하면 자동으로 배포해주는 서비스입니다.

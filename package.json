@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:all": "npm run build && cd server && npm run build",
+    "start": "cd server && NODE_ENV=production node dist/index.js"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.95.0",
