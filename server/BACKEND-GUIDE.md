@@ -69,8 +69,7 @@ cococ/
 │   │   ├── routes/         ← API 엔드포인트들
 │   │   └── middleware/     ← 미들웨어
 │   ├── prisma/
-│   │   ├── schema.prisma   ← DB 테이블 설계도
-│   │   └── dev.db          ← SQLite 데이터 파일 (자동생성)
+│   │   └── schema.prisma   ← DB 테이블 설계도 (PostgreSQL)
 │   ├── uploads/            ← 업로드된 이미지 저장소
 │   └── package.json        ← 서버 의존성 목록
 │
@@ -101,9 +100,9 @@ cococ/
        │
        │ prisma.archive.findMany()
        ▼
-[SQLite 데이터베이스]
+[PostgreSQL 데이터베이스]
        │
-       │ SELECT * FROM Archive
+       │ SELECT * FROM "Archive"
        ▼
 [데이터 반환] → Express → Vite → React → 화면에 표시!
 ```
@@ -118,8 +117,8 @@ Node.js로 만드는 웹 서버 프레임워크. "프레임워크"란 복잡한 
 ### TypeScript
 JavaScript에 "타입"을 추가한 언어. 예를 들어 `name: string`이라고 적으면 name에는 문자열만 들어갈 수 있습니다. 실수로 숫자를 넣으면 빨간 줄이 뜹니다. 프론트엔드와 같은 언어라서 새로 배울 필요가 없습니다!
 
-### SQLite
-파일 하나로 동작하는 가벼운 데이터베이스. MySQL이나 PostgreSQL처럼 별도 설치 없이, `dev.db`라는 파일 하나에 모든 데이터가 저장됩니다. 소규모 프로젝트에 최적입니다.
+### PostgreSQL (Supabase)
+관계형 데이터베이스. 운영 환경(배포)과 동일하게 로컬에서도 PostgreSQL 을 사용합니다. 클라우드는 Supabase 의 무료 인스턴스를 쓰며, 연결 문자열은 `DATABASE_URL` 환경변수로 주입합니다.
 
 ### Prisma ORM
 데이터베이스를 쉽게 다루는 도구. SQL을 직접 쓰지 않고, `prisma.archive.findMany()`처럼 JavaScript 코드로 DB를 조작합니다. 자동으로 TypeScript 타입도 만들어줍니다.
@@ -159,9 +158,11 @@ npx prisma migrate dev --name init
 
 > 이 명령이 하는 일:
 > 1. `schema.prisma`를 읽어서 SQL 명령으로 변환
-> 2. `prisma/dev.db` 파일을 생성 (이게 데이터베이스!)
+> 2. `DATABASE_URL` 이 가리키는 PostgreSQL DB 에 마이그레이션 적용
 > 3. 테이블들을 만들어줌 (Archive, Magazine, Application 등)
 > 4. Prisma Client를 자동 생성 (타입 포함)
+>
+> ※ 사전에 `server/.env` (또는 루트 `.env`) 에 `DATABASE_URL=postgresql://...` 가 설정돼 있어야 합니다.
 
 ### Step 3: 초기 데이터 넣기
 
@@ -298,8 +299,7 @@ await prisma.archive.delete({ where: { id: 1 } });
 
 ### JSON 필드에 대해
 
-SQLite는 배열(Array) 타입을 직접 지원하지 않습니다.
-그래서 `tags`, `gallery`, `recipes` 같은 배열 데이터는 문자열로 변환해서 저장합니다:
+PostgreSQL 자체는 배열/JSONB 를 지원하지만, 본 프로젝트는 스키마를 단순하게 유지하기 위해 `tags`, `gallery`, `recipes` 같은 가변 데이터를 모두 `String` 컬럼에 JSON 문자열로 저장합니다:
 
 ```
 저장 시: ["Gin", "Classic"] → '["Gin","Classic"]'  (JSON.stringify)
@@ -469,7 +469,7 @@ npx prisma studio
 
 ## 10. 배포하기
 
-### 단일 포트 프로덕션 빌드 (단일 서버 + SQLite 가정)
+### 단일 포트 프로덕션 빌드 (단일 서버 가정)
 
 Vite로 빌드한 프론트(`/dist`)와 Express 백엔드를 같은 프로세스에서 서비스하면 포트 하나만으로 풀스택 운영이 가능합니다. 절차는 다음과 같습니다:
 
@@ -509,8 +509,9 @@ Railway는 GitHub 저장소를 연결하면 자동으로 배포해주는 서비�
 3. **새 프로젝트 생성** → GitHub 저장소 연결
 
 4. **환경 변수 설정**:
-   - `PORT` → Railway가 자동 지정
-   - `DATABASE_URL` → `file:./dev.db` (SQLite 사용 시)
+   - `PORT` → 호스팅이 자동 지정 (Railway, Vercel 등)
+   - `DATABASE_URL` → PostgreSQL 커넥션 문자열 (예: Supabase 의 Connection string)
+   - `ADMIN_PASSWORD` → 어드민 비밀번호
 
 5. **빌드 명령 설정**:
    ```
@@ -541,8 +542,9 @@ pwd  # /path/to/cococ/server 여야 합니다
 # 2. node_modules가 있는지 확인
 ls node_modules  # 없으면 npm install 실행
 
-# 3. DB가 초기화되었는지 확인
-ls prisma/dev.db  # 없으면 npx prisma migrate dev 실행
+# 3. DB 마이그레이션 적용 확인
+npx prisma migrate status  # Up to date 여야 함. 아니면 npx prisma migrate dev 실행
+# DATABASE_URL 가 .env 에 정확히 들어가 있는지도 확인
 ```
 
 ### "데이터가 안 보여요"

@@ -36,7 +36,7 @@
 
 ### Backend (`/server`)
 - **Express 4** + **TypeScript** (ESM, `tsx watch`)
-- **Prisma 6** ORM + **SQLite** (`server/prisma/dev.db`)
+- **Prisma 6** ORM + **PostgreSQL** (Supabase, `DATABASE_URL` 환경변수)
 - **multer** — 이미지 업로드 (`/uploads`)
 - **cors**, **dotenv**
 - 어드민 인증: **인메모리 토큰**(TTL 12h) — `POST /api/admin/login`
@@ -75,8 +75,7 @@ cococ/
 │   │   └── seed.ts            초기 데이터
 │   ├── prisma/
 │   │   ├── schema.prisma      DB 스키마
-│   │   ├── migrations/        마이그레이션 이력
-│   │   └── dev.db             SQLite 파일 (자동 생성)
+│   │   └── migrations/        마이그레이션 이력
 │   ├── uploads/               업로드된 이미지
 │   └── BACKEND-GUIDE.md       백엔드 초보자용 상세 가이드
 │
@@ -102,7 +101,8 @@ npm install
 ```bash
 cd server
 npm install
-npx prisma migrate dev --name init   # DB 파일과 테이블 생성
+# 루트의 .env 또는 server/.env 에 DATABASE_URL (PostgreSQL) 설정 필요
+npx prisma migrate deploy            # 스키마 적용 (또는 migrate dev --name init)
 npm run db:seed                      # 초기 데이터 삽입
 ```
 
@@ -128,7 +128,7 @@ npm run dev
 **`server/.env`**
 ```env
 PORT=4000
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DBNAME"   # Supabase 등 PostgreSQL 커넥션 문자열
 ADMIN_PASSWORD=원하는_관리자_비밀번호
 ALLOWED_ORIGINS=http://localhost:5173
 ```
@@ -184,7 +184,7 @@ VITE_API_URL=https://your-backend-host
 
 ## 데이터 모델 요약
 
-`server/prisma/schema.prisma` 기준 6개 테이블:
+`prisma/schema.prisma` 기준 6개 테이블:
 
 | 모델 | 용도 |
 |---|---|
@@ -195,7 +195,7 @@ VITE_API_URL=https://your-backend-host
 | `InterviewSetting` | 면접 가능일·시간 슬롯 (단일 레코드) |
 | `ApplyPeriod` | 지원 시작·종료·강제 마감 플래그 (단일 레코드) |
 
-SQLite가 배열 타입을 지원하지 않으므로 `tags`, `gallery`, `recipes`, `content`, `availableTimes` 등은 JSON 문자열로 저장되고 응답 시 파싱됩니다.
+`tags`, `gallery`, `recipes`, `content`, `availableTimes` 등 가변 배열/객체 필드는 JSON 문자열(`String`)로 저장되고 응답 시 파싱됩니다 (스키마 단순화 목적).
 
 ---
 
