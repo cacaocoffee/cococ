@@ -47,9 +47,14 @@ export default function ClosedScreen() {
 
   useEffect(() => {
     let cancelled = false;
-    void applyService.loadApplyPeriod().then((p) => {
-      if (!cancelled) setPeriod(p);
-    });
+    void applyService
+      .loadApplyPeriod()
+      .then((p) => {
+        if (!cancelled) setPeriod(p);
+      })
+      .catch(() => {
+        // P2022 등 서버 에러 시 period 없이 기본 메시지로 렌더
+      });
     return () => { cancelled = true; };
   }, []);
 

@@ -195,13 +195,17 @@ export default function ApplyPage() {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const [isOpen, period] = await Promise.all([
-        applyService.isApplyOpen(),
-        applyService.loadApplyPeriod(),
-      ]);
-      if (cancelled) return;
-      setOpen(isOpen);
-      setGeneration(period?.generation ?? null);
+      try {
+        const [isOpen, period] = await Promise.all([
+          applyService.isApplyOpen().catch(() => true),
+          applyService.loadApplyPeriod().catch(() => null),
+        ]);
+        if (cancelled) return;
+        setOpen(isOpen);
+        setGeneration(period?.generation ?? null);
+      } catch {
+        if (!cancelled) setOpen(true);
+      }
     })();
     return () => { cancelled = true; };
   }, []);
