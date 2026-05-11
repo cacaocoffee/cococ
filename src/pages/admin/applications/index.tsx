@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Users, Trash2, ChevronDown, ChevronUp,
   Download, Search, ArrowUpDown, Calendar,
 } from "lucide-react";
 import { applyService } from "@/domain/apply/apply-service";
+import type { ApplicationItem } from "@/domain/apply/apply-dto";
 import { ConfirmModal, useConfirm } from "@/components/ui/Modal";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
@@ -155,10 +156,10 @@ const deleteBtnCss = css({
 interface InterviewScheduleEditorProps {
   app: AdminApplicationItem;
   onSave: (value: string | null) => void;
+  settings: { interviewDates: string[]; interviewTimes: string[] };
 }
 
-function InterviewScheduleEditor({ app, onSave }: InterviewScheduleEditorProps) {
-  const settings = applyService.loadInterviewSettings() ?? applyService.DEFAULT_INTERVIEW_SETTINGS;
+function InterviewScheduleEditor({ app, onSave, settings }: InterviewScheduleEditorProps) {
   const { interviewDates: dates, interviewTimes: times } = settings;
   const available = new Set(app.interviewTimes ?? []);
   const confirmed = app.interviewSchedule;
@@ -239,9 +240,10 @@ interface ApplicationRowProps {
   onStatusChange: (id: string, status: string) => void;
   onSaveField: (id: string, fields: Partial<AdminApplicationItem>) => void;
   onDelete: (id: string) => void;
+  settings: { interviewDates: string[]; interviewTimes: string[] };
 }
 
-function ApplicationRow({ app, onStatusChange, onSaveField, onDelete }: ApplicationRowProps) {
+function ApplicationRow({ app, onStatusChange, onSaveField, onDelete, settings }: ApplicationRowProps) {
   const [expanded, setExpanded] = useState<boolean>(false);
   const statusConfig = STATUS_CFG[app.status] ?? STATUS_CFG.pending;
   const StatusIcon = statusConfig.icon;
@@ -329,6 +331,7 @@ function ApplicationRow({ app, onStatusChange, onSaveField, onDelete }: Applicat
                   <p className={sectionLabelCss}>면접 일정 (확정)</p>
                   <InterviewScheduleEditor
                     app={app}
+                    settings={settings}
                     onSave={(v) => onSaveField(app.id, { interviewSchedule: v || null })}
                   />
                 </div>
@@ -480,17 +483,28 @@ const sortBtnCss = css({
 });
 const sortActiveCss = css({ color: "#34d399", borderColor: "#34d399" });
 
-function loadApplications(): AdminApplicationItem[] {
-  return applyService.loadApplications() as unknown as AdminApplicationItem[];
-}
-
 export default function ApplicationsTab() {
-  const [apps, setApps] = useState<AdminApplicationItem[]>(loadApplications);
+  const [apps, setApps] = useState<AdminApplicationItem[]>([]);
+  const [settings, setSettings] = useState<{ interviewDates: string[]; interviewTimes: string[] }>(
+    () => applyService.DEFAULT_INTERVIEW_SETTINGS,
+  );
   const [search, setSearch] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   // sort: null | "asc" | "desc" — 면접일 기준, pass1+interviewSchedule 있는 사람에게만 적용
   const [interviewSort, setInterviewSort] = useState<"asc" | "desc" | null>(null);
   const { confirmProps, openConfirm } = useConfirm();
+
+  const refreshApps = useCallback(async () => {
+    const data = await applyService.loadApplications();
+    setApps(data as unknown as AdminApplicationItem[]);
+  }, []);
+
+  useEffect(() => {
+    void refreshApps();
+    void applyService.loadInterviewSettings().then((s) => {
+      if (s) setSettings(s);
+    });
+  }, [refreshApps]);
 
   const counts = {
     total: apps.length,
@@ -662,13 +676,26 @@ export default function ApplicationsTab() {
             <ApplicationRow
               key={app.id}
               app={app}
-              onStatusChange={(id, newStatus) => setApps(applyService.updateStatus(id, newStatus as "pending" | "pass" | "fail") as unknown as AdminApplicationItem[])}
-              onSaveField={(id, fields) => setApps(applyService.updateFields(id, fields as Parameters<typeof applyService.updateFields>[1]) as unknown as AdminApplicationItem[])}
+              settings={settings}
+              onStatusChange={async (id, newStatus) => {
+                await applyService.updateStatus(id, newStatus as ApplicationItem["status"]);
+                await refreshApps();
+              }}
+              onSaveField={async (id, fields) => {
+                await applyService.updateFields(
+                  id,
+                  fields as Parameters<typeof applyService.updateFields>[1],
+                );
+                await refreshApps();
+              }}
               onDelete={(id) =>
                 openConfirm({
                   title: "지원서를 삭제하시겠습니까?",
                   description: "삭제한 지원서는 복구할 수 없습니다.",
-                  onConfirm: () => setApps(applyService.deleteApplication(id) as unknown as AdminApplicationItem[]),
+                  onConfirm: async () => {
+                    await applyService.deleteApplication(id);
+                    await refreshApps();
+                  },
                 })
               }
             />
