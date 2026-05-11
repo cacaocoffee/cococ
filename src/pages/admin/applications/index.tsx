@@ -7,12 +7,14 @@ import {
 import { applyService } from "@/domain/apply/apply-service";
 import type { ApplicationItem } from "@/domain/apply/apply-dto";
 import { ConfirmModal, useConfirm } from "@/components/ui/Modal";
+import LoadingButton from "@/components/ui/LoadingButton";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 import { STATUS_CFG } from "../constants";
 import {
   listCss, tabHeaderRowCss, tabTitleCss,
   emptyStateCss, emptyIconCss, emptyTextCss,
+  scrollTableWrapCss,
 } from "../styles";
 
 // Admin view uses the persisted ApplicationItem shape — extend with admin-only fields
@@ -173,12 +175,12 @@ function InterviewScheduleEditor({ app, onSave, settings }: InterviewScheduleEdi
   return (
     <div
       onClick={(e: React.MouseEvent) => e.stopPropagation()}
-      className={css({ overflowX: "auto" })}
+      className={scrollTableWrapCss}
     >
       <table className={css({ borderCollapse: "collapse", fontSize: "11px", width: "100%", tableLayout: "fixed" })}>
         <thead>
           <tr>
-            <th className={css({ padding: "6px 10px", color: colors.textDimmest, fontWeight: "700", textAlign: "left", whiteSpace: "nowrap", width: "90px" })} />
+            <th className={css({ padding: "6px 10px", color: colors.textDimmest, fontWeight: "700", textAlign: "left", whiteSpace: "nowrap", width: "90px", position: "sticky", left: 0, backgroundColor: colors.bgCard, zIndex: 1 })} />
             {dates.map((d) => (
               <th key={d} className={css({ padding: "6px 10px", color: colors.textSecondary, fontWeight: "700", textAlign: "center", whiteSpace: "nowrap" })}>
                 {d}
@@ -189,7 +191,7 @@ function InterviewScheduleEditor({ app, onSave, settings }: InterviewScheduleEdi
         <tbody>
           {times.map((t) => (
             <tr key={t}>
-              <td className={css({ padding: "3px 10px 3px 0", color: colors.textDimmer, fontWeight: "700", whiteSpace: "nowrap", paddingRight: "12px" })}>
+              <td className={css({ padding: "3px 10px 3px 0", color: colors.textDimmer, fontWeight: "700", whiteSpace: "nowrap", paddingRight: "12px", position: "sticky", left: 0, backgroundColor: colors.bgCard, zIndex: 1 })}>
                 {t}
               </td>
               {dates.map((d) => {
@@ -241,9 +243,10 @@ interface ApplicationRowProps {
   onSaveField: (id: string, fields: Partial<AdminApplicationItem>) => void;
   onDelete: (id: string) => void;
   settings: { interviewDates: string[]; interviewTimes: string[] };
+  pending?: boolean;
 }
 
-function ApplicationRow({ app, onStatusChange, onSaveField, onDelete, settings }: ApplicationRowProps) {
+function ApplicationRow({ app, onStatusChange, onSaveField, onDelete, settings, pending = false }: ApplicationRowProps) {
   const [expanded, setExpanded] = useState<boolean>(false);
   const statusConfig = STATUS_CFG[app.status] ?? STATUS_CFG.pending;
   const StatusIcon = statusConfig.icon;
@@ -288,10 +291,11 @@ function ApplicationRow({ app, onStatusChange, onSaveField, onDelete, settings }
         </div>
         <div className={actionsCss} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
           {["pending", "pass1", "pass2", "fail"].map((statusKey) => (
-            <motion.button
+            <LoadingButton
               key={statusKey}
-              whileTap={{ scale: 0.93 }}
               onClick={() => onStatusChange(app.id, statusKey)}
+              loading={pending && app.status !== statusKey}
+              spinnerSize={9}
               className={cx(
                 statusBtnBaseCss,
                 app.status === statusKey
@@ -304,11 +308,16 @@ function ApplicationRow({ app, onStatusChange, onSaveField, onDelete, settings }
               )}
             >
               {STATUS_CFG[statusKey].label}
-            </motion.button>
+            </LoadingButton>
           ))}
-          <motion.button whileTap={{ scale: 0.93 }} onClick={() => onDelete(app.id)} className={deleteBtnCss}>
+          <LoadingButton
+            onClick={() => onDelete(app.id)}
+            className={deleteBtnCss}
+            loading={pending}
+            spinnerSize={11}
+          >
             <Trash2 size={13} />
-          </motion.button>
+          </LoadingButton>
         </div>
         <div className={chevronCss}>
           {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -461,12 +470,17 @@ const chipInactiveCss = css({
   border: `1px solid ${colors.borderLight}`,
   _hover: { color: colors.textPrimary },
 });
-const searchWrapCss = css({ marginLeft: "auto", position: "relative" });
+const searchWrapCss = css({
+  marginLeft: "auto",
+  position: "relative",
+  flex: "1 1 200px",
+  maxWidth: "240px",
+});
 const searchInputCss = css({
   backgroundColor: colors.bgCard, border: `1px solid ${colors.borderLight}`,
   color: colors.textPrimary, fontSize: "12px",
   paddingBlock: "8px", paddingLeft: "36px", paddingRight: "16px",
-  borderRadius: "0.5rem", outline: "none", width: "192px",
+  borderRadius: "0.5rem", outline: "none", width: "100%",
   transition: "border-color 0.2s", _focus: { borderColor: colors.brand },
 });
 const searchIconCss = css({
@@ -492,7 +506,28 @@ export default function ApplicationsTab() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   // sort: null | "asc" | "desc" — 면접일 기준, pass1+interviewSchedule 있는 사람에게만 적용
   const [interviewSort, setInterviewSort] = useState<"asc" | "desc" | null>(null);
+  // 진행 중인 행 ID — 같은 row 의 모든 액션 버튼을 disabled + spinner 처리
+  const [pendingIds, setPendingIds] = useState<Set<string>>(() => new Set());
   const { confirmProps, openConfirm } = useConfirm();
+
+  const withPending = useCallback(async (id: string, fn: () => Promise<void>) => {
+    setPendingIds((prev) => {
+      if (prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+    try {
+      await fn();
+    } finally {
+      setPendingIds((prev) => {
+        if (!prev.has(id)) return prev;
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    }
+  }, []);
 
   const refreshApps = useCallback(async () => {
     const data = await applyService.loadApplications();
@@ -677,27 +712,38 @@ export default function ApplicationsTab() {
               key={app.id}
               app={app}
               settings={settings}
-              onStatusChange={async (id, newStatus) => {
-                await applyService.updateStatus(id, newStatus as ApplicationItem["status"]);
-                await refreshApps();
+              pending={pendingIds.has(app.id)}
+              onStatusChange={(id, newStatus) => {
+                if (pendingIds.has(id)) return;
+                if (apps.find((a) => a.id === id)?.status === newStatus) return;
+                void withPending(id, async () => {
+                  await applyService.updateStatus(id, newStatus as ApplicationItem["status"]);
+                  await refreshApps();
+                });
               }}
-              onSaveField={async (id, fields) => {
-                await applyService.updateFields(
-                  id,
-                  fields as Parameters<typeof applyService.updateFields>[1],
-                );
-                await refreshApps();
+              onSaveField={(id, fields) => {
+                if (pendingIds.has(id)) return;
+                void withPending(id, async () => {
+                  await applyService.updateFields(
+                    id,
+                    fields as Parameters<typeof applyService.updateFields>[1],
+                  );
+                  await refreshApps();
+                });
               }}
-              onDelete={(id) =>
+              onDelete={(id) => {
+                if (pendingIds.has(id)) return;
                 openConfirm({
                   title: "지원서를 삭제하시겠습니까?",
                   description: "삭제한 지원서는 복구할 수 없습니다.",
-                  onConfirm: async () => {
-                    await applyService.deleteApplication(id);
-                    await refreshApps();
+                  onConfirm: () => {
+                    void withPending(id, async () => {
+                      await applyService.deleteApplication(id);
+                      await refreshApps();
+                    });
                   },
-                })
-              }
+                });
+              }}
             />
           ))}
         </div>

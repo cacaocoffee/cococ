@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { ToggleLeft, ToggleRight, Calendar, Clock, Plus, X } from "lucide-react";
 
 import { applyService } from "@/domain/apply/apply-service";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
-import { inputCss } from "../styles";
+import LoadingButton from "@/components/ui/LoadingButton";
+import { inputCss, scrollTableWrapCss } from "../styles";
 import DatePicker from "../components/DatePicker";
 
 // ─── Styles ────────────────────────────────────────────────────
@@ -273,6 +273,7 @@ export default function PeriodTab() {
   const [interview, setInterview] = useState(applyService.DEFAULT_INTERVIEW_SETTINGS);
   const [open, setOpen] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [dateInput, setDateInput] = useState("");
 
   useEffect(() => {
@@ -289,14 +290,20 @@ export default function PeriodTab() {
   }, []);
 
   const save = async () => {
-    await applyService.saveApplyPeriod({
-      start: period.start,
-      end: period.end,
-      forceClosed: period.enabled === false,
-    });
-    await applyService.saveInterviewSettings(interview);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    if (saving) return;
+    setSaving(true);
+    try {
+      await applyService.saveApplyPeriod({
+        start: period.start,
+        end: period.end,
+        forceClosed: period.enabled === false,
+      });
+      await applyService.saveInterviewSettings(interview);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const addDate = () => {
@@ -424,14 +431,15 @@ export default function PeriodTab() {
           </div>
         )}
 
-        <motion.button
+        <LoadingButton
           onClick={save}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={saving ? undefined : { scale: 1.02 }}
+          loading={saving}
+          spinnerSize={14}
           className={cx(saveBtnBaseCss, saved ? saveBtnSavedCss : saveBtnNormalCss)}
         >
-          {saved ? "✓ 저장 완료!" : "저장"}
-        </motion.button>
+          {saving ? "저장 중…" : saved ? "✓ 저장 완료!" : "저장"}
+        </LoadingButton>
       </div>
 
       {/* ─── 면접 / MT 설정 ─────────────────────────────────── */}
@@ -487,11 +495,11 @@ export default function PeriodTab() {
             <Clock size={12} />
             면접 시간대 <span style={{ fontWeight: "400", color: colors.textDimmest, marginLeft: "4px" }}>클릭해서 활성/비활성</span>
           </label>
-          <div style={{ overflowX: "auto" }}>
+          <div className={scrollTableWrapCss}>
             <table style={{ borderCollapse: "collapse", fontSize: "11px", width: "100%", tableLayout: "fixed" }}>
               <thead>
                 <tr>
-                  <th style={{ padding: "6px 12px 6px 0", color: colors.textDimmest, fontWeight: "700", textAlign: "left", whiteSpace: "nowrap", width: "90px" }}>
+                  <th style={{ padding: "6px 12px 6px 0", color: colors.textDimmest, fontWeight: "700", textAlign: "left", whiteSpace: "nowrap", width: "90px", position: "sticky", left: 0, backgroundColor: colors.bgCard, zIndex: 1 }}>
                     시간대
                   </th>
                   {interview.interviewDates.length === 0 ? (
@@ -512,7 +520,7 @@ export default function PeriodTab() {
                   const active = interview.interviewTimes.includes(slot);
                   return (
                     <tr key={slot}>
-                      <td style={{ padding: "3px 12px 3px 0", whiteSpace: "nowrap" }}>
+                      <td style={{ padding: "3px 12px 3px 0", whiteSpace: "nowrap", position: "sticky", left: 0, backgroundColor: colors.bgCard, zIndex: 1 }}>
                         <button
                           onClick={() => toggleTime(slot)}
                           style={{
@@ -550,14 +558,15 @@ export default function PeriodTab() {
           <p className={countCss}>현재 {interview.interviewTimes.length}개 시간대 활성</p>
         </div>
 
-        <motion.button
+        <LoadingButton
           onClick={save}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={saving ? undefined : { scale: 1.02 }}
+          loading={saving}
+          spinnerSize={14}
           className={cx(saveBtnBaseCss, saved ? saveBtnSavedCss : saveBtnNormalCss)}
         >
-          {saved ? "✓ 저장 완료!" : "저장"}
-        </motion.button>
+          {saving ? "저장 중…" : saved ? "✓ 저장 완료!" : "저장"}
+        </LoadingButton>
       </div>
 
       <p className={hintCss}>

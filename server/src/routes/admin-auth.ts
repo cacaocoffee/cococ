@@ -1,8 +1,14 @@
 import { Router } from 'express';
 import { randomBytes } from 'crypto';
 import { issue, revoke } from '../lib/admin-tokens.js';
+import { requireAdmin } from '../middleware/require-admin.js';
 
 export const adminAuthRouter = Router();
+
+// 토큰 유효성 검증용 가벼운 핑 — 프론트가 admin shell 렌더 전에 호출.
+adminAuthRouter.get('/ping', requireAdmin, (_req, res) => {
+  res.json({ ok: true });
+});
 
 adminAuthRouter.post('/login', async (req, res) => {
   const expected = process.env.ADMIN_PASSWORD;

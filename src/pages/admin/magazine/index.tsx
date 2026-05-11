@@ -14,6 +14,7 @@ import {
   useAlert,
 } from "@/components/ui/Modal";
 import ImageUpload from "@/components/ui/ImageUpload";
+import LoadingButton from "@/components/ui/LoadingButton";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 import type { MagazineItem } from "@/domain/magazine/magazine-dto";
@@ -156,9 +157,10 @@ interface MagazineFormProps {
   onSave: (data: Omit<MagazineItem, "id" | "createdAt">) => void;
   onCancel: () => void;
   onAlert: (msg: string) => void;
+  saving?: boolean;
 }
 
-function MagazineForm({ initial = EMPTY_MAG as MagazineFormState, onSave, onCancel, onAlert }: MagazineFormProps) {
+function MagazineForm({ initial = EMPTY_MAG as MagazineFormState, onSave, onCancel, onAlert, saving = false }: MagazineFormProps) {
   const [f, setF] = useState<MagazineFormState>({ magazineType: "blog", slides: [], ...initial });
   const set = (k: keyof MagazineFormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setF((p) => ({ ...p, [k]: e.target.value }));
@@ -216,6 +218,7 @@ function MagazineForm({ initial = EMPTY_MAG as MagazineFormState, onSave, onCanc
   }, [firstUrl]);
 
   const handleSave = () => {
+    if (saving) return;
     if (!f.title || !f.excerpt) {
       onAlert("제목과 요약은 필수입니다.");
       return;
@@ -372,10 +375,15 @@ function MagazineForm({ initial = EMPTY_MAG as MagazineFormState, onSave, onCanc
       )}
 
       <div className={formBtnRowCss}>
-        <button onClick={onCancel} className={cancelBtnCss}>취소</button>
-        <motion.button onClick={handleSave} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className={saveBtnCss}>
-          저장
-        </motion.button>
+        <button onClick={onCancel} className={cancelBtnCss} disabled={saving}>취소</button>
+        <LoadingButton
+          onClick={handleSave}
+          whileHover={saving ? undefined : { scale: 1.03 }}
+          className={saveBtnCss}
+          loading={saving}
+        >
+          {saving ? "저장 중…" : "저장"}
+        </LoadingButton>
       </div>
     </motion.div>
   );
@@ -431,10 +439,12 @@ export default function MagazineTab() {
           <p className={subSectionLabelCss}>새 아티클 작성</p>
           <MagazineForm
             onAlert={(msg) => openAlert({ title: msg, type: "error" })}
-            onSave={(d) =>
-              addMutation.mutate(d, { onSuccess: () => setMode(null) })
-            }
+            onSave={(d) => {
+              if (addMutation.isPending) return;
+              addMutation.mutate(d, { onSuccess: () => setMode(null) });
+            }}
             onCancel={() => setMode(null)}
+            saving={addMutation.isPending}
           />
         </div>
       )}
@@ -444,13 +454,15 @@ export default function MagazineTab() {
           <MagazineForm
             initial={toForm(mode as MagazineItem)}
             onAlert={(msg) => openAlert({ title: msg, type: "error" })}
-            onSave={(d) =>
+            onSave={(d) => {
+              if (updateMutation.isPending) return;
               updateMutation.mutate(
                 { id: (mode as MagazineItem).id, data: d },
                 { onSuccess: () => setMode(null) },
-              )
-            }
+              );
+            }}
             onCancel={() => setMode(null)}
+            saving={updateMutation.isPending}
           />
         </div>
       )}
@@ -477,19 +489,23 @@ export default function MagazineTab() {
               >
                 <Pencil size={14} />
               </motion.button>
-              <motion.button
+              <LoadingButton
                 onClick={() =>
                   openConfirm({
                     title: "아티클을 삭제하시겠습니까?",
                     description: "삭제한 아티클은 복구할 수 없습니다.",
-                    onConfirm: () => deleteMutation.mutate(item.id),
+                    onConfirm: () => {
+                      if (deleteMutation.isPending) return;
+                      deleteMutation.mutate(item.id);
+                    },
                   })
                 }
-                whileTap={{ scale: 0.93 }}
                 className={deleteBtnCss}
+                loading={deleteMutation.isPending && deleteMutation.variables === item.id}
+                spinnerSize={13}
               >
                 <Trash2 size={14} />
-              </motion.button>
+              </LoadingButton>
             </div>
           </div>
         ))}
