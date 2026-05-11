@@ -16,6 +16,7 @@ import {
 import ImageUpload from "@/components/ui/ImageUpload";
 import GalleryUpload from "@/components/ui/GalleryUpload";
 import LoadingButton from "@/components/ui/LoadingButton";
+import TabSkeleton from "../components/TabSkeleton";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 import type { ArchiveItem } from "@/domain/archive/archive-dto";
@@ -366,7 +367,7 @@ const toForm = (item: ArchiveItem): ArchiveFormState => ({
 });
 
 export default function ArchiveTab() {
-  const { data: items = [] } = useArchiveList();
+  const { data: items = [], isLoading } = useArchiveList();
   const addMutation = useAddArchive();
   const updateMutation = useUpdateArchive();
   const deleteMutation = useDeleteArchive();
@@ -376,6 +377,17 @@ export default function ArchiveTab() {
   const { alertProps, openAlert } = useAlert();
 
   const filtered = items.filter((i) => !search || i.title.includes(search));
+
+  if (isLoading) {
+    return (
+      <div>
+        <div className={tabHeaderRowCss}>
+          <h2 className={tabTitleCss}>아카이브 관리</h2>
+        </div>
+        <TabSkeleton variant="cards" count={4} />
+      </div>
+    );
+  }
 
   return (
     <div>

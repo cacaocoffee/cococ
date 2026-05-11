@@ -78,8 +78,12 @@ applyRouter.get('/applications', async (_req, res, next) => {
 applyRouter.post('/applications', validate(applicationSchema), async (req, res, next) => {
   try {
     const body = req.body;
+    // 현재 모집 중인 기수를 서버가 직접 주입 (클라이언트 위변조 방지)
+    const period = await prisma.applyPeriod.findUnique({ where: { id: 1 } });
+    const generation = period?.generation ?? 0;
     const item = await prisma.application.create({
       data: {
+        generation,
         name: body.name,
         gender: body.gender,
         birthdate: body.birthdate,
@@ -218,6 +222,7 @@ applyRouter.get('/period', async (_req, res, next) => {
       start: period.start,
       end: period.end,
       forceClosed: period.forceClosed,
+      generation: period.generation,
     });
   } catch (err) {
     next(err);
@@ -228,24 +233,28 @@ applyRouter.get('/period', async (_req, res, next) => {
 applyRouter.put('/period', requireAdmin, async (req, res, next) => {
   try {
     const body = req.body;
+    const generation = Math.max(1, Math.floor(Number(body.generation) || 1));
     const period = await prisma.applyPeriod.upsert({
       where: { id: 1 },
       update: {
         start: body.start ?? '',
         end: body.end ?? '',
         forceClosed: body.forceClosed ?? false,
+        generation,
       },
       create: {
         id: 1,
         start: body.start ?? '',
         end: body.end ?? '',
         forceClosed: body.forceClosed ?? false,
+        generation,
       },
     });
     res.json({
       start: period.start,
       end: period.end,
       forceClosed: period.forceClosed,
+      generation: period.generation,
     });
   } catch (err) {
     next(err);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ToggleLeft, ToggleRight, Calendar, Clock, Plus, X } from "lucide-react";
+import { ToggleLeft, ToggleRight, Calendar, Clock, Plus, X, Hash } from "lucide-react";
 
 import { applyService } from "@/domain/apply/apply-service";
 import { css, cx } from "@/lib/css";
@@ -7,6 +7,7 @@ import { colors } from "@/lib/tokens";
 import LoadingButton from "@/components/ui/LoadingButton";
 import { inputCss, scrollTableWrapCss } from "../styles";
 import DatePicker from "../components/DatePicker";
+import TabSkeleton from "../components/TabSkeleton";
 
 // ─── Styles ────────────────────────────────────────────────────
 const maxCss = css({ maxWidth: "36rem" });
@@ -265,7 +266,8 @@ const combine = (d, t) => (d ? `${d}T${t || "00:00"}` : "");
 
 // ─── Component ────────────────────────────────────────────────
 export default function PeriodTab() {
-  const [period, setPeriod] = useState<{ start: string; end: string; enabled?: boolean }>({
+  const [period, setPeriod] = useState<{ start: string; end: string; enabled?: boolean; generation: number }>({
+    generation: 1,
     start: "",
     end: "",
     enabled: true,
@@ -274,19 +276,27 @@ export default function PeriodTab() {
   const [open, setOpen] = useState(false);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [dateInput, setDateInput] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
     void (async () => {
-      const [p, i, isOpen] = await Promise.all([
-        applyService.loadApplyPeriod(),
-        applyService.loadInterviewSettings(),
-        applyService.isApplyOpen(),
-      ]);
-      if (p) setPeriod({ start: p.start ?? "", end: p.end ?? "", enabled: !p.forceClosed });
-      if (i) setInterview(i);
-      setOpen(isOpen);
+      try {
+        const [p, i, isOpen] = await Promise.all([
+          applyService.loadApplyPeriod(),
+          applyService.loadInterviewSettings(),
+          applyService.isApplyOpen(),
+        ]);
+        if (cancelled) return;
+        if (p) setPeriod({ start: p.start ?? "", end: p.end ?? "", enabled: !p.forceClosed, generation: p.generation ?? 1 });
+        if (i) setInterview(i);
+        setOpen(isOpen);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     })();
+    return () => { cancelled = true; };
   }, []);
 
   const save = async () => {
@@ -297,6 +307,7 @@ export default function PeriodTab() {
         start: period.start,
         end: period.end,
         forceClosed: period.enabled === false,
+        generation: period.generation,
       });
       await applyService.saveInterviewSettings(interview);
       setSaved(true);
@@ -327,6 +338,15 @@ export default function PeriodTab() {
         : [...p.interviewTimes, slot],
     }));
 
+  if (loading) {
+    return (
+      <div className={maxCss}>
+        <h2 className={titleCss}>접수 기간 설정</h2>
+        <TabSkeleton variant="form" count={5} />
+      </div>
+    );
+  }
+
   return (
     <div className={maxCss}>
       <h2 className={titleCss}>접수 기간 설정</h2>
@@ -337,6 +357,28 @@ export default function PeriodTab() {
       </div>
 
       <div className={cardCss}>
+        {/* 모집 기수 */}
+        <div>
+          <label className={labelCss}>
+            <Hash size={12} />
+            모집 기수
+          </label>
+          <input
+            type="number"
+            min={1}
+            value={period.generation}
+            onChange={(e) =>
+              setPeriod((p) => ({
+                ...p,
+                generation: Math.max(1, Math.floor(Number(e.target.value) || 1)),
+              }))
+            }
+            className={inputCss}
+            placeholder="예: 25"
+          />
+          <p className={countCss}>현재 <strong style={{ color: colors.brand }}>{period.generation}기</strong> 모집 중. 변경 후 저장하면 새 지원서에 자동 적용됩니다.</p>
+        </div>
+
         <div className={grid2Css}>
           {/* 접수 시작 일시 */}
           <div>

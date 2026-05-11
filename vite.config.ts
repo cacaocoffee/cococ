@@ -10,6 +10,21 @@ export default defineConfig({
     },
   },
 
+  build: {
+    chunkSizeWarningLimit: 1200,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          router: ['@tanstack/react-router', '@tanstack/react-query'],
+          motion: ['framer-motion'],
+          icons: ['lucide-react'],
+          markdown: ['react-markdown'],
+        },
+      },
+    },
+  },
+
   // ──────────────────────────────────────────────────────────
   // 개발 서버 프록시 설정
   // ──────────────────────────────────────────────────────────

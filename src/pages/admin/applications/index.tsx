@@ -8,6 +8,7 @@ import { applyService } from "@/domain/apply/apply-service";
 import type { ApplicationItem } from "@/domain/apply/apply-dto";
 import { ConfirmModal, useConfirm } from "@/components/ui/Modal";
 import LoadingButton from "@/components/ui/LoadingButton";
+import TabSkeleton from "../components/TabSkeleton";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 import { STATUS_CFG } from "../constants";
@@ -22,6 +23,7 @@ interface AdminApplicationItem {
   id: string;
   submittedAt: string;
   status: string;
+  generation?: number;
   name: string;
   gender: string;
   birthdate: string;
@@ -65,6 +67,15 @@ const infoCss = css({ flex: "1 1 0%", minWidth: "0" });
 const nameRowCss = css({ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" });
 const nameCss = css({ color: colors.textPrimary, fontWeight: "700", fontSize: "14px" });
 const genderCss = css({ color: colors.textFaint, fontSize: "12px" });
+const genChipCss = css({
+  display: "inline-flex", alignItems: "center",
+  backgroundColor: "rgba(245,158,11,0.12)",
+  color: colors.brand,
+  fontSize: "11px", fontWeight: "900",
+  paddingInline: "8px", paddingBlock: "2px",
+  borderRadius: "9999px",
+  border: "1px solid rgba(245,158,11,0.22)",
+});
 const metaRowCss = css({
   display: "flex", gap: "8px", marginTop: "4px",
   flexWrap: "wrap", fontSize: "12px", color: colors.textFaint,
@@ -258,6 +269,9 @@ function ApplicationRow({ app, onStatusChange, onSaveField, onDelete, settings, 
         <div className={avatarCss}>{app.name?.[0] ?? "?"}</div>
         <div className={infoCss}>
           <div className={nameRowCss}>
+            {app.generation ? (
+              <span className={genChipCss}>{app.generation}기</span>
+            ) : null}
             <span className={nameCss}>{app.name || "이름 없음"}</span>
             <span className={genderCss}>{app.gender}</span>
             <span
@@ -499,6 +513,7 @@ const sortActiveCss = css({ color: "#34d399", borderColor: "#34d399" });
 
 export default function ApplicationsTab() {
   const [apps, setApps] = useState<AdminApplicationItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [settings, setSettings] = useState<{ interviewDates: string[]; interviewTimes: string[] }>(
     () => applyService.DEFAULT_INTERVIEW_SETTINGS,
   );
@@ -535,11 +550,22 @@ export default function ApplicationsTab() {
   }, []);
 
   useEffect(() => {
-    void refreshApps();
-    void applyService.loadInterviewSettings().then((s) => {
-      if (s) setSettings(s);
-    });
-  }, [refreshApps]);
+    let cancelled = false;
+    setLoading(true);
+    void Promise.all([
+      applyService.loadApplications(),
+      applyService.loadInterviewSettings(),
+    ])
+      .then(([data, s]) => {
+        if (cancelled) return;
+        setApps(data as unknown as AdminApplicationItem[]);
+        if (s) setSettings(s);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   const counts = {
     total: apps.length,
@@ -589,7 +615,7 @@ export default function ApplicationsTab() {
       return `"${String(v).replace(/"/g, '""')}"`;
     };
     const header = [
-      "제출일시", "이름", "성별", "생년월일", "전화", "이메일", "SNS",
+      "기수", "제출일시", "이름", "성별", "생년월일", "전화", "이메일", "SNS",
       "MT가능", "코콕알게된경로", "주연락수단",
       "가능시간", "확정면접시간",
       "디자인툴능력", "주활용디자인툴",
@@ -602,6 +628,7 @@ export default function ApplicationsTab() {
       (b.submittedAt ?? "").localeCompare(a.submittedAt ?? ""),
     );
     const rows = ordered.map((app) => [
+      app.generation ?? "",
       new Date(app.submittedAt).toLocaleString("ko-KR"),
       app.name, app.gender, app.birthdate, app.phone, app.email, app.sns,
       app.mtAvailable, app.howKnow, app.mainContact,
@@ -632,6 +659,17 @@ export default function ApplicationsTab() {
     ["2차 합격", counts.pass2, "#10b981"],
     ["불합격", counts.fail, colors.dangerMuted],
   ];
+
+  if (loading) {
+    return (
+      <div>
+        <div className={tabHeaderRowCss}>
+          <h2 className={tabTitleCss}>지원서 목록</h2>
+        </div>
+        <TabSkeleton variant="cards" count={5} />
+      </div>
+    );
+  }
 
   return (
     <div>

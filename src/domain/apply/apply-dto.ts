@@ -2,6 +2,7 @@ export interface ApplicationItem {
   id: string;
   submittedAt: string;
   status: 'pending' | 'pass' | 'fail';
+  generation?: number;
   name: string;
   gender: string;
   birthdate: string;
@@ -31,4 +32,5 @@ export interface ApplyPeriod {
   start: string;
   end: string;
   forceClosed?: boolean;
+  generation?: number;
 }

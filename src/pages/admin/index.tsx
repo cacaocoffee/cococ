@@ -8,6 +8,7 @@ import { colors } from "@/lib/tokens";
 import { apiFetch, clearAdminToken, getAdminToken, ADMIN_UNAUTHORIZED_EVENT } from "@/lib/api";
 import { AlertModal, useAlert } from "@/components/ui/Modal";
 import LoginScreen from "./LoginScreen";
+import AdminBootSpinner from "./components/AdminBootSpinner";
 
 interface Tab {
   key: string;
@@ -159,8 +160,7 @@ export default function AdminPage() {
   const activeKey = TABS.find((t) => location.pathname.startsWith(t.to))?.key ?? "applications";
 
   if (auth === "unknown") {
-    // 검증 동안엔 빈 화면 — TopProgressBar 가 위에서 진행 중임을 보여줌
-    return <div style={{ minHeight: "100vh" }} />;
+    return <AdminBootSpinner />;
   }
 
   if (auth === "no") {

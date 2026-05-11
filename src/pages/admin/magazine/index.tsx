@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/Modal";
 import ImageUpload from "@/components/ui/ImageUpload";
 import LoadingButton from "@/components/ui/LoadingButton";
+import TabSkeleton from "../components/TabSkeleton";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 import type { MagazineItem } from "@/domain/magazine/magazine-dto";
@@ -410,13 +411,24 @@ const toForm = (item: MagazineItem): MagazineFormState => ({
 });
 
 export default function MagazineTab() {
-  const { data: items = [] } = useMagazineList();
+  const { data: items = [], isLoading } = useMagazineList();
   const addMutation = useAddMagazine();
   const updateMutation = useUpdateMagazine();
   const deleteMutation = useDeleteMagazine();
   const [mode, setMode] = useState<"create" | MagazineItem | null>(null);
   const { confirmProps, openConfirm } = useConfirm();
   const { alertProps, openAlert } = useAlert();
+
+  if (isLoading) {
+    return (
+      <div>
+        <div className={tabHeaderRowCss}>
+          <h2 className={tabTitleCss}>매거진 관리</h2>
+        </div>
+        <TabSkeleton variant="cards" count={4} />
+      </div>
+    );
+  }
 
   return (
     <div>
