@@ -6,9 +6,11 @@ import {
   Link,
   redirect,
   useRouter,
+  useRouterState,
 } from "@tanstack/react-router";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import TopProgressBar from "@/components/ui/TopProgressBar";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 
@@ -90,17 +92,24 @@ const marqueeStyle = `
 `;
 
 // ─── Root layout ───
-const rootRoute = createRootRoute({
-  component: () => (
+function RootLayout() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAdmin = pathname.startsWith("/admin");
+  return (
     <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-amber-500 selection:text-black">
-      <Navbar />
+      <TopProgressBar />
+      {!isAdmin && <Navbar />}
       <main>
         <Outlet />
       </main>
-      <Footer />
+      {!isAdmin && <Footer />}
       <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
     </div>
-  ),
+  );
+}
+
+const rootRoute = createRootRoute({
+  component: RootLayout,
   notFoundComponent: NotFoundPage,
   errorComponent: ErrorPage,
 });

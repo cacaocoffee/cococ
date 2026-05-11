@@ -30,10 +30,11 @@ export const formCardCss = css({
   backgroundColor: colors.bgCard,
   border: `1px solid ${colors.borderSubtle}`,
   borderRadius: "1rem",
-  padding: "28px",
+  padding: "18px",
   display: "flex",
   flexDirection: "column",
   gap: "20px",
+  "@sm": { padding: "28px" },
 });
 
 export const formGrid2Css = css({
@@ -123,14 +124,17 @@ export const listCss = css({
 });
 
 // ─── Item card (archive / magazine list row) ──────────────────
+// 좁은 폭에서 액션 버튼이 자동으로 다음 줄로 wrap 되도록 flexWrap 사용.
 export const itemCardCss = css({
   backgroundColor: colors.bgCard,
   border: `1px solid ${colors.borderSubtle}`,
   borderRadius: "1rem",
-  padding: "16px",
+  padding: "12px",
   display: "flex",
   alignItems: "center",
-  gap: "16px",
+  gap: "12px",
+  flexWrap: "wrap",
+  "@sm": { padding: "16px", gap: "16px", flexWrap: "nowrap" },
 });
 
 export const itemThumbWrapCss = css({
@@ -147,7 +151,10 @@ export const itemThumbCss = css({
   height: "100%",
   objectFit: "cover",
 });
-export const itemBodyCss = css({ flex: "1 1 0%", minWidth: "0" });
+export const itemBodyCss = css({
+  flex: "1 1 160px",
+  minWidth: "0",
+});
 export const itemCatCss = css({
   color: colors.brand,
   fontSize: "10px",
@@ -168,6 +175,7 @@ export const itemActionsCss = css({
   display: "flex",
   gap: "8px",
   flexShrink: "0",
+  marginLeft: "auto",
 });
 
 export const editBtnCss = css({
@@ -214,7 +222,8 @@ export const searchBarInputCss = css({
   paddingRight: "16px",
   borderRadius: "0.5rem",
   outline: "none",
-  width: "224px",
+  width: "100%",
+  maxWidth: "224px",
   transition: "border-color 0.2s",
   _focus: { borderColor: colors.brand },
 });
@@ -226,6 +235,14 @@ export const searchBarIconCss = css({
   transform: "translateY(-50%)",
   color: colors.textDimmer,
   pointerEvents: "none",
+});
+
+// ─── Scrollable table wrapper (when2meet 시간표 등 좁은 폭에서 가로 스크롤) ───
+export const scrollTableWrapCss = css({
+  overflowX: "auto",
+  WebkitOverflowScrolling: "touch",
+  marginInline: "-4px",
+  paddingInline: "4px",
 });
 
 // ─── Empty state ──────────────────────────────────────────────

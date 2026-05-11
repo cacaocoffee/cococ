@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, ChevronDown } from "lucide-react";
+import { Search, ChevronDown, Archive as ArchiveIcon } from "lucide-react";
 import { useArchiveList } from "@/domain/archive/archive-query-options";
 import PageWrapper from "@/components/ui/PageWrapper";
 import SectionTitle from "@/components/ui/SectionTitle";
 import ArchiveCard from "@/components/ui/ArchiveCard";
 import FilterButton from "@/components/ui/FilterButton";
+import Skeleton from "@/components/ui/Skeleton";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 
@@ -95,6 +96,36 @@ const emptyCss = css({
   textAlign: "center",
 });
 
+const emptyStateCss = css({
+  textAlign: "center",
+  paddingBlock: "96px",
+  color: colors.textFaint,
+});
+
+const emptyIconCss = css({
+  marginInline: "auto",
+  marginBottom: "16px",
+  opacity: "0.35",
+});
+
+const emptyTitleCss = css({
+  fontSize: "16px",
+  fontWeight: "700",
+  color: colors.textMuted,
+  marginBottom: "8px",
+});
+
+const emptySubCss = css({
+  fontSize: "13px",
+  color: colors.textDimmer,
+});
+
+const skeletonCardCss = css({
+  display: "flex",
+  flexDirection: "column",
+  gap: "12px",
+});
+
 const gridCss = css({
   display: "grid",
   gridTemplateColumns: "1fr",
@@ -109,7 +140,7 @@ export default function ArchivePage() {
   const [search, setSearch] = useState("");
   const [yearFilter, setYearFilter] = useState("전체");
   const [baseFilter, setBaseFilter] = useState("전체");
-  const { data: items = [] } = useArchiveList();
+  const { data: items = [], isLoading } = useArchiveList();
 
   const filtered = items.filter((d) => {
     const catOk = filter === "전체" || d.category === filter;
@@ -196,7 +227,24 @@ export default function ArchivePage() {
           </div>
         </motion.div>
 
-        {filtered.length === 0 ? (
+        {isLoading ? (
+          <div className={gridCss}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className={skeletonCardCss}>
+                <Skeleton height="208px" radius="0.75rem" />
+                <Skeleton width="40%" height="11px" />
+                <Skeleton width="80%" height="16px" />
+                <Skeleton width="60%" height="12px" />
+              </div>
+            ))}
+          </div>
+        ) : items.length === 0 ? (
+          <div className={emptyStateCss}>
+            <div className={emptyIconCss}><ArchiveIcon size={40} /></div>
+            <p className={emptyTitleCss}>아직 등록된 활동이 없습니다.</p>
+            <p className={emptySubCss}>곧 코콕의 활동들이 이 곳에 채워질 예정입니다.</p>
+          </div>
+        ) : filtered.length === 0 ? (
           <p className={emptyCss}>검색 결과가 없습니다.</p>
         ) : (
           <motion.div layout className={gridCss}>

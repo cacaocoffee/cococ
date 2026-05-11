@@ -14,6 +14,7 @@ import {
   useConfirm,
   useAlert,
 } from "@/components/ui/Modal";
+import LoadingButton from "@/components/ui/LoadingButton";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 import type { ScheduleEvent } from "@/domain/schedule/schedule-dto";
@@ -74,15 +75,17 @@ interface ScheduleFormProps {
   onSave: (data: Omit<ScheduleEvent, "id">) => void;
   onCancel: () => void;
   onAlert: (msg: string) => void;
+  saving?: boolean;
 }
 
-function ScheduleForm({ initial = EMPTY_FORM, archiveOptions, onSave, onCancel, onAlert }: ScheduleFormProps) {
+function ScheduleForm({ initial = EMPTY_FORM, archiveOptions, onSave, onCancel, onAlert, saving = false }: ScheduleFormProps) {
   const [f, setF] = useState<ScheduleFormState>(initial);
   const set = (k: keyof ScheduleFormState) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
       setF((p) => ({ ...p, [k]: e.target.value }));
 
   const handleSave = () => {
+    if (saving) return;
     if (!f.title.trim() || !f.date.trim()) {
       onAlert("제목과 시작 날짜는 필수입니다.");
       return;
@@ -149,15 +152,15 @@ function ScheduleForm({ initial = EMPTY_FORM, archiveOptions, onSave, onCancel, 
       </div>
 
       <div className={formBtnRowCss}>
-        <button onClick={onCancel} className={cancelBtnCss}>취소</button>
-        <motion.button
+        <button onClick={onCancel} className={cancelBtnCss} disabled={saving}>취소</button>
+        <LoadingButton
           onClick={handleSave}
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
+          whileHover={saving ? undefined : { scale: 1.03 }}
           className={saveBtnCss}
+          loading={saving}
         >
-          저장
-        </motion.button>
+          {saving ? "저장 중…" : "저장"}
+        </LoadingButton>
       </div>
     </motion.div>
   );
@@ -230,8 +233,12 @@ export default function ScheduleTab() {
           <ScheduleForm
             archiveOptions={archiveOptions}
             onAlert={(msg) => openAlert({ title: msg, description: "", type: "error" })}
-            onSave={(d) => addMutation.mutate(d, { onSuccess: () => setMode(null) })}
+            onSave={(d) => {
+              if (addMutation.isPending) return;
+              addMutation.mutate(d, { onSuccess: () => setMode(null) });
+            }}
             onCancel={() => setMode(null)}
+            saving={addMutation.isPending}
           />
         </div>
       )}
@@ -242,13 +249,15 @@ export default function ScheduleTab() {
             initial={toForm(mode as ScheduleEvent)}
             archiveOptions={archiveOptions}
             onAlert={(msg) => openAlert({ title: msg, description: "", type: "error" })}
-            onSave={(d) =>
+            onSave={(d) => {
+              if (updateMutation.isPending) return;
               updateMutation.mutate(
                 { id: (mode as ScheduleEvent).id, data: d },
                 { onSuccess: () => setMode(null) },
-              )
-            }
+              );
+            }}
             onCancel={() => setMode(null)}
+            saving={updateMutation.isPending}
           />
         </div>
       )}
@@ -288,19 +297,23 @@ export default function ScheduleTab() {
                 >
                   <Pencil size={14} />
                 </motion.button>
-                <motion.button
+                <LoadingButton
                   onClick={() =>
                     openConfirm({
                       title: "일정을 삭제하시겠습니까?",
                       description: "삭제한 일정은 복구할 수 없습니다.",
-                      onConfirm: () => deleteMutation.mutate(item.id),
+                      onConfirm: () => {
+                        if (deleteMutation.isPending) return;
+                        deleteMutation.mutate(item.id);
+                      },
                     })
                   }
-                  whileTap={{ scale: 0.93 }}
                   className={deleteBtnCss}
+                  loading={deleteMutation.isPending && deleteMutation.variables === item.id}
+                  spinnerSize={13}
                 >
                   <Trash2 size={14} />
-                </motion.button>
+                </LoadingButton>
               </div>
             </div>
           );

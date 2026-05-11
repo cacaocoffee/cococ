@@ -3,7 +3,6 @@ import PageWrapper from "@/components/ui/PageWrapper";
 import HeroSection from "./sections/HeroSection";
 import PartnerBand from "./sections/PartnerBand";
 import MissionSection from "./sections/MissionSection";
-import CocknatusSection from "./sections/CocknatusSection";
 import RecentArchiveSection from "./sections/RecentArchiveSection";
 import InsightSection from "./sections/InsightSection";
 
@@ -16,7 +15,6 @@ export default function HomePage() {
         <HeroSection />
         <PartnerBand />
         <MissionSection />
-        <CocknatusSection />
         <RecentArchiveSection />
         <InsightSection />
       </div>
