@@ -7,7 +7,7 @@ import multer from 'multer';
 import { randomBytes } from 'crypto';
 import path from 'path';
 import { requireAdmin } from '../middleware/require-admin.js';
-import { supabase, STORAGE_BUCKET } from '../lib/supabase.js';
+import { getSupabase, STORAGE_BUCKET } from '../lib/supabase.js';
 
 export const uploadRouter = Router();
 
@@ -38,6 +38,7 @@ uploadRouter.post('/', requireAdmin, upload.single('file'), async (req, res) => 
   const ext = path.extname(req.file.originalname).toLowerCase();
   const objectKey = `${Date.now()}-${randomBytes(8).toString('hex')}${ext}`;
 
+  const supabase = getSupabase();
   const { error } = await supabase.storage
     .from(STORAGE_BUCKET)
     .upload(objectKey, req.file.buffer, {
