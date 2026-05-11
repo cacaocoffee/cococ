@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
 import type { ApplyPeriod } from "@/domain/apply/apply-dto";
 import { css } from "@/lib/css";
-import { colors } from "@/lib/tokens";
+import { colors, shadows } from "@/lib/tokens";
 
 const closedWrapCss = css({
   minHeight: "60vh",
@@ -12,7 +12,19 @@ const closedWrapCss = css({
   paddingInline: "24px",
 });
 
-const closedInnerCss = css({ textAlign: "center", maxWidth: "28rem" });
+const closedInnerCss = css({
+  textAlign: "center",
+  width: "100%",
+  maxWidth: "42rem",
+  marginInline: "auto",
+  backgroundColor: colors.bgCard,
+  border: `1px solid ${colors.borderSubtle}`,
+  borderRadius: "1.5rem",
+  boxShadow: shadows.card,
+  paddingBlock: "64px",
+  paddingInline: "32px",
+  "@md": { paddingInline: "48px" },
+});
 
 const closedIconWrapCss = css({
   width: "80px",

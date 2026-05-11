@@ -519,6 +519,7 @@ export default function ApplicationsTab() {
   );
   const [search, setSearch] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [genFilter, setGenFilter] = useState<number | "all">("all");
   // sort: null | "asc" | "desc" — 면접일 기준, pass1+interviewSchedule 있는 사람에게만 적용
   const [interviewSort, setInterviewSort] = useState<"asc" | "desc" | null>(null);
   // 진행 중인 행 ID — 같은 row 의 모든 액션 버튼을 disabled + spinner 처리
@@ -567,12 +568,26 @@ export default function ApplicationsTab() {
     return () => { cancelled = true; };
   }, []);
 
+  // 기수 필터 적용된 베이스 — 통계/CSV/목록 모두 이걸 기반으로
+  const byGen = genFilter === "all"
+    ? apps
+    : apps.filter((a) => a.generation === genFilter);
+
+  // 등록된 모든 기수(내림차순) — 칩으로 표시
+  const generations = [
+    ...new Set(
+      apps
+        .map((a) => a.generation)
+        .filter((g): g is number => typeof g === "number" && g > 0),
+    ),
+  ].sort((a, b) => b - a);
+
   const counts = {
-    total: apps.length,
-    pending: apps.filter((a) => a.status === "pending").length,
-    pass1: apps.filter((a) => a.status === "pass1").length,
-    pass2: apps.filter((a) => a.status === "pass2").length,
-    fail: apps.filter((a) => a.status === "fail").length,
+    total: byGen.length,
+    pending: byGen.filter((a) => a.status === "pending").length,
+    pass1: byGen.filter((a) => a.status === "pass1").length,
+    pass2: byGen.filter((a) => a.status === "pass2").length,
+    fail: byGen.filter((a) => a.status === "fail").length,
   };
 
   const cycleInterviewSort = () => {
@@ -586,7 +601,7 @@ export default function ApplicationsTab() {
     : interviewSort === "asc" ? "면접일 오름차순"
     : "면접일 정렬";
 
-  const filtered = apps.filter((app) => {
+  const filtered = byGen.filter((app) => {
     const matchStatus = statusFilter === "all" || app.status === statusFilter;
     const matchSearch =
       !search ||
@@ -623,8 +638,8 @@ export default function ApplicationsTab() {
       "자기소개", "지원동기", "비전선택", "기여방향", "기타",
       "상태",
     ];
-    // 제출일시 내림차순(최신순)
-    const ordered = [...apps].sort((a, b) =>
+    // 제출일시 내림차순(최신순) — 현재 선택된 기수 필터를 따름
+    const ordered = [...byGen].sort((a, b) =>
       (b.submittedAt ?? "").localeCompare(a.submittedAt ?? ""),
     );
     const rows = ordered.map((app) => [
@@ -703,6 +718,26 @@ export default function ApplicationsTab() {
           </div>
         ))}
       </div>
+
+      {generations.length > 0 && (
+        <div className={cx(filterRowCss, css({ marginBottom: "8px" }))}>
+          <button
+            onClick={() => setGenFilter("all")}
+            className={cx(chipBaseCss, genFilter === "all" ? chipActiveCss : chipInactiveCss)}
+          >
+            전체 기수
+          </button>
+          {generations.map((g) => (
+            <button
+              key={g}
+              onClick={() => setGenFilter(g)}
+              className={cx(chipBaseCss, genFilter === g ? chipActiveCss : chipInactiveCss)}
+            >
+              {g}기
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className={filterRowCss}>
         {(
