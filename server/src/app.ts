@@ -11,6 +11,7 @@ import { applyRouter } from './routes/apply.js';
 import { scheduleRouter } from './routes/schedule.js';
 import { uploadRouter } from './routes/upload.js';
 import { adminAuthRouter } from './routes/admin-auth.js';
+import { diagRouter } from './routes/diag.js';
 import { errorHandler } from './middleware/error.js';
 
 const app = express();
@@ -40,6 +41,7 @@ app.use(
 
 app.use(express.json({ limit: '10mb' }));
 
+app.use('/api/_diag', diagRouter);
 app.use('/api/admin', adminAuthRouter);
 app.use('/api/archives', archiveRouter);
 app.use('/api/magazines', magazineRouter);
