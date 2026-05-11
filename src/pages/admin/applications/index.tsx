@@ -534,36 +534,44 @@ export default function ApplicationsTab() {
   })();
 
   const exportCSV = () => {
+    // RFC 4180: 모든 셀을 큰따옴표로 감싸고 내부 따옴표는 두 번 반복
+    const escape = (v: unknown): string => {
+      if (v === null || v === undefined) return "";
+      return `"${String(v).replace(/"/g, '""')}"`;
+    };
     const header = [
-      "이름", "성별", "생년월일", "연락처", "이메일", "SNS",
-      "MT참가", "코콕알게된경로", "주소통수단",
-      "확정면접일정", "지원자가능시간",
+      "제출일시", "이름", "성별", "생년월일", "전화", "이메일", "SNS",
+      "MT가능", "코콕알게된경로", "주연락수단",
+      "가능시간", "확정면접시간",
       "디자인툴능력", "주활용디자인툴",
       "사진영상능력", "프로젝트기획경험",
-      "Q1.자기소개", "Q2.지원동기", "Q3-1.비전선택", "Q3-2.기여방향", "기타",
-      "상태", "접수일시",
+      "자기소개", "지원동기", "비전선택", "기여방향", "기타",
+      "상태",
     ];
-    const rows = apps.map((app) => [
+    // 제출일시 내림차순(최신순)
+    const ordered = [...apps].sort((a, b) =>
+      (b.submittedAt ?? "").localeCompare(a.submittedAt ?? ""),
+    );
+    const rows = ordered.map((app) => [
+      new Date(app.submittedAt).toLocaleString("ko-KR"),
       app.name, app.gender, app.birthdate, app.phone, app.email, app.sns,
       app.mtAvailable, app.howKnow, app.mainContact,
+      (app.interviewTimes || []).map((k) => k.replace("__", " ")).join(", "),
       app.interviewSchedule ? app.interviewSchedule.replace("__", " ") : "",
-      `"${(app.interviewTimes || []).map((k) => k.replace("__", " ")).join(", ")}"`,
-      app.scaleDesignTool, `"${(app.mainDesign || "").replace(/"/g, '""')}"`,
-      app.scaleCameraTool, `"${(app.mainProject || "").replace(/"/g, '""')}"`,
-      `"${(app.q1_intro || "").replace(/"/g, '""')}"`,
-      `"${(app.q2_motivation || "").replace(/"/g, '""')}"`,
-      `"${(app.q3_drink || "").replace(/"/g, '""')}"`,
-      `"${(app.q4_contribution || "").replace(/"/g, '""')}"`,
-      `"${(app.qEtc || "").replace(/"/g, '""')}"`,
+      app.scaleDesignTool, app.mainDesign,
+      app.scaleCameraTool, app.mainProject,
+      app.q1_intro, app.q2_motivation, app.q3_drink, app.q4_contribution, app.qEtc,
       STATUS_CFG[app.status]?.label ?? app.status,
-      new Date(app.submittedAt).toLocaleString("ko-KR"),
     ]);
-    const csv = [header, ...rows].map((r) => r.join(",")).join("\n");
+    const csv = [header, ...rows].map((r) => r.map(escape).join(",")).join("\r\n");
     const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "cococ_지원서.csv";
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const ts = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
+    a.download = `applications-${ts}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
