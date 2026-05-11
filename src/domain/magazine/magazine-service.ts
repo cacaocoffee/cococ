@@ -1,13 +1,20 @@
-import { MAGAZINE_DATA } from '@/data';
-import { createLocalStorageAPI } from '@/lib/local-storage';
+// ──────────────────────────────────────────────────────────
+// 매거진 서비스 (API 연동 버전)
+// ──────────────────────────────────────────────────────────
+
+import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api';
 import type { MagazineItem } from './magazine-dto';
 
-const magazineStorage = createLocalStorageAPI<MagazineItem>('cococ_magazine', MAGAZINE_DATA);
-
 export const magazineService = {
-  fetchList: () => magazineStorage.getAll(),
-  fetchById: (id: string | number) => magazineStorage.getById(id),
-  create: (data: Omit<MagazineItem, 'id' | 'createdAt'>) => magazineStorage.add(data),
-  update: (id: string | number, data: Partial<MagazineItem>) => magazineStorage.update(id, data),
-  delete: (id: string | number) => magazineStorage.remove(id),
+  fetchList: () => apiGet<MagazineItem[]>('/api/magazines'),
+
+  fetchById: (id: string | number) => apiGet<MagazineItem | null>(`/api/magazines/${id}`),
+
+  create: (data: Omit<MagazineItem, 'id' | 'createdAt'>) =>
+    apiPost<MagazineItem>('/api/magazines', data),
+
+  update: (id: string | number, data: Partial<MagazineItem>) =>
+    apiPut<MagazineItem>(`/api/magazines/${id}`, data),
+
+  delete: (id: string | number) => apiDelete(`/api/magazines/${id}`),
 };

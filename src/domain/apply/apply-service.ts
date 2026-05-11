@@ -1,49 +1,54 @@
+// ──────────────────────────────────────────────────────────
+// 지원서 서비스 (API 연동 버전)
+// ──────────────────────────────────────────────────────────
+// 기존: localStorage에 직접 저장
+// 변경: 백엔드 API에 요청
+//
+// ⚠️ 주의: 기존에는 동기(sync) 함수였지만,
+//    API 호출은 비동기(async)이므로 모든 함수가 Promise를 반환합니다.
+//    호출하는 곳에서 await를 붙여야 합니다.
+// ──────────────────────────────────────────────────────────
+
+import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from '@/lib/api';
 import type { ApplicationItem, InterviewSettings, ApplyPeriod } from './apply-dto';
 
-const APP_KEY = 'cococ_applications';
-
 export const applyService = {
-  loadApplications(): ApplicationItem[] {
-    try {
-      return JSON.parse(localStorage.getItem(APP_KEY) || '[]') as ApplicationItem[];
-    } catch {
-      return [];
-    }
+  // ── 지원서 관련 ────────────────────────────────────────
+
+  /** 전체 지원서 목록 조회 */
+  async loadApplications(): Promise<ApplicationItem[]> {
+    return apiGet<ApplicationItem[]>('/api/apply/applications');
   },
 
-  saveApplication(data: Omit<ApplicationItem, 'id' | 'submittedAt' | 'status'>): ApplicationItem {
-    const existing = applyService.loadApplications();
-    const item: ApplicationItem = {
-      id: Date.now().toString(),
-      submittedAt: new Date().toISOString(),
-      status: 'pending',
-      ...data,
-    };
-    localStorage.setItem(APP_KEY, JSON.stringify([item, ...existing]));
-    return item;
+  /** 새 지원서 제출 */
+  async saveApplication(
+    data: Omit<ApplicationItem, 'id' | 'submittedAt' | 'status'>,
+  ): Promise<ApplicationItem> {
+    return apiPost<ApplicationItem>('/api/apply/applications', data);
   },
 
-  updateStatus(id: string, status: ApplicationItem['status']): ApplicationItem[] {
-    const updated = applyService.loadApplications().map((a) =>
-      a.id === id ? { ...a, status } : a,
-    );
-    localStorage.setItem(APP_KEY, JSON.stringify(updated));
-    return updated;
+  /** 지원서 상태 변경 (합격/불합격) */
+  async updateStatus(
+    id: string,
+    status: ApplicationItem['status'],
+  ): Promise<ApplicationItem> {
+    return apiPatch<ApplicationItem>(`/api/apply/applications/${id}`, { status });
   },
 
-  updateFields(id: string, fields: Partial<ApplicationItem>): ApplicationItem[] {
-    const updated = applyService.loadApplications().map((a) =>
-      a.id === id ? { ...a, ...fields } : a,
-    );
-    localStorage.setItem(APP_KEY, JSON.stringify(updated));
-    return updated;
+  /** 지원서 필드 일부 수정 */
+  async updateFields(
+    id: string,
+    fields: Partial<ApplicationItem>,
+  ): Promise<ApplicationItem> {
+    return apiPatch<ApplicationItem>(`/api/apply/applications/${id}`, fields);
   },
 
-  deleteApplication(id: string): ApplicationItem[] {
-    const updated = applyService.loadApplications().filter((a) => a.id !== id);
-    localStorage.setItem(APP_KEY, JSON.stringify(updated));
-    return updated;
+  /** 지원서 삭제 */
+  async deleteApplication(id: string): Promise<void> {
+    return apiDelete(`/api/apply/applications/${id}`);
   },
+
+  // ── 면접 설정 ──────────────────────────────────────────
 
   DEFAULT_INTERVIEW_SETTINGS: {
     mtDate: '추후 공지 예정',
@@ -54,35 +59,31 @@ export const applyService = {
     ],
   } satisfies InterviewSettings,
 
-  loadInterviewSettings(): InterviewSettings | null {
-    try {
-      return JSON.parse(localStorage.getItem('cococ_interview_settings') || 'null') as InterviewSettings | null;
-    } catch {
-      return null;
-    }
+  /** 면접 설정 조회 */
+  async loadInterviewSettings(): Promise<InterviewSettings | null> {
+    return apiGet<InterviewSettings | null>('/api/apply/interview-settings');
   },
 
-  saveInterviewSettings(settings: InterviewSettings): void {
-    localStorage.setItem('cococ_interview_settings', JSON.stringify(settings));
+  /** 면접 설정 저장 */
+  async saveInterviewSettings(settings: InterviewSettings): Promise<void> {
+    await apiPut('/api/apply/interview-settings', settings);
   },
 
-  loadApplyPeriod(): ApplyPeriod | null {
-    try {
-      return JSON.parse(localStorage.getItem('cococ_apply_period') || 'null') as ApplyPeriod | null;
-    } catch {
-      return null;
-    }
+  // ── 지원 기간 ──────────────────────────────────────────
+
+  /** 지원 기간 조회 */
+  async loadApplyPeriod(): Promise<ApplyPeriod | null> {
+    return apiGet<ApplyPeriod | null>('/api/apply/period');
   },
 
-  saveApplyPeriod(period: ApplyPeriod): void {
-    localStorage.setItem('cococ_apply_period', JSON.stringify(period));
+  /** 지원 기간 설정 */
+  async saveApplyPeriod(period: ApplyPeriod): Promise<void> {
+    await apiPut('/api/apply/period', period);
   },
 
-  isApplyOpen(): boolean {
-    const p = applyService.loadApplyPeriod();
-    if (!p || !p.start || !p.end) return true;
-    if (p.forceClosed) return false;
-    const now = new Date();
-    return now >= new Date(p.start) && now <= new Date(p.end);
+  /** 지원 가능 여부 확인 */
+  async isApplyOpen(): Promise<boolean> {
+    const result = await apiGet<{ open: boolean }>('/api/apply/is-open');
+    return result.open;
   },
 };

@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Archive {
+  id           Int      @id @default(autoincrement())
+  year         String
+  semester     String   @default("")
+  category     String
+  title        String
+  date         String
+  base         String
+  img          String   @default("")
+  participants Int      @default(0)
+  location     String   @default("")
+  description  String   @default("")
+  tags         String   @default("[]")
+  gallery      String   @default("[]")
+  recipes      String   @default("[]")
+  content      String   @default("[]")
+  createdAt    DateTime @default(now())
+}
+
+model Magazine {
+  id            Int      @id @default(autoincrement())
+  title         String
+  author        String
+  date          String
+  readTime      String   @default("")
+  excerpt       String   @default("")
+  img           String   @default("")
+  tags          String   @default("[]")
+  magazineType  String   @default("")
+  instagramUrls String   @default("[]")
+  content       String   @default("[]")
+  createdAt     DateTime @default(now())
+}
+
+model Application {
+  id             Int      @id @default(autoincrement())
+  submittedAt    DateTime @default(now())
+  status         String   @default("pending")
+
+  name           String
+  gender         String
+  birthdate      String
+  phone          String
+  email          String
+  sns            String   @default("")
+
+  mtAvailable    String   @default("")
+  mainContact    String   @default("")
+  availableTimes String   @default("[]")
+  interviewTimes String   @default("[]")
+
+  scaleGourmet   Int      @default(0)
+  scalePeople    Int      @default(0)
+  q3_1_style     String   @default("")
+  q1_intro       String   @default("")
+  q2_drink       String   @default("")
+  q3_2_reason    String   @default("")
+  qEtc           String   @default("")
+}
+
+model Schedule {
+  id        Int     @id @default(autoincrement())
+  title     String
+  date      String
+  endDate   String  @default("")
+  type      String
+  archiveId Int?
+}
+
+model InterviewSetting {
+  id             Int    @id @default(1)
+  mtDate         String @default("")
+  interviewDates String @default("[]")
+  interviewTimes String @default("[]")
+}
+
+model ApplyPeriod {
+  id          Int     @id @default(1)
+  start       String  @default("")
+  end         String  @default("")
+  forceClosed Boolean @default(false)
+}
+
+model AdminToken {
+  token     String   @id
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+}

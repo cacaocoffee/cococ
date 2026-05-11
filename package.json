@@ -3,30 +3,51 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "dev:api": "tsx watch server/src/index.ts",
+    "build": "prisma generate && vite build",
     "preview": "vite preview",
-    "build:all": "npm run build && cd server && npm run build",
-    "start": "cd server && NODE_ENV=production node dist/index.js"
+    "vercel-build": "prisma generate && vite build",
+    "postinstall": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "tsx server/src/seed.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.6.0",
+    "@supabase/supabase-js": "^2.45.0",
     "@tanstack/react-query": "^5.95.0",
     "@tanstack/react-router": "^1.48.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.21.0",
     "framer-motion": "^11.3.8",
     "lucide-react": "^0.383.0",
+    "multer": "^1.4.5-lts.1",
     "overlay-kit": "^1.9.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-markdown": "^10.1.0"
+    "react-markdown": "^10.1.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tanstack/router-devtools": "^1.48.0",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.0.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@vercel/node": "^3.2.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.40",
+    "prisma": "^6.6.0",
+    "tsx": "^4.19.0",
     "typescript": "^6.0.2",
     "vite": "^5.4.0"
   }
