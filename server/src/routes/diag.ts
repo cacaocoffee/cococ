@@ -23,24 +23,58 @@ diagRouter.get('/', async (_req, res) => {
     env[key] = typeof v === 'string' && v.length > 0;
   }
 
-  let db: 'ok' | { ok: false; code?: string; kind: string };
+  let db: 'ok' | { ok: false; code?: string; kind: string; message?: string };
   try {
     await prisma.$queryRaw`SELECT 1`;
     db = 'ok';
   } catch (e) {
     let code: string | undefined;
     let kind = 'unknown';
+    let message: string | undefined;
     if (e instanceof Prisma.PrismaClientInitializationError) {
       code = e.errorCode ?? 'PRISMA_INIT';
       kind = 'init';
+      message = e.message;
     } else if (e instanceof Prisma.PrismaClientKnownRequestError) {
       code = e.code;
       kind = 'known_request';
+      message = e.message;
     } else if (e instanceof Error) {
       kind = e.name;
+      message = e.message;
     }
-    db = { ok: false, code, kind };
+    // DATABASE_URL이 메시지에 끼었을 가능성 차단: postgresql:// 라인은 마스킹
+    if (message) {
+      message = message
+        .replace(/postgres(?:ql)?:\/\/[^\s"']+/gi, 'postgres://***')
+        .slice(0, 600);
+    }
+    db = { ok: false, code, kind, message };
   }
 
-  res.json({ env, db, nodeEnv: process.env.NODE_ENV ?? null });
+  // 디버깅용: DATABASE_URL의 모양만 (값 노출 X)
+  const dbUrl = process.env.DATABASE_URL;
+  const dbUrlShape = dbUrl
+    ? {
+        scheme: dbUrl.split('://')[0] ?? null,
+        host: (() => {
+          try {
+            return new URL(dbUrl).hostname;
+          } catch {
+            return 'unparseable';
+          }
+        })(),
+        port: (() => {
+          try {
+            return new URL(dbUrl).port || null;
+          } catch {
+            return null;
+          }
+        })(),
+        hasPgbouncerParam: /pgbouncer=true/i.test(dbUrl),
+        length: dbUrl.length,
+      }
+    : null;
+
+  res.json({ env, db, dbUrlShape, nodeEnv: process.env.NODE_ENV ?? null });
 });
