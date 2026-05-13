@@ -15,17 +15,16 @@ import { validate } from '../lib/validate.js';
 
 export const scheduleRouter = Router();
 
-const scheduleCreateSchema = z
-  .object({
-    title: z.string().trim().min(1).max(200),
-    date: z.string().trim().min(1),
-    endDate: z.string().optional().default(''),
-    type: z.string().trim().min(1).max(40),
-    archiveId: z.coerce.number().int().nullable().optional(),
-  })
-  .strict();
+// strict 대신 default(strip) — 모르는 필드는 조용히 drop해서 기존 동작 유지.
+const scheduleCreateSchema = z.object({
+  title: z.string().trim().min(1).max(200),
+  date: z.string().trim().min(1),
+  endDate: z.string().optional().default(''),
+  type: z.string().trim().min(1).max(40),
+  archiveId: z.coerce.number().int().nullable().optional(),
+});
 
-const scheduleUpdateSchema = scheduleCreateSchema.partial().strict();
+const scheduleUpdateSchema = scheduleCreateSchema.partial();
 
 // 전체 일정 조회 (날짜순)
 scheduleRouter.get('/', async (_req, res, next) => {

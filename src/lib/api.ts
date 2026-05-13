@@ -2,7 +2,9 @@
 // 같은 도메인에 호스팅될 때(Vercel)는 BASE를 비워서 상대경로로 /api/* 호출.
 // 로컬 dev에서 별도 API 서버를 쓰는 경우 VITE_API_URL 또는 VITE_API_BASE_URL 지정.
 
-const TOKEN_KEY = "cococ_admin_token";
+// 인증은 서버가 발급하는 HttpOnly 쿠키(cococ_admin_session)로 수행한다.
+// 클라이언트는 토큰 값을 보지 못하고, 로그인 여부만 UI 게이트용으로 sessionStorage에 보관한다.
+const FLAG_KEY = "cococ_admin_logged_in";
 const BASE = (
   (import.meta.env.VITE_API_URL as string | undefined) ??
   (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
@@ -10,14 +12,16 @@ const BASE = (
 ).replace(/\/$/, "");
 
 export const getAdminToken = (): string | null =>
-  typeof window === "undefined" ? null : sessionStorage.getItem(TOKEN_KEY);
+  typeof window === "undefined" ? null : sessionStorage.getItem(FLAG_KEY);
 
-export const setAdminToken = (token: string): void => {
-  sessionStorage.setItem(TOKEN_KEY, token);
+export const setAdminToken = (_token: string): void => {
+  // 토큰 자체는 더 이상 클라이언트에 저장되지 않는다(HttpOnly 쿠키로 이동).
+  // UI 게이트용 마커만 유지.
+  sessionStorage.setItem(FLAG_KEY, "1");
 };
 
 export const clearAdminToken = (): void => {
-  sessionStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem(FLAG_KEY);
 };
 
 // ─── Inflight counter (전역 progress bar 용) ──────────────────
@@ -61,12 +65,7 @@ const handle401 = (): void => {
   }
 };
 
-const buildHeaders = (init?: HeadersInit): Headers => {
-  const headers = new Headers(init);
-  const token = getAdminToken();
-  if (token) headers.set("Authorization", `Bearer ${token}`);
-  return headers;
-};
+const buildHeaders = (init?: HeadersInit): Headers => new Headers(init);
 
 async function request<T>(
   path: string,
@@ -78,7 +77,8 @@ async function request<T>(
   }
   beginInflight();
   try {
-    const res = await fetch(`${BASE}${path}`, { ...init, headers });
+    // credentials: 'include' — HttpOnly 어드민 쿠키를 자동 동봉.
+    const res = await fetch(`${BASE}${path}`, { ...init, headers, credentials: "include" });
     if (res.status === 401) {
       handle401();
       throw new Error("Unauthorized");
@@ -137,6 +137,7 @@ export async function apiUploadFile(
       method: "POST",
       headers,
       body: fd,
+      credentials: "include",
     });
     if (res.status === 401) {
       handle401();

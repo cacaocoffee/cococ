@@ -44,8 +44,9 @@ const archiveFields = z.object({
   content: z.array(z.unknown()),
 });
 
-const archiveCreateSchema = archiveFields.partial().strict();
-const archiveUpdateSchema = archiveFields.partial().strict();
+// strict 대신 default(strip) — 모르는 필드는 조용히 drop해서 기존 동작 유지.
+const archiveCreateSchema = archiveFields.partial();
+const archiveUpdateSchema = archiveFields.partial();
 
 // ──────────────────────────────────────────────────────────
 // 헬퍼 함수: DB 레코드 → 프론트엔드용 JSON 변환

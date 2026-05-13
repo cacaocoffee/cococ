@@ -4,6 +4,7 @@
 
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import { archiveRouter } from './routes/archive.js';
 import { magazineRouter } from './routes/magazine.js';
@@ -55,10 +56,12 @@ app.use(
       if (allowedOriginPatterns.some((re) => re.test(origin))) return cb(null, true);
       cb(new Error(`CORS: origin not allowed (${origin})`));
     },
-    credentials: false,
+    // 어드민 세션 쿠키 동봉 필요 (cross-origin dev/preview 시나리오).
+    credentials: true,
   }),
 );
 
+app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 
 app.use('/api/_diag', diagRouter);

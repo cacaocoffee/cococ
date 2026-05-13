@@ -38,7 +38,8 @@ const submitLimiter = rateLimit({
   message: { error: '요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.' },
 });
 
-// 어드민이 수정 가능한 필드만 화이트리스트. 다른 필드는 자동 drop.
+// 어드민이 수정 가능한 필드만 화이트리스트.
+// strict 대신 default(strip) — 알 수 없는 필드는 조용히 drop해서 기존 동작 유지.
 const applicationPatchSchema = z
   .object({
     status: z.string().trim().min(1).max(40),
@@ -51,8 +52,7 @@ const applicationPatchSchema = z
     availableTimes: z.array(z.string()),
     interviewTimes: z.array(z.string()),
   })
-  .partial()
-  .strict();
+  .partial();
 
 const interviewSettingsSchema = z
   .object({
@@ -60,8 +60,7 @@ const interviewSettingsSchema = z
     interviewDates: z.array(z.string()),
     interviewTimes: z.array(z.string()),
   })
-  .partial()
-  .strict();
+  .partial();
 
 const applyPeriodSchema = z
   .object({
@@ -70,8 +69,7 @@ const applyPeriodSchema = z
     forceClosed: z.boolean(),
     generation: z.coerce.number().int().min(1),
   })
-  .partial()
-  .strict();
+  .partial();
 
 // 새 지원서 제출 시 검증 스키마 (공개 라우트이므로 입력을 신뢰할 수 없다)
 const applicationSchema = z.object({

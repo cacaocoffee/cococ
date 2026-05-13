@@ -65,11 +65,12 @@ export default function LoginScreen({ onLogin }: Props) {
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const { token } = await apiFetch<{ token: string; expiresAt: number }>(
+      // 서버가 HttpOnly 쿠키로 세션을 설정한다. 클라이언트는 로그인 마커만 저장.
+      await apiFetch<{ ok: true; expiresAt: number }>(
         "/api/admin/login",
         { method: "POST", body: JSON.stringify({ password: pw }) },
       );
-      setAdminToken(token);
+      setAdminToken("1");
       onLogin();
     } catch {
       setError(true);
