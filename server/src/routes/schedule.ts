@@ -8,10 +8,24 @@
 // ──────────────────────────────────────────────────────────
 
 import { Router } from 'express';
+import { z } from 'zod';
 import { prisma } from '../prisma.js';
 import { requireAdmin } from '../middleware/require-admin.js';
+import { validate } from '../lib/validate.js';
 
 export const scheduleRouter = Router();
+
+const scheduleCreateSchema = z
+  .object({
+    title: z.string().trim().min(1).max(200),
+    date: z.string().trim().min(1),
+    endDate: z.string().optional().default(''),
+    type: z.string().trim().min(1).max(40),
+    archiveId: z.coerce.number().int().nullable().optional(),
+  })
+  .strict();
+
+const scheduleUpdateSchema = scheduleCreateSchema.partial().strict();
 
 // 전체 일정 조회 (날짜순)
 scheduleRouter.get('/', async (_req, res, next) => {
@@ -31,7 +45,7 @@ scheduleRouter.get('/', async (_req, res, next) => {
 });
 
 // 일정 추가
-scheduleRouter.post('/', requireAdmin, async (req, res, next) => {
+scheduleRouter.post('/', requireAdmin, validate(scheduleCreateSchema), async (req, res, next) => {
   try {
     const body = req.body;
     const item = await prisma.schedule.create({
@@ -50,7 +64,7 @@ scheduleRouter.post('/', requireAdmin, async (req, res, next) => {
 });
 
 // 일정 수정
-scheduleRouter.put('/:id', requireAdmin, async (req, res, next) => {
+scheduleRouter.put('/:id', requireAdmin, validate(scheduleUpdateSchema), async (req, res, next) => {
   try {
     const body = req.body;
     const data: any = {};

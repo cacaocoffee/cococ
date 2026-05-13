@@ -12,10 +12,28 @@
 // ──────────────────────────────────────────────────────────
 
 import { Router } from 'express';
+import { z } from 'zod';
 import { prisma } from '../prisma.js';
 import { requireAdmin } from '../middleware/require-admin.js';
+import { validate } from '../lib/validate.js';
 
 export const magazineRouter = Router();
+
+const magazineFields = z.object({
+  title: z.string().max(300),
+  author: z.string().max(100),
+  date: z.string().max(40),
+  readTime: z.string().max(40),
+  excerpt: z.string().max(2000),
+  img: z.string().max(2000),
+  magazineType: z.string().max(40),
+  tags: z.array(z.string()),
+  instagramUrls: z.array(z.string()),
+  content: z.array(z.unknown()),
+});
+
+const magazineCreateSchema = magazineFields.partial().strict();
+const magazineUpdateSchema = magazineFields.partial().strict();
 
 function toResponse(item: any) {
   return {
@@ -55,7 +73,7 @@ magazineRouter.get('/:id', async (req, res, next) => {
 });
 
 // 생성
-magazineRouter.post('/', requireAdmin, async (req, res, next) => {
+magazineRouter.post('/', requireAdmin, validate(magazineCreateSchema), async (req, res, next) => {
   try {
     const body = req.body;
     const item = await prisma.magazine.create({
@@ -79,7 +97,7 @@ magazineRouter.post('/', requireAdmin, async (req, res, next) => {
 });
 
 // 수정
-magazineRouter.put('/:id', requireAdmin, async (req, res, next) => {
+magazineRouter.put('/:id', requireAdmin, validate(magazineUpdateSchema), async (req, res, next) => {
   try {
     const body = req.body;
     const data: any = {};

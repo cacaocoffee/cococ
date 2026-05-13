@@ -18,12 +18,34 @@
 // ──────────────────────────────────────────────────────────
 
 import { Router } from 'express';
+import { z } from 'zod';
 import { prisma } from '../prisma.js';
 import { requireAdmin } from '../middleware/require-admin.js';
+import { validate } from '../lib/validate.js';
 
 // Router()로 라우터 객체를 만듭니다.
 // 라우터는 "이 URL에 이 함수를 연결해줘"라는 설정 모음입니다.
 export const archiveRouter = Router();
+
+const archiveFields = z.object({
+  year: z.string().max(10),
+  semester: z.string().max(20),
+  category: z.string().max(40),
+  title: z.string().max(300),
+  date: z.string().max(40),
+  base: z.string().max(2000),
+  img: z.string().max(2000),
+  participants: z.coerce.number().int().min(0),
+  location: z.string().max(300),
+  description: z.string().max(5000),
+  tags: z.array(z.string()),
+  gallery: z.array(z.unknown()),
+  recipes: z.array(z.unknown()),
+  content: z.array(z.unknown()),
+});
+
+const archiveCreateSchema = archiveFields.partial().strict();
+const archiveUpdateSchema = archiveFields.partial().strict();
 
 // ──────────────────────────────────────────────────────────
 // 헬퍼 함수: DB 레코드 → 프론트엔드용 JSON 변환
@@ -94,7 +116,7 @@ archiveRouter.get('/:id', async (req, res, next) => {
 // 클라이언트가 body에 JSON 데이터를 담아 보냅니다.
 // req.body에서 데이터를 꺼내 DB에 저장합니다.
 
-archiveRouter.post('/', requireAdmin, async (req, res, next) => {
+archiveRouter.post('/', requireAdmin, validate(archiveCreateSchema), async (req, res, next) => {
   try {
     const body = req.body;
 
@@ -131,7 +153,7 @@ archiveRouter.post('/', requireAdmin, async (req, res, next) => {
 // PUT /api/archives/:id - 아카이브 수정
 // ──────────────────────────────────────────────────────────
 
-archiveRouter.put('/:id', requireAdmin, async (req, res, next) => {
+archiveRouter.put('/:id', requireAdmin, validate(archiveUpdateSchema), async (req, res, next) => {
   try {
     const body = req.body;
 

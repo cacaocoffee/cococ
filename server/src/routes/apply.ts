@@ -38,6 +38,41 @@ const submitLimiter = rateLimit({
   message: { error: '요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.' },
 });
 
+// 어드민이 수정 가능한 필드만 화이트리스트. 다른 필드는 자동 drop.
+const applicationPatchSchema = z
+  .object({
+    status: z.string().trim().min(1).max(40),
+    name: z.string().trim().min(1).max(50),
+    gender: z.string().trim().min(1),
+    birthdate: z.string().trim().min(1),
+    phone: z.string().trim().regex(/^[0-9-]{9,13}$/),
+    email: z.string().trim().email(),
+    sns: z.string(),
+    availableTimes: z.array(z.string()),
+    interviewTimes: z.array(z.string()),
+  })
+  .partial()
+  .strict();
+
+const interviewSettingsSchema = z
+  .object({
+    mtDate: z.string(),
+    interviewDates: z.array(z.string()),
+    interviewTimes: z.array(z.string()),
+  })
+  .partial()
+  .strict();
+
+const applyPeriodSchema = z
+  .object({
+    start: z.string(),
+    end: z.string(),
+    forceClosed: z.boolean(),
+    generation: z.coerce.number().int().min(1),
+  })
+  .partial()
+  .strict();
+
 // 새 지원서 제출 시 검증 스키마 (공개 라우트이므로 입력을 신뢰할 수 없다)
 const applicationSchema = z.object({
   name: z.string().trim().min(1).max(50),
@@ -121,7 +156,7 @@ applyRouter.post('/applications', submitLimiter, validate(applicationSchema), as
 
 // 지원서 수정 (상태 변경 등)
 // PATCH는 "일부 필드만 수정"할 때 사용하는 HTTP 메서드입니다.
-applyRouter.patch('/applications/:id', requireAdmin, async (req, res, next) => {
+applyRouter.patch('/applications/:id', requireAdmin, validate(applicationPatchSchema), async (req, res, next) => {
   try {
     const body = req.body;
     const data: any = {};
@@ -190,7 +225,7 @@ applyRouter.get('/interview-settings', async (_req, res, next) => {
 });
 
 // 면접 설정 저장
-applyRouter.put('/interview-settings', requireAdmin, async (req, res, next) => {
+applyRouter.put('/interview-settings', requireAdmin, validate(interviewSettingsSchema), async (req, res, next) => {
   try {
     const body = req.body;
     const settings = await prisma.interviewSetting.upsert({
@@ -240,7 +275,7 @@ applyRouter.get('/period', async (_req, res, next) => {
 });
 
 // 지원 기간 저장
-applyRouter.put('/period', requireAdmin, async (req, res, next) => {
+applyRouter.put('/period', requireAdmin, validate(applyPeriodSchema), async (req, res, next) => {
   try {
     const body = req.body;
     const generation = Math.max(1, Math.floor(Number(body.generation) || 1));
