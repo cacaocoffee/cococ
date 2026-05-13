@@ -20,9 +20,12 @@ const app = express();
 // Vercel 등 리버스 프록시 뒤에서 X-Forwarded-For 신뢰 (rate limit IP 식별용).
 app.set('trust proxy', 1);
 
+// trailing slash 같은 흔한 입력 실수에 견디게 정규화 — 비교는 항상 정규화된 값끼리.
+const normalizeOrigin = (s: string): string => s.trim().replace(/\/+$/, '');
+
 const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? 'http://localhost:5173')
   .split(',')
-  .map((s) => s.trim())
+  .map(normalizeOrigin)
   .filter(Boolean);
 
 // 추가 정규식 패턴 (예: 본인 프로젝트 프리뷰 도메인). 콤마로 구분.
@@ -46,14 +49,15 @@ app.use(
   cors({
     origin: (origin, cb) => {
       if (!origin) return cb(null, true);
-      if (allowedOrigins.includes(origin)) return cb(null, true);
+      const normalized = normalizeOrigin(origin);
+      if (allowedOrigins.includes(normalized)) return cb(null, true);
       try {
-        const host = new URL(origin).hostname;
+        const host = new URL(normalized).hostname;
         if (host === 'localhost' || host === '127.0.0.1') return cb(null, true);
       } catch {
         /* ignore */
       }
-      if (allowedOriginPatterns.some((re) => re.test(origin))) return cb(null, true);
+      if (allowedOriginPatterns.some((re) => re.test(normalized))) return cb(null, true);
       cb(new Error(`CORS: origin not allowed (${origin})`));
     },
     // 어드민 세션 쿠키 동봉 필요 (cross-origin dev/preview 시나리오).
