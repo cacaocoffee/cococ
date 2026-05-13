@@ -113,6 +113,14 @@ applyRouter.get('/applications', requireAdmin, async (_req, res, next) => {
     });
     res.json(items.map(appToResponse));
   } catch (err) {
+    // 스키마 드리프트(P2022: 컬럼 누락)로 어드민 페이지가 통째로 멈추지 않게.
+    // DB 마이그레이션이 늦어진 경우 빈 목록을 보여주고 운영 측에서 ALTER TABLE 후 자연 복구.
+    const code = (err as { code?: string })?.code;
+    if (code === 'P2022') {
+      console.warn('⚠️ Application 테이블 스키마 드리프트 감지 (P2022). 빈 목록으로 폴백.');
+      res.json([]);
+      return;
+    }
     next(err);
   }
 });
