@@ -32,8 +32,9 @@ const magazineFields = z.object({
   content: z.array(z.unknown()),
 });
 
-const magazineCreateSchema = magazineFields.partial().strict();
-const magazineUpdateSchema = magazineFields.partial().strict();
+// strict 대신 default(strip) — 모르는 필드는 조용히 drop해서 기존 동작 유지.
+const magazineCreateSchema = magazineFields.partial();
+const magazineUpdateSchema = magazineFields.partial();
 
 function toResponse(item: any) {
   return {

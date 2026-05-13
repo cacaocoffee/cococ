@@ -6,6 +6,19 @@ import { requireAdmin } from '../middleware/require-admin.js';
 
 export const adminAuthRouter = Router();
 
+const COOKIE_NAME = 'cococ_admin_session';
+const COOKIE_MAX_AGE_MS = 12 * 60 * 60 * 1000;
+
+function cookieOptions() {
+  return {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict' as const,
+    path: '/api',
+    maxAge: COOKIE_MAX_AGE_MS,
+  };
+}
+
 // 토큰 유효성 검증용 가벼운 핑 — 프론트가 admin shell 렌더 전에 호출.
 adminAuthRouter.get('/ping', requireAdmin, (_req, res) => {
   res.json({ ok: true });
@@ -48,12 +61,16 @@ adminAuthRouter.post('/login', loginLimiter, async (req, res) => {
 
   const token = randomBytes(32).toString('hex');
   const expiresAt = await issue(token);
-  res.json({ token, expiresAt });
+  // 토큰은 HttpOnly 쿠키로만 전달 — JS 측에서 접근 불가 → XSS로 탈취 차단.
+  res.cookie(COOKIE_NAME, token, cookieOptions());
+  res.json({ ok: true, expiresAt });
 });
 
 adminAuthRouter.post('/logout', async (req, res) => {
-  const header = req.headers.authorization ?? '';
-  const match = /^Bearer\s+(.+)$/.exec(header);
-  if (match) await revoke(match[1]);
+  const cookieToken = req.cookies?.[COOKIE_NAME];
+  if (typeof cookieToken === 'string' && cookieToken) {
+    await revoke(cookieToken);
+  }
+  res.clearCookie(COOKIE_NAME, { ...cookieOptions(), maxAge: undefined });
   res.status(200).json({ ok: true });
 });
