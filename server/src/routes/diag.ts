@@ -5,8 +5,12 @@
 import { Router } from 'express';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../prisma.js';
+import { requireAdmin } from '../middleware/require-admin.js';
 
 export const diagRouter = Router();
+
+// 진단 라우트는 인프라 메타데이터를 노출하므로 어드민 전용.
+diagRouter.use(requireAdmin);
 
 const REQUIRED_ENV = [
   'DATABASE_URL',
