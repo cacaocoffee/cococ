@@ -5,13 +5,21 @@
 import { Router } from 'express';
 import multer from 'multer';
 import { randomBytes } from 'crypto';
-import path from 'path';
+import { fileTypeFromBuffer } from 'file-type';
 import { requireAdmin } from '../middleware/require-admin.js';
 import { getSupabase, STORAGE_BUCKET } from '../lib/supabase.js';
 
 export const uploadRouter = Router();
 
+// MIME 화이트리스트는 클라이언트 위변조 가능 — 매직바이트로 한 번 더 검증.
+// SVG는 안에 <script>를 품을 수 있어 명시적으로 차단한다.
 const ALLOWED_MIME = new Set(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+const ALLOWED_EXT: Record<string, string> = {
+  'image/jpeg': '.jpg',
+  'image/png': '.png',
+  'image/gif': '.gif',
+  'image/webp': '.webp',
+};
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -35,14 +43,25 @@ uploadRouter.post('/', requireAdmin, upload.single('file'), async (req, res) => 
     return;
   }
 
-  const ext = path.extname(req.file.originalname).toLowerCase();
+  // 매직바이트 검증 — 실제 파일이 허용된 이미지 타입인지 확인.
+  const detected = await fileTypeFromBuffer(req.file.buffer);
+  if (!detected || !ALLOWED_MIME.has(detected.mime)) {
+    res.status(400).json({
+      error: 'Invalid input',
+      details: { reason: 'unsupported image binary', detected: detected?.mime ?? 'unknown' },
+    });
+    return;
+  }
+
+  // 확장자는 검증된 실제 타입에서 도출 (사용자 제공 originalname 신뢰 안 함).
+  const ext = ALLOWED_EXT[detected.mime];
   const objectKey = `${Date.now()}-${randomBytes(8).toString('hex')}${ext}`;
 
   const supabase = getSupabase();
   const { error } = await supabase.storage
     .from(STORAGE_BUCKET)
     .upload(objectKey, req.file.buffer, {
-      contentType: req.file.mimetype,
+      contentType: detected.mime,
       upsert: false,
     });
 
