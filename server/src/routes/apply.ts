@@ -22,11 +22,21 @@
 
 import { Router } from 'express';
 import { z } from 'zod';
+import rateLimit from 'express-rate-limit';
 import { prisma } from '../prisma.js';
 import { requireAdmin } from '../middleware/require-admin.js';
 import { validate } from '../lib/validate.js';
 
 export const applyRouter = Router();
+
+// 공개 지원서 제출 스팸/봇 방어: IP당 1시간 5건.
+const submitLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 5,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { error: '요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.' },
+});
 
 // 새 지원서 제출 시 검증 스키마 (공개 라우트이므로 입력을 신뢰할 수 없다)
 const applicationSchema = z.object({
@@ -74,8 +84,8 @@ applyRouter.get('/applications', requireAdmin, async (_req, res, next) => {
   }
 });
 
-// 새 지원서 제출
-applyRouter.post('/applications', validate(applicationSchema), async (req, res, next) => {
+// 새 지원서 제출 (공개) — IP 레이트리미트 적용
+applyRouter.post('/applications', submitLimiter, validate(applicationSchema), async (req, res, next) => {
   try {
     const body = req.body;
     // 현재 모집 중인 기수를 서버가 직접 주입 (클라이언트 위변조 방지)
