@@ -46,6 +46,7 @@ model Application {
   id             Int      @id @default(autoincrement())
   submittedAt    DateTime @default(now())
   status         String   @default("pending")
+  generation     Int      @default(0)
 
   name           String
   gender         String
@@ -89,6 +90,7 @@ model ApplyPeriod {
   start       String  @default("")
   end         String  @default("")
   forceClosed Boolean @default(false)
+  generation  Int     @default(1)
 }
 
 model AdminToken {

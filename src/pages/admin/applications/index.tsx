@@ -8,6 +8,7 @@ import { applyService } from "@/domain/apply/apply-service";
 import type { ApplicationItem } from "@/domain/apply/apply-dto";
 import { ConfirmModal, useConfirm } from "@/components/ui/Modal";
 import LoadingButton from "@/components/ui/LoadingButton";
+import TabSkeleton from "../components/TabSkeleton";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 import { STATUS_CFG } from "../constants";
@@ -22,6 +23,7 @@ interface AdminApplicationItem {
   id: string;
   submittedAt: string;
   status: string;
+  generation?: number;
   name: string;
   gender: string;
   birthdate: string;
@@ -65,6 +67,15 @@ const infoCss = css({ flex: "1 1 0%", minWidth: "0" });
 const nameRowCss = css({ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" });
 const nameCss = css({ color: colors.textPrimary, fontWeight: "700", fontSize: "14px" });
 const genderCss = css({ color: colors.textFaint, fontSize: "12px" });
+const genChipCss = css({
+  display: "inline-flex", alignItems: "center",
+  backgroundColor: "rgba(245,158,11,0.12)",
+  color: colors.brand,
+  fontSize: "11px", fontWeight: "900",
+  paddingInline: "8px", paddingBlock: "2px",
+  borderRadius: "9999px",
+  border: "1px solid rgba(245,158,11,0.22)",
+});
 const metaRowCss = css({
   display: "flex", gap: "8px", marginTop: "4px",
   flexWrap: "wrap", fontSize: "12px", color: colors.textFaint,
@@ -258,6 +269,9 @@ function ApplicationRow({ app, onStatusChange, onSaveField, onDelete, settings, 
         <div className={avatarCss}>{app.name?.[0] ?? "?"}</div>
         <div className={infoCss}>
           <div className={nameRowCss}>
+            {app.generation ? (
+              <span className={genChipCss}>{app.generation}기</span>
+            ) : null}
             <span className={nameCss}>{app.name || "이름 없음"}</span>
             <span className={genderCss}>{app.gender}</span>
             <span
@@ -499,11 +513,13 @@ const sortActiveCss = css({ color: "#34d399", borderColor: "#34d399" });
 
 export default function ApplicationsTab() {
   const [apps, setApps] = useState<AdminApplicationItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [settings, setSettings] = useState<{ interviewDates: string[]; interviewTimes: string[] }>(
     () => applyService.DEFAULT_INTERVIEW_SETTINGS,
   );
   const [search, setSearch] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [genFilter, setGenFilter] = useState<number | "all">("all");
   // sort: null | "asc" | "desc" — 면접일 기준, pass1+interviewSchedule 있는 사람에게만 적용
   const [interviewSort, setInterviewSort] = useState<"asc" | "desc" | null>(null);
   // 진행 중인 행 ID — 같은 row 의 모든 액션 버튼을 disabled + spinner 처리
@@ -535,18 +551,43 @@ export default function ApplicationsTab() {
   }, []);
 
   useEffect(() => {
-    void refreshApps();
-    void applyService.loadInterviewSettings().then((s) => {
-      if (s) setSettings(s);
-    });
-  }, [refreshApps]);
+    let cancelled = false;
+    setLoading(true);
+    void Promise.all([
+      applyService.loadApplications(),
+      applyService.loadInterviewSettings(),
+    ])
+      .then(([data, s]) => {
+        if (cancelled) return;
+        setApps(data as unknown as AdminApplicationItem[]);
+        if (s) setSettings(s);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  // 기수 필터 적용된 베이스 — 통계/CSV/목록 모두 이걸 기반으로
+  const byGen = genFilter === "all"
+    ? apps
+    : apps.filter((a) => a.generation === genFilter);
+
+  // 등록된 모든 기수(내림차순) — 칩으로 표시
+  const generations = [
+    ...new Set(
+      apps
+        .map((a) => a.generation)
+        .filter((g): g is number => typeof g === "number" && g > 0),
+    ),
+  ].sort((a, b) => b - a);
 
   const counts = {
-    total: apps.length,
-    pending: apps.filter((a) => a.status === "pending").length,
-    pass1: apps.filter((a) => a.status === "pass1").length,
-    pass2: apps.filter((a) => a.status === "pass2").length,
-    fail: apps.filter((a) => a.status === "fail").length,
+    total: byGen.length,
+    pending: byGen.filter((a) => a.status === "pending").length,
+    pass1: byGen.filter((a) => a.status === "pass1").length,
+    pass2: byGen.filter((a) => a.status === "pass2").length,
+    fail: byGen.filter((a) => a.status === "fail").length,
   };
 
   const cycleInterviewSort = () => {
@@ -560,7 +601,7 @@ export default function ApplicationsTab() {
     : interviewSort === "asc" ? "면접일 오름차순"
     : "면접일 정렬";
 
-  const filtered = apps.filter((app) => {
+  const filtered = byGen.filter((app) => {
     const matchStatus = statusFilter === "all" || app.status === statusFilter;
     const matchSearch =
       !search ||
@@ -589,7 +630,7 @@ export default function ApplicationsTab() {
       return `"${String(v).replace(/"/g, '""')}"`;
     };
     const header = [
-      "제출일시", "이름", "성별", "생년월일", "전화", "이메일", "SNS",
+      "기수", "제출일시", "이름", "성별", "생년월일", "전화", "이메일", "SNS",
       "MT가능", "코콕알게된경로", "주연락수단",
       "가능시간", "확정면접시간",
       "디자인툴능력", "주활용디자인툴",
@@ -597,11 +638,12 @@ export default function ApplicationsTab() {
       "자기소개", "지원동기", "비전선택", "기여방향", "기타",
       "상태",
     ];
-    // 제출일시 내림차순(최신순)
-    const ordered = [...apps].sort((a, b) =>
+    // 제출일시 내림차순(최신순) — 현재 선택된 기수 필터를 따름
+    const ordered = [...byGen].sort((a, b) =>
       (b.submittedAt ?? "").localeCompare(a.submittedAt ?? ""),
     );
     const rows = ordered.map((app) => [
+      app.generation ?? "",
       new Date(app.submittedAt).toLocaleString("ko-KR"),
       app.name, app.gender, app.birthdate, app.phone, app.email, app.sns,
       app.mtAvailable, app.howKnow, app.mainContact,
@@ -632,6 +674,17 @@ export default function ApplicationsTab() {
     ["2차 합격", counts.pass2, "#10b981"],
     ["불합격", counts.fail, colors.dangerMuted],
   ];
+
+  if (loading) {
+    return (
+      <div>
+        <div className={tabHeaderRowCss}>
+          <h2 className={tabTitleCss}>지원서 목록</h2>
+        </div>
+        <TabSkeleton variant="cards" count={5} />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -665,6 +718,26 @@ export default function ApplicationsTab() {
           </div>
         ))}
       </div>
+
+      {generations.length > 0 && (
+        <div className={cx(filterRowCss, css({ marginBottom: "8px" }))}>
+          <button
+            onClick={() => setGenFilter("all")}
+            className={cx(chipBaseCss, genFilter === "all" ? chipActiveCss : chipInactiveCss)}
+          >
+            전체 기수
+          </button>
+          {generations.map((g) => (
+            <button
+              key={g}
+              onClick={() => setGenFilter(g)}
+              className={cx(chipBaseCss, genFilter === g ? chipActiveCss : chipInactiveCss)}
+            >
+              {g}기
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className={filterRowCss}>
         {(

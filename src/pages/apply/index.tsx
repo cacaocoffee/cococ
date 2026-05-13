@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FAQ_DATA } from "@/data";
 import PageWrapper from "@/components/ui/PageWrapper";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { applyService } from "@/domain/apply/apply-service";
+import type { ApplyPeriod } from "@/domain/apply/apply-dto";
 import { AlertModal, useAlert } from "@/components/ui/Modal";
 import { css } from "@/lib/css";
 import { colors, shadows } from "@/lib/tokens";
 import { INIT, stepVariants } from "./constants";
 import { summaryRowCss, summaryLabelCss, summaryValueCss } from "./styles";
 import ClosedScreen from "./ClosedScreen";
+import ApplyFormSkeleton from "./ApplyFormSkeleton";
 import FaqItem from "./components/FaqItem";
 import Step1Personal from "./steps/Step1Personal";
 import Step2Activity from "./steps/Step2Activity";
@@ -188,8 +190,24 @@ const faqListCss = css({
 
 // ─── Main ─────────────────────────────────────────────────────
 export default function ApplyPage() {
-  const open = applyService.isApplyOpen();
+  const [open, setOpen] = useState<boolean | null>(null);
+  const [period, setPeriod] = useState<ApplyPeriod | null>(null);
+  const generation = period?.generation ?? null;
   const { alertProps, openAlert } = useAlert();
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const [isOpen, p] = await Promise.all([
+        applyService.isApplyOpen().catch(() => true),
+        applyService.loadApplyPeriod().catch(() => null),
+      ]);
+      if (cancelled) return;
+      setPeriod(p);
+      setOpen(isOpen);
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
@@ -246,7 +264,7 @@ export default function ApplyPage() {
     goTo(step + 1);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!form.privacyAgree) {
       openAlert({
         title: "개인정보 동의 필요",
@@ -255,14 +273,38 @@ export default function ApplyPage() {
       });
       return;
     }
-    applyService.saveApplication(form);
-    setSubmitted(true);
+    try {
+      await applyService.saveApplication(form);
+      setSubmitted(true);
+    } catch {
+      openAlert({
+        title: "제출 실패",
+        description: "잠시 후 다시 시도해 주세요.",
+        type: "error",
+      });
+    }
   };
+
+  if (open === null)
+    return (
+      <PageWrapper>
+        <div className={pageCss}>
+          <div className={headerCss}>
+            <p className={eyebrowCss}>Recruitment</p>
+            <h2 className={pageTitleCss}>COCOC 지원서</h2>
+            <p className={pageSubCss}>
+              즐겁게 임하는 것, 코콕이 추구하는 가장 핵심적인 가치입니다.
+            </p>
+          </div>
+          <ApplyFormSkeleton />
+        </div>
+      </PageWrapper>
+    );
 
   if (!open)
     return (
       <PageWrapper>
-        <ClosedScreen />
+        <ClosedScreen period={period} />
       </PageWrapper>
     );
 
@@ -326,7 +368,9 @@ export default function ApplyPage() {
           animate={{ opacity: 1, y: 0 }}
         >
           <p className={eyebrowCss}>Recruitment</p>
-          <h2 className={pageTitleCss}>COCOC 19기 지원서</h2>
+          <h2 className={pageTitleCss}>
+            COCOC {generation ?? ""}{generation ? "기 " : ""}지원서
+          </h2>
           <p className={pageSubCss}>
             즐겁게 임하는 것, 코콕이 추구하는 가장 핵심적인 가치입니다.
           </p>

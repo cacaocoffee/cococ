@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
-import { applyService } from "@/domain/apply/apply-service";
+import type { ApplyPeriod } from "@/domain/apply/apply-dto";
 import { css } from "@/lib/css";
-import { colors } from "@/lib/tokens";
+import { colors, shadows } from "@/lib/tokens";
 
 const closedWrapCss = css({
   minHeight: "60vh",
@@ -12,7 +12,19 @@ const closedWrapCss = css({
   paddingInline: "24px",
 });
 
-const closedInnerCss = css({ textAlign: "center", maxWidth: "28rem" });
+const closedInnerCss = css({
+  textAlign: "center",
+  width: "100%",
+  maxWidth: "42rem",
+  marginInline: "auto",
+  backgroundColor: colors.bgCard,
+  border: `1px solid ${colors.borderSubtle}`,
+  borderRadius: "1.5rem",
+  boxShadow: shadows.card,
+  paddingBlock: "64px",
+  paddingInline: "32px",
+  "@md": { paddingInline: "48px" },
+});
 
 const closedIconWrapCss = css({
   width: "80px",
@@ -40,8 +52,16 @@ const closedDescCss = css({
 });
 const closedAccentCss = css({ color: colors.brand, fontWeight: "700" });
 
-export default function ClosedScreen() {
-  const period = applyService.loadApplyPeriod();
+interface Props {
+  period: ApplyPeriod | null;
+}
+
+export default function ClosedScreen({ period }: Props) {
+  const generation = period?.generation;
+  const title = generation
+    ? `${generation}기 모집은 종료되었습니다`
+    : "모집은 종료되었습니다";
+
   return (
     <div className={closedWrapCss}>
       <motion.div
@@ -52,22 +72,22 @@ export default function ClosedScreen() {
         <div className={closedIconWrapCss}>
           <Lock size={36} />
         </div>
-        <h2 className={closedTitleCss}>현재 접수 기간이 아닙니다</h2>
-        {period?.start && period?.end ? (
-          <p className={closedDescCss}>
-            접수 기간:{" "}
-            <span className={closedAccentCss}>
-              {new Date(period.start).toLocaleDateString("ko-KR")} ~{" "}
-              {new Date(period.end).toLocaleDateString("ko-KR")}
-            </span>
-            <br />
-            다음 모집 공고를 기다려 주세요.
-          </p>
-        ) : (
-          <p className={closedDescCss}>
-            현재 모집 기간이 아닙니다. 다음 공고를 기다려 주세요.
-          </p>
-        )}
+        <h2 className={closedTitleCss}>{title}</h2>
+        <p className={closedDescCss}>
+          다음 기회에 만나요!
+          {period?.start && period?.end && (
+            <>
+              <br />
+              <span style={{ fontSize: "12px", color: colors.textDimmer }}>
+                접수 기간이었던 일자:{" "}
+                <span className={closedAccentCss}>
+                  {new Date(period.start).toLocaleDateString("ko-KR")} ~{" "}
+                  {new Date(period.end).toLocaleDateString("ko-KR")}
+                </span>
+              </span>
+            </>
+          )}
+        </p>
       </motion.div>
     </div>
   );

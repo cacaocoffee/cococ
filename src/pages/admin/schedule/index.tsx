@@ -15,6 +15,7 @@ import {
   useAlert,
 } from "@/components/ui/Modal";
 import LoadingButton from "@/components/ui/LoadingButton";
+import TabSkeleton from "../components/TabSkeleton";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 import type { ScheduleEvent } from "@/domain/schedule/schedule-dto";
@@ -198,8 +199,8 @@ const formatDate = (str: string): string => {
 };
 
 export default function ScheduleTab() {
-  const { data: items = [] } = useScheduleList();
-  const { data: archives = [] } = useArchiveList();
+  const { data: items = [], isLoading: schedLoading } = useScheduleList();
+  const { data: archives = [], isLoading: archLoading } = useArchiveList();
   const addMutation = useAddSchedule();
   const updateMutation = useUpdateSchedule();
   const deleteMutation = useDeleteSchedule();
@@ -210,6 +211,17 @@ export default function ScheduleTab() {
   const archiveOptions = archives.map((a) => ({ id: a.id, title: a.title }));
 
   const sorted = [...items].sort((a, b) => a.date.localeCompare(b.date));
+
+  if (schedLoading || archLoading) {
+    return (
+      <div>
+        <div className={tabHeaderRowCss}>
+          <h2 className={tabTitleCss}>일정 관리</h2>
+        </div>
+        <TabSkeleton variant="list" count={6} />
+      </div>
+    );
+  }
 
   return (
     <div>
