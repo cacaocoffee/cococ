@@ -62,8 +62,8 @@ function appToResponse(item: any) {
 
 // ── 지원서 CRUD ────────────────────────────────────────────
 
-// 전체 지원서 목록 (최신순)
-applyRouter.get('/applications', async (_req, res, next) => {
+// 전체 지원서 목록 (최신순) — 어드민 전용 (PII 포함)
+applyRouter.get('/applications', requireAdmin, async (_req, res, next) => {
   try {
     const items = await prisma.application.findMany({
       orderBy: { submittedAt: 'desc' },
