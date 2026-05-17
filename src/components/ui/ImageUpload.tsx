@@ -26,7 +26,7 @@ const previewWrapCss = css({
   height: '160px',
   borderRadius: '0.75rem',
   overflow: 'hidden',
-  backgroundColor: 'rgba(0,0,0,0.3)',
+  backgroundColor: colors.bgSection,
   border: `1px solid ${colors.borderInput}`,
 });
 
@@ -49,7 +49,7 @@ const previewEmptyCss = css({
 const uploadOverlayCss = css({
   position: 'absolute',
   inset: '0',
-  backgroundColor: 'rgba(0,0,0,0.5)',
+  backgroundColor: 'rgba(33,27,18,0.45)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -62,7 +62,7 @@ const clearBtnCss = css({
   width: '28px',
   height: '28px',
   borderRadius: '9999px',
-  backgroundColor: 'rgba(0,0,0,0.7)',
+  backgroundColor: 'rgba(33,27,18,0.78)',
   color: colors.textPrimary,
   border: 'none',
   cursor: 'pointer',
@@ -79,7 +79,7 @@ const uploadBtnCss = css({
   display: 'flex',
   alignItems: 'center',
   gap: '6px',
-  backgroundColor: 'rgba(0,0,0,0.7)',
+  backgroundColor: 'rgba(33,27,18,0.78)',
   color: colors.textSecondary,
   border: `1px solid ${colors.borderStrong}`,
   borderRadius: '0.5rem',
@@ -92,7 +92,7 @@ const uploadBtnCss = css({
 });
 
 const urlInputCss = css({
-  backgroundColor: 'rgba(0,0,0,0.3)',
+  backgroundColor: colors.bgSection,
   border: `1px solid ${colors.borderInput}`,
   borderRadius: '0.75rem',
   paddingInline: '16px',
@@ -110,13 +110,18 @@ const hintCss = css({ fontSize: '11px', color: colors.textDimmer });
 export default function ImageUpload({ label, value, onChange, required = false }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFile = async (file: File | undefined) => {
     if (!file) return;
+    setError(null);
     setLoading(true);
     try {
       const url = await uploadService.upload(file);
       onChange(url);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '업로드 실패';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -168,6 +173,9 @@ export default function ImageUpload({ label, value, onChange, required = false }
         className={urlInputCss}
       />
       <span className={hintCss}>파일 선택 또는 URL 직접 입력</span>
+      {error && (
+        <span style={{ fontSize: '11px', color: colors.danger, fontWeight: 700 }}>{error}</span>
+      )}
     </div>
   );
 }

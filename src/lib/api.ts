@@ -131,6 +131,12 @@ export async function apiUploadFile(
   const headers = buildHeaders();
   const fd = new FormData();
   fd.append("file", file);
+
+  // 서버 function maxDuration이 30s — 그보다 짧게 끊어서 사용자가 명확한 에러를 받게 함.
+  const UPLOAD_TIMEOUT_MS = 25_000;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), UPLOAD_TIMEOUT_MS);
+
   beginInflight();
   try {
     const res = await fetch(`${BASE}${path}`, {
@@ -138,6 +144,7 @@ export async function apiUploadFile(
       headers,
       body: fd,
       credentials: "include",
+      signal: controller.signal,
     });
     if (res.status === 401) {
       handle401();
@@ -150,7 +157,13 @@ export async function apiUploadFile(
     const data = (await res.json()) as { url: string };
     // 기존 upload.ts는 URL 문자열을 기대 → 단일 인자 호출일 때 URL만 반환
     return typeof pathOrFile === "string" ? data : data.url;
+  } catch (e) {
+    if (e instanceof DOMException && e.name === "AbortError") {
+      throw new Error(`업로드 시간이 초과되었습니다 (${UPLOAD_TIMEOUT_MS / 1000}s). 네트워크/서버 상태를 확인해 주세요.`);
+    }
+    throw e;
   } finally {
+    clearTimeout(timeoutId);
     endInflight();
   }
 }
