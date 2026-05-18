@@ -162,7 +162,12 @@ export default function ImageUpload({ label, value, onChange, required = false }
         type="file"
         accept="image/*"
         style={{ display: 'none' }}
-        onChange={(e) => handleFile(e.target.files?.[0])}
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          // 같은 파일을 지웠다가 다시 올리면 onChange가 안 뜨는 브라우저 동작 방지.
+          e.target.value = '';
+          handleFile(file);
+        }}
       />
 
       <input
