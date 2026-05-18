@@ -43,6 +43,15 @@ const allowedOriginPatterns = (process.env.ALLOWED_ORIGIN_PATTERNS ?? '')
   })
   .filter((r): r is RegExp => r !== null);
 
+// 콜드스타트마다 한 번 — 어느 origin/패턴이 실제로 로드됐는지 가시화.
+console.log('[cors] loaded', {
+  allowedOrigins,
+  patternCount: allowedOriginPatterns.length,
+  patternSources: allowedOriginPatterns.map((r) => r.source),
+  envAllowedOriginsSet: !!process.env.ALLOWED_ORIGINS,
+  envAllowedOriginPatternsSet: !!process.env.ALLOWED_ORIGIN_PATTERNS,
+});
+
 // 같은 오리진(헤더 없음), 명시 허용 도메인, 로컬 dev만 허용.
 // *.vercel.app 광범위 허용은 보안상 제거 — 필요한 프리뷰는 ALLOWED_ORIGIN_PATTERNS로.
 app.use(
@@ -58,6 +67,12 @@ app.use(
         /* ignore */
       }
       if (allowedOriginPatterns.some((re) => re.test(normalized))) return cb(null, true);
+      console.warn('[cors] reject', {
+        origin,
+        normalized,
+        allowedOrigins,
+        patternSources: allowedOriginPatterns.map((r) => r.source),
+      });
       cb(new Error(`CORS: origin not allowed (${origin})`));
     },
     // 어드민 세션 쿠키 동봉 필요 (cross-origin dev/preview 시나리오).

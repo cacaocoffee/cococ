@@ -136,7 +136,12 @@ export default function GalleryUpload({ label, value = [], onChange }: GalleryUp
         accept="image/*"
         multiple
         style={{ display: 'none' }}
-        onChange={(e) => handleFiles(e.target.files)}
+        onChange={(e) => {
+          // handleFiles 동기 부분이 FileList를 Array.from으로 캡쳐한 뒤에 value를 비워야 한다.
+          // (input.value = '' 가 FileList를 같이 비우는 브라우저 특성)
+          handleFiles(e.target.files);
+          e.target.value = '';
+        }}
       />
 
       {error && (
