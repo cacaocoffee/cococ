@@ -58,16 +58,39 @@ uploadRouter.post('/', requireAdmin, upload.single('file'), async (req, res) => 
   const objectKey = `${Date.now()}-${randomBytes(8).toString('hex')}${ext}`;
 
   const supabase = getSupabase();
-  const { error } = await supabase.storage
+
+  // Vercel function 한도(30s) 안쪽에서 직접 503으로 변환 — 호출이 매달려도 클라이언트가 의미있는 에러를 받게.
+  const STORAGE_TIMEOUT_MS = 15_000;
+  const uploadPromise = supabase.storage
     .from(STORAGE_BUCKET)
     .upload(objectKey, req.file.buffer, {
       contentType: detected.mime,
       upsert: false,
     });
+  const timeoutPromise = new Promise<{ error: { message: string; __timeout: true } }>((resolve) => {
+    setTimeout(
+      () => resolve({ error: { message: `Storage upload timed out after ${STORAGE_TIMEOUT_MS}ms`, __timeout: true } }),
+      STORAGE_TIMEOUT_MS,
+    );
+  });
+  const result = await Promise.race([uploadPromise, timeoutPromise]);
+  const error = (result as { error: unknown }).error as
+    | { message?: string; __timeout?: boolean }
+    | null;
 
   if (error) {
-    console.error('Supabase upload failed:', error);
-    res.status(500).json({ error: 'Upload failed' });
+    console.error('Supabase upload failed:', {
+      bucket: STORAGE_BUCKET,
+      objectKey,
+      mime: detected.mime,
+      size: req.file.size,
+      error,
+    });
+    if (error.__timeout) {
+      res.status(503).json({ error: 'Storage upstream timeout', details: { bucket: STORAGE_BUCKET } });
+      return;
+    }
+    res.status(500).json({ error: 'Upload failed', details: { message: error.message ?? 'unknown' } });
     return;
   }
 

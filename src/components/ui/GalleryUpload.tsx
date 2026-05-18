@@ -30,7 +30,7 @@ const thumbWrapCss = css({
   aspectRatio: '1',
   borderRadius: '0.5rem',
   overflow: 'hidden',
-  backgroundColor: 'rgba(0,0,0,0.3)',
+  backgroundColor: colors.bgSection,
 });
 
 const thumbImgCss = css({ width: '100%', height: '100%', objectFit: 'cover' });
@@ -42,7 +42,7 @@ const removeBtnCss = css({
   width: '22px',
   height: '22px',
   borderRadius: '9999px',
-  backgroundColor: 'rgba(0,0,0,0.75)',
+  backgroundColor: 'rgba(33,27,18,0.78)',
   color: colors.textPrimary,
   border: 'none',
   cursor: 'pointer',
@@ -55,7 +55,7 @@ const removeBtnCss = css({
 const addBtnCss = css({
   aspectRatio: '1',
   borderRadius: '0.5rem',
-  backgroundColor: 'rgba(0,0,0,0.3)',
+  backgroundColor: colors.bgSection,
   border: `1px dashed ${colors.borderInput}`,
   display: 'flex',
   flexDirection: 'column',
@@ -73,7 +73,7 @@ const addBtnCss = css({
 const loadingThumbCss = css({
   aspectRatio: '1',
   borderRadius: '0.5rem',
-  backgroundColor: 'rgba(0,0,0,0.3)',
+  backgroundColor: colors.bgSection,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -82,13 +82,18 @@ const loadingThumbCss = css({
 export default function GalleryUpload({ label, value = [], onChange }: GalleryUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFiles = async (files: FileList | null) => {
     if (!files?.length) return;
+    setError(null);
     setLoading(true);
     try {
       const urls = await Promise.all(Array.from(files).map((f) => uploadService.upload(f)));
       onChange([...value, ...urls]);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '업로드 실패';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -133,6 +138,10 @@ export default function GalleryUpload({ label, value = [], onChange }: GalleryUp
         style={{ display: 'none' }}
         onChange={(e) => handleFiles(e.target.files)}
       />
+
+      {error && (
+        <span style={{ fontSize: '11px', color: colors.danger, fontWeight: 700 }}>{error}</span>
+      )}
     </div>
   );
 }
