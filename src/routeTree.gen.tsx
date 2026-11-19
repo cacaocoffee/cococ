@@ -79,6 +79,8 @@ import ApplyPage from "./pages/apply/index";
 import SchedulePage from "./pages/schedule/index";
 import AdminPage from "./pages/admin/index";
 import ApplicationsTab from "./pages/admin/applications/index";
+import MembersTab from "./pages/admin/members/index";
+import DuesTab from "./pages/admin/dues/index";
 import PeriodTab from "./pages/admin/period/index";
 import ScheduleTab from "./pages/admin/schedule/index";
 import ArchiveTab from "./pages/admin/archive/index";
@@ -167,6 +169,16 @@ const adminApplicationsRoute = createRoute({
   path: "/applications",
   component: ApplicationsTab,
 });
+const adminMembersRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: "/members",
+  component: MembersTab,
+});
+const adminDuesRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: "/dues",
+  component: DuesTab,
+});
 const adminPeriodRoute = createRoute({
   getParentRoute: () => adminRoute,
   path: "/period",
@@ -200,6 +212,8 @@ const routeTree = rootRoute.addChildren([
   adminRoute.addChildren([
     adminIndexRoute,
     adminApplicationsRoute,
+    adminMembersRoute,
+    adminDuesRoute,
     adminPeriodRoute,
     adminScheduleRoute,
     adminArchiveRoute,

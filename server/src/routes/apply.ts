@@ -51,6 +51,8 @@ const applicationPatchSchema = z
     sns: z.string(),
     availableTimes: z.array(z.string()),
     interviewTimes: z.array(z.string()),
+    // 확정한 면접 시간. null이면 확정을 푼다
+    interviewSchedule: z.string().max(100).nullable(),
   })
   .partial();
 
@@ -83,13 +85,23 @@ const applicationSchema = z.object({
   mainContact: z.string().optional().default(''),
   availableTimes: z.array(z.string()).optional().default([]),
   interviewTimes: z.array(z.string()).optional().default([]),
-  scaleGourmet: z.coerce.number().int().min(1).max(5),
-  scalePeople: z.coerce.number().int().min(1).max(5),
+  // 예전 양식의 항목. 지금 양식은 보내지 않으므로 없어도 받는다
+  scaleGourmet: z.coerce.number().int().min(0).max(5).optional().default(0),
+  scalePeople: z.coerce.number().int().min(0).max(5).optional().default(0),
   q3_1_style: z.string().optional().default(''),
-  q1_intro: z.string().optional().default(''),
+  q1_intro: z.string().max(5000).optional().default(''),
   q2_drink: z.string().optional().default(''),
   q3_2_reason: z.string().optional().default(''),
-  qEtc: z.string().optional().default(''),
+  qEtc: z.string().max(5000).optional().default(''),
+  // 지금 양식의 항목
+  howKnow: z.string().max(500).optional().default(''),
+  scaleDesignTool: z.coerce.number().int().min(1).max(5).nullable().optional(),
+  mainDesign: z.string().max(2000).optional().default(''),
+  scaleCameraTool: z.coerce.number().int().min(1).max(5).nullable().optional(),
+  mainProject: z.string().max(2000).optional().default(''),
+  q2_motivation: z.string().max(5000).optional().default(''),
+  q3_drink: z.string().max(500).optional().default(''),
+  q4_contribution: z.string().max(5000).optional().default(''),
 });
 
 // DB 레코드 → 프론트엔드 형식 변환
@@ -152,6 +164,14 @@ applyRouter.post('/applications', submitLimiter, validate(applicationSchema), as
         q2_drink: body.q2_drink ?? '',
         q3_2_reason: body.q3_2_reason ?? '',
         qEtc: body.qEtc ?? '',
+        howKnow: body.howKnow ?? '',
+        scaleDesignTool: body.scaleDesignTool ?? null,
+        mainDesign: body.mainDesign ?? '',
+        scaleCameraTool: body.scaleCameraTool ?? null,
+        mainProject: body.mainProject ?? '',
+        q2_motivation: body.q2_motivation ?? '',
+        q3_drink: body.q3_drink ?? '',
+        q4_contribution: body.q4_contribution ?? '',
       },
     });
     res.status(201).json(appToResponse(item));
@@ -177,6 +197,7 @@ applyRouter.patch('/applications/:id', requireAdmin, validate(applicationPatchSc
     if (body.sns !== undefined) data.sns = body.sns;
     if (body.availableTimes !== undefined) data.availableTimes = JSON.stringify(body.availableTimes);
     if (body.interviewTimes !== undefined) data.interviewTimes = JSON.stringify(body.interviewTimes);
+    if (body.interviewSchedule !== undefined) data.interviewSchedule = body.interviewSchedule;
 
     const item = await prisma.application.update({
       where: { id: Number(req.params.id) },
