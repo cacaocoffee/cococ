@@ -6,10 +6,12 @@ import { colors } from "@/lib/tokens";
 const sectionCss = css({ marginBottom: "64px" });
 
 const titleCss = css({
-  fontSize: "20px",
-  fontWeight: "900",
+  fontFamily: "'Newsreader', 'Iowan Old Style', Georgia, serif",
+  fontSize: "28px",
+  fontWeight: "500",
   color: colors.textPrimary,
-  marginBottom: "24px",
+  marginBottom: "28px",
+  letterSpacing: "-0.012em",
 });
 
 const gridCss = css({
@@ -32,8 +34,9 @@ const cardCss = css({
 const iconWrapCss = css({
   width: "48px",
   height: "48px",
-  borderRadius: "0.75rem",
-  backgroundColor: "rgba(245,158,11,0.1)",
+  borderRadius: "10px",
+  backgroundColor: "rgba(194,96,63,0.10)",
+  border: `1px solid rgba(194,96,63,0.22)`,
   color: colors.brand,
   display: "flex",
   alignItems: "center",

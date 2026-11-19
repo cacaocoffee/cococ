@@ -20,7 +20,7 @@ const boxCss = css({
 const lineBaseCss = css({
   height: "16px",
   borderRadius: "0.5rem",
-  backgroundColor: "rgba(255,255,255,0.06)",
+  backgroundColor: "rgba(60,40,15,0.07)",
   position: "relative",
   overflow: "hidden",
 });
@@ -28,7 +28,7 @@ const lineBaseCss = css({
 const lineTallCss = css({
   height: "44px",
   borderRadius: "0.75rem",
-  backgroundColor: "rgba(255,255,255,0.06)",
+  backgroundColor: "rgba(60,40,15,0.07)",
   position: "relative",
   overflow: "hidden",
 });
@@ -37,7 +37,7 @@ const lineHeadCss = css({
   height: "12px",
   width: "30%",
   borderRadius: "0.5rem",
-  backgroundColor: "rgba(255,255,255,0.05)",
+  backgroundColor: "rgba(60,40,15,0.05)",
   marginBottom: "4px",
   position: "relative",
   overflow: "hidden",
@@ -47,8 +47,8 @@ const shimmerCss = css({
   position: "absolute",
   inset: "0",
   background:
-    "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.05) 60%, transparent 100%)",
-  animation: "apply-skel 1.4s ease-in-out infinite",
+    "linear-gradient(90deg, transparent 0%, rgba(60,40,15,0.06) 40%, rgba(60,40,15,0.12) 50%, rgba(60,40,15,0.06) 60%, transparent 100%)",
+  animation: "apply-skel 1.6s ease-in-out infinite",
   transform: "translateX(-100%)",
 });
 

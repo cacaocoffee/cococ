@@ -1,6 +1,6 @@
 import { Tag } from 'lucide-react';
 import { css, cx } from '@/lib/css';
-import { colors } from '@/lib/tokens';
+import { colors, fonts } from '@/lib/tokens';
 
 type TagBadgeVariant = 'default' | 'amber';
 
@@ -10,19 +10,23 @@ interface TagBadgeProps {
 }
 
 const baseCss = css({
-  fontSize: '11px',
+  fontFamily: fonts.mono,
+  fontSize: '10px',
   fontWeight: '700',
-  paddingInline: '12px',
+  letterSpacing: '0.16em',
+  textTransform: 'uppercase',
+  paddingInline: '10px',
   paddingBlock: '4px',
   borderRadius: '9999px',
   display: 'inline-flex',
   alignItems: 'center',
-  gap: '4px',
+  gap: '5px',
+  border: `1px solid ${colors.borderMedium}`,
 });
 
 const variantCss: Record<TagBadgeVariant, string> = {
-  default: css({ backgroundColor: 'rgba(255,255,255,0.06)', color: colors.textSecondary }),
-  amber:   css({ backgroundColor: 'rgba(245,158,11,0.1)',   color: colors.brand }),
+  default: css({ backgroundColor: colors.bgCard, color: colors.textMuted }),
+  amber:   css({ backgroundColor: 'rgba(194,96,63,0.10)', color: colors.brand, borderColor: 'rgba(194,96,63,0.30)' }),
 };
 
 export default function TagBadge({ label, variant = 'default' }: TagBadgeProps) {

@@ -1,15 +1,17 @@
 import { motion } from "framer-motion";
 import { css } from "@/lib/css";
-import { colors } from "@/lib/tokens";
+import { colors, fonts } from "@/lib/tokens";
 import type { Recipe } from "@/domain/archive/archive-dto";
 
-const sectionCss = css({ marginBottom: "64px" });
+const sectionCss = css({ marginBottom: "72px" });
 
 const titleCss = css({
-  fontSize: "20px",
-  fontWeight: "900",
+  fontFamily: fonts.display,
+  fontSize: "28px",
+  fontWeight: "500",
   color: colors.textPrimary,
-  marginBottom: "24px",
+  marginBottom: "28px",
+  letterSpacing: "-0.012em",
 });
 
 const gridCss = css({
@@ -22,16 +24,17 @@ const gridCss = css({
 
 const cardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderLight}`,
-  borderRadius: "1rem",
+  border: `1px solid ${colors.borderSubtle}`,
+  borderRadius: "14px",
   overflow: "hidden",
 });
 
 const imgWrapCss = css({
   width: "100%",
   aspectRatio: "4/3",
-  backgroundColor: "rgba(0,0,0,0.3)",
+  backgroundColor: colors.bgSection,
   overflow: "hidden",
+  borderBottom: `1px solid ${colors.borderSubtle}`,
 });
 
 const imgCss = css({
@@ -56,9 +59,11 @@ const bodyCss = css({ padding: "20px" });
 
 const nameCss = css({
   color: colors.textPrimary,
-  fontWeight: "900",
-  fontSize: "18px",
-  marginBottom: "10px",
+  fontFamily: fonts.display,
+  fontWeight: "500",
+  fontSize: "20px",
+  marginBottom: "12px",
+  letterSpacing: "-0.008em",
 });
 
 const ingredientsCss = css({

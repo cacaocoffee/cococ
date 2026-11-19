@@ -1,13 +1,16 @@
 import { motion } from "framer-motion";
 import { css } from "@/lib/css";
+import { colors, fonts } from "@/lib/tokens";
 
-const gallerySectionCss = css({ marginBottom: "64px" });
+const gallerySectionCss = css({ marginBottom: "72px" });
 
 const galleryTitleCss = css({
-  fontSize: "20px",
-  fontWeight: "900",
-  color: "#ffffff",
-  marginBottom: "24px",
+  fontFamily: fonts.display,
+  fontSize: "28px",
+  fontWeight: "500",
+  color: colors.textPrimary,
+  marginBottom: "28px",
+  letterSpacing: "-0.012em",
 });
 
 const galleryCss = css({
@@ -19,13 +22,15 @@ const galleryCss = css({
 
 const galleryWideItemCss = css({
   overflow: "hidden",
-  borderRadius: "0.75rem",
+  borderRadius: "6px",
+  border: `1px solid ${colors.borderSubtle}`,
   "@sm": { gridColumn: "span 2 / span 2", aspectRatio: "16/9" },
 });
 
 const gallerySquareItemCss = css({
   overflow: "hidden",
-  borderRadius: "0.75rem",
+  borderRadius: "6px",
+  border: `1px solid ${colors.borderSubtle}`,
   aspectRatio: "1/1",
 });
 

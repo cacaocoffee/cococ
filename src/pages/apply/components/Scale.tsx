@@ -22,7 +22,7 @@ const scaleBtnBaseCss = css({
   transition: "all 0.2s",
   cursor: "pointer",
   background: "none",
-  _hover: { borderColor: "rgba(245,158,11,0.4)" },
+  _hover: { borderColor: "rgba(194,96,63,0.40)" },
 });
 
 const scaleBtnActiveCss = css({

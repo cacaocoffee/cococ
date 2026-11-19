@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { applyService } from "@/domain/apply/apply-service";
 import type { ApplicationItem } from "@/domain/apply/apply-dto";
-import { ConfirmModal, useConfirm } from "@/components/ui/Modal";
+import { AlertModal, ConfirmModal, useAlert, useConfirm } from "@/components/ui/Modal";
 import LoadingButton from "@/components/ui/LoadingButton";
 import TabSkeleton from "../components/TabSkeleton";
 import { css, cx } from "@/lib/css";
@@ -525,6 +525,7 @@ export default function ApplicationsTab() {
   // 진행 중인 행 ID — 같은 row 의 모든 액션 버튼을 disabled + spinner 처리
   const [pendingIds, setPendingIds] = useState<Set<string>>(() => new Set());
   const { confirmProps, openConfirm } = useConfirm();
+  const { alertProps, openAlert } = useAlert();
 
   const withPending = useCallback(async (id: string, fn: () => Promise<void>) => {
     setPendingIds((prev) => {
@@ -535,6 +536,13 @@ export default function ApplicationsTab() {
     });
     try {
       await fn();
+    } catch (err) {
+      console.error("[admin/applications] action failed", err);
+      openAlert({
+        title: "처리 실패",
+        description: "요청을 처리하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+        type: "error",
+      });
     } finally {
       setPendingIds((prev) => {
         if (!prev.has(id)) return prev;
@@ -543,7 +551,7 @@ export default function ApplicationsTab() {
         return next;
       });
     }
-  }, []);
+  }, [openAlert]);
 
   const refreshApps = useCallback(async () => {
     const data = await applyService.loadApplications();
@@ -822,6 +830,7 @@ export default function ApplicationsTab() {
         </div>
       )}
       <ConfirmModal {...confirmProps} />
+      <AlertModal {...alertProps} />
     </div>
   );
 }

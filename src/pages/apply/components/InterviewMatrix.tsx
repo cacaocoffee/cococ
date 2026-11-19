@@ -54,13 +54,13 @@ const btnBaseCss = css({
   fontSize: "11px",
   fontWeight: "800",
   color: "transparent",
-  _hover: { borderColor: "rgba(245,158,11,0.5)", backgroundColor: "rgba(245,158,11,0.08)" },
+  _hover: { borderColor: "rgba(194,96,63,0.50)", backgroundColor: "rgba(194,96,63,0.06)" },
 });
 
 const btnActiveCss = css({
-  backgroundColor: "rgba(245,158,11,0.18)",
-  borderColor: "rgba(245,158,11,0.5)",
-  color: "rgba(245,158,11,0.9)",
+  backgroundColor: "rgba(194,96,63,0.16)",
+  borderColor: "rgba(194,96,63,0.50)",
+  color: colors.brand,
 });
 
 const emptyMsgCss = css({

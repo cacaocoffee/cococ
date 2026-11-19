@@ -1,42 +1,45 @@
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { css } from "@/lib/css";
-import { colors } from "@/lib/tokens";
+import { colors, fonts } from "@/lib/tokens";
 
 const contentListCss = css({
   display: "flex",
   flexDirection: "column",
-  gap: "48px",
-  marginBottom: "64px",
+  gap: "56px",
+  marginBottom: "72px",
 });
 
 const sectionHeaderCss = css({
   display: "flex",
-  alignItems: "flex-start",
+  alignItems: "baseline",
   gap: "16px",
-  marginBottom: "16px",
+  marginBottom: "20px",
 });
 
 const sectionNumCss = css({
   color: colors.brand,
-  fontWeight: "900",
-  fontSize: "14px",
-  marginTop: "4px",
+  fontFamily: fonts.mono,
+  fontWeight: "700",
+  fontSize: "12px",
+  letterSpacing: "0.18em",
   flexShrink: "0",
 });
 
 const sectionTitleCss = css({
-  fontSize: "24px",
-  fontWeight: "900",
+  fontFamily: fonts.display,
+  fontSize: "28px",
+  fontWeight: "500",
   color: colors.textPrimary,
-  lineHeight: "1.375",
+  lineHeight: "1.18",
+  letterSpacing: "-0.012em",
 });
 
 const sectionBodyCss = css({
-  color: colors.textMuted,
-  lineHeight: "1.9",
-  fontSize: "16px",
-  paddingLeft: "36px",
+  color: colors.textSecondary,
+  lineHeight: "1.85",
+  fontSize: "17px",
+  paddingLeft: "0",
   "& p": { marginBottom: "1em" },
   "& strong": { color: colors.textPrimary, fontWeight: "700" },
   "& em": { fontStyle: "italic" },
@@ -54,9 +57,9 @@ const sectionBodyCss = css({
 });
 
 const noHeadingBodyCss = css({
-  color: colors.textMuted,
-  lineHeight: "1.9",
-  fontSize: "16px",
+  color: colors.textSecondary,
+  lineHeight: "1.85",
+  fontSize: "17px",
   "& p": { marginBottom: "1em" },
   "& strong": { color: colors.textPrimary, fontWeight: "700" },
   "& em": { fontStyle: "italic" },
@@ -69,16 +72,19 @@ const noHeadingBodyCss = css({
 
 const blockImageCss = css({
   width: "100%",
-  borderRadius: "1rem",
+  borderRadius: "4px",
   objectFit: "cover",
-  maxHeight: "480px",
+  maxHeight: "560px",
+  border: `1px solid ${colors.borderSubtle}`,
 });
 
 const captionCss = css({
   textAlign: "center",
-  color: colors.textDimmer,
-  fontSize: "13px",
-  marginTop: "12px",
+  color: colors.textFaint,
+  fontFamily: fonts.mono,
+  fontSize: "12px",
+  letterSpacing: "0.06em",
+  marginTop: "14px",
 });
 
 interface ContentBlock {

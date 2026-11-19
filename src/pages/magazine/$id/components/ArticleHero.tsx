@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import BackButton from "@/components/ui/BackButton";
 import { css } from "@/lib/css";
+import { fetchInstagramThumbnail } from "@/lib/microlink";
 import type { MagazineItem } from "@/domain/magazine/magazine-dto";
 
 const heroSectionCss = css({
@@ -15,7 +16,7 @@ const heroImgCss = css({ width: "100%", height: "100%", objectFit: "cover" });
 const heroOverlayCss = css({
   position: "absolute",
   inset: "0",
-  background: "linear-gradient(to top, #0a0a0a, rgba(0,0,0,0.5), transparent)",
+  background: "linear-gradient(to top, #F6EFE2 0%, rgba(246,239,226,0.55) 25%, rgba(33,27,18,0.18) 70%, rgba(33,27,18,0.42) 100%)",
 });
 
 const heroBackBtnCss = css({
@@ -36,14 +37,11 @@ export default function ArticleHero({ item }: ArticleHeroProps) {
     if (item.magazineType !== "cardnews") return;
     const firstUrl = item.instagramUrls?.[0];
     if (!firstUrl) return;
-    fetch(`https://api.microlink.io/?url=${encodeURIComponent(firstUrl)}`)
-      .then((r) => r.json())
-      .then((json) => {
-        if (json.status === "success" && json.data?.image?.url) {
-          setThumb(json.data.image.url);
-        }
-      })
-      .catch(() => {});
+    const controller = new AbortController();
+    void fetchInstagramThumbnail(firstUrl, { signal: controller.signal }).then((url) => {
+      if (url && !controller.signal.aborted) setThumb(url);
+    });
+    return () => controller.abort();
   }, [item.img, item.magazineType, item.instagramUrls?.[0]]);
 
   return (
@@ -63,7 +61,7 @@ export default function ArticleHero({ item }: ArticleHeroProps) {
         transition={{ delay: 0.3 }}
         className={heroBackBtnCss}
       >
-        <BackButton label="Magazine" />
+        <BackButton label="Magazine" tone="onDark" />
       </motion.div>
     </div>
   );

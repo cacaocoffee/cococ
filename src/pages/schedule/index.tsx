@@ -204,7 +204,7 @@ const listItemLinkCss = css({
   borderBottom: `1px solid ${colors.borderFaint}`,
   textDecoration: 'none',
   transition: 'background-color 0.15s',
-  _hover: { backgroundColor: 'rgba(245,158,11,0.05)' },
+  _hover: { backgroundColor: 'rgba(194,96,63,0.06)' },
   _last: { borderBottom: 'none' },
 });
 

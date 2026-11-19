@@ -19,15 +19,18 @@ const dividerLineCss = css({
 
 const dividerStarCss = css({
   color: colors.brand,
-  fontWeight: "900",
-  fontSize: "18px",
+  fontFamily: "'Newsreader', 'Iowan Old Style', Georgia, serif",
+  fontStyle: "italic",
+  fontSize: "22px",
 });
 
 const othersTitleCss = css({
-  fontSize: "18px",
-  fontWeight: "900",
+  fontFamily: "'Newsreader', 'Iowan Old Style', Georgia, serif",
+  fontSize: "24px",
+  fontWeight: "500",
   color: colors.textPrimary,
-  marginBottom: "24px",
+  marginBottom: "28px",
+  letterSpacing: "-0.012em",
 });
 
 const othersGridCss = css({
@@ -40,10 +43,12 @@ const othersGridCss = css({
 const otherCardCss = css({
   backgroundColor: colors.bgCard,
   border: `1px solid ${colors.borderSubtle}`,
-  borderRadius: "1rem",
+  borderRadius: "10px",
   overflow: "hidden",
   textDecoration: "none",
   display: "block",
+  transition: "border-color 0.2s",
+  _hover: { borderColor: colors.borderStrong },
 });
 
 const otherImgWrapCss = css({ height: "144px", overflow: "hidden" });
@@ -60,16 +65,21 @@ const otherBodyCss = css({ padding: "20px" });
 
 const otherMetaCss = css({
   color: colors.brand,
+  fontFamily: "ui-monospace, 'JetBrains Mono', Menlo, monospace",
   fontSize: "10px",
   fontWeight: "700",
-  marginBottom: "8px",
+  letterSpacing: "0.18em",
+  textTransform: "uppercase",
+  marginBottom: "10px",
 });
 
 const otherTitleCss = css({
   color: colors.textPrimary,
-  fontWeight: "700",
-  fontSize: "14px",
-  lineHeight: "1.375",
+  fontFamily: "'Newsreader', 'Iowan Old Style', Georgia, serif",
+  fontWeight: "500",
+  fontSize: "17px",
+  letterSpacing: "-0.005em",
+  lineHeight: "1.22",
   transition: "color 0.2s",
   display: "-webkit-box",
   "-webkit-line-clamp": "2",

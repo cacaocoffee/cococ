@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { css, cx } from '@/lib/css';
-import { colors } from '@/lib/tokens';
+import { colors, fonts } from '@/lib/tokens';
 import CococLogo from '@/components/ui/CococLogo';
 
 interface Tab {
@@ -21,70 +21,114 @@ const TABS: Tab[] = [
 const navCss = css({
   position: 'fixed',
   top: '0',
-  width: '100%',
+  left: '0',
+  right: '0',
   zIndex: '50',
-  backgroundColor: 'rgba(10,10,10,0.85)',
-  backdropFilter: 'blur(12px)',
-  borderBottom: `1px solid ${colors.borderMedium}`,
+  backgroundColor: 'rgba(246,239,226,0.82)',
+  backdropFilter: 'blur(14px) saturate(1.2)',
+  borderBottom: `1px solid ${colors.borderSubtle}`,
   paddingInline: '24px',
-  paddingBlock: '20px',
+  paddingBlock: '14px',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  '@md': { paddingInline: '48px' },
+  transition: 'border-color 0.25s, background-color 0.25s',
+  '@md': { paddingInline: '48px', paddingBlock: '16px' },
 });
 
+const navScrolledCss = css({
+  borderColor: colors.borderMedium,
+  backgroundColor: 'rgba(246,239,226,0.94)',
+});
+
+const logoLinkCss = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '12px',
+  color: colors.textPrimary,
+  textDecoration: 'none',
+});
+
+const logoWordmarkCss = css({
+  fontFamily: fonts.display,
+  fontSize: '22px',
+  fontWeight: '600',
+  letterSpacing: '-0.01em',
+  color: colors.textPrimary,
+  display: 'none',
+  '@sm': { display: 'inline' },
+});
 
 const desktopNavCss = css({
   display: 'none',
-  gap: '40px',
+  gap: '32px',
   '@md': { display: 'flex' },
 });
 
 const navLinkBaseCss = css({
-  fontSize: '12px',
+  fontFamily: fonts.mono,
+  fontSize: '11px',
   fontWeight: '700',
-  letterSpacing: '3px',
+  letterSpacing: '0.22em',
   textTransform: 'uppercase',
-  transition: 'all 0.2s',
-  paddingBottom: '4px',
-  borderBottom: '2px solid transparent',
+  transition: 'color 0.2s',
+  paddingBlock: '6px',
   textDecoration: 'none',
+  position: 'relative',
 });
 
-const navLinkActiveCss = css({ color: colors.brand, borderColor: colors.brand });
+const navLinkActiveCss = css({
+  color: colors.textPrimary,
+  _after: {
+    content: '""',
+    position: 'absolute',
+    left: '0',
+    right: '0',
+    bottom: '-2px',
+    height: '1px',
+    backgroundColor: colors.brand,
+  },
+});
+
 const navLinkInactiveCss = css({
   color: colors.textFaint,
-  borderColor: 'transparent',
   _hover: { color: colors.textPrimary },
 });
 
-const rightGroupCss = css({ display: 'flex', alignItems: 'center', gap: '16px' });
+const rightGroupCss = css({ display: 'flex', alignItems: 'center', gap: '12px' });
 
 const menuBtnCss = css({
-  display: 'block',
-  color: colors.textMuted,
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '40px',
+  height: '40px',
+  color: colors.textPrimary,
   background: 'none',
-  border: 'none',
+  border: `1px solid ${colors.borderMedium}`,
+  borderRadius: '9999px',
   cursor: 'pointer',
-  transition: 'color 0.2s',
-  _hover: { color: colors.textPrimary },
+  transition: 'background-color 0.2s, border-color 0.2s',
+  _hover: { backgroundColor: colors.bgCard, borderColor: colors.borderStrong },
   '@md': { display: 'none' },
 });
 
 const joinBtnCss = css({
   display: 'none',
-  backgroundColor: colors.brand,
+  backgroundColor: colors.textPrimary,
   color: colors.bgPage,
   paddingInline: '20px',
-  paddingBlock: '8px',
+  paddingBlock: '10px',
   borderRadius: '9999px',
-  fontSize: '12px',
-  fontWeight: '900',
+  fontSize: '11px',
+  fontFamily: fonts.mono,
+  letterSpacing: '0.18em',
+  fontWeight: '700',
   textDecoration: 'none',
+  textTransform: 'uppercase',
   transition: 'background-color 0.2s',
-  _hover: { backgroundColor: colors.brandHover },
-  '@md': { display: 'block' },
+  _hover: { backgroundColor: colors.brand },
+  '@md': { display: 'inline-block' },
 });
 
 const mobileMenuCss = css({
@@ -96,34 +140,47 @@ const mobileMenuCss = css({
   borderBottom: `1px solid ${colors.borderMedium}`,
   display: 'flex',
   flexDirection: 'column',
-  paddingBlock: '16px',
+  paddingBlock: '12px',
 });
 
 const mobileLinkBaseCss = css({
   paddingInline: '24px',
-  paddingBlock: '16px',
-  fontSize: '14px',
+  paddingBlock: '14px',
+  fontFamily: fonts.mono,
+  fontSize: '12px',
   fontWeight: '700',
-  letterSpacing: '0.1em',
+  letterSpacing: '0.18em',
   textTransform: 'uppercase',
   transition: 'color 0.2s',
   textDecoration: 'none',
 });
 
 const mobileLinkActiveCss = css({ color: colors.brand });
-const mobileLinkInactiveCss = css({ color: colors.textMuted, _hover: { color: colors.textPrimary } });
+const mobileLinkInactiveCss = css({
+  color: colors.textMuted,
+  _hover: { color: colors.textPrimary },
+});
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 4);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const isActive = (to: string): boolean =>
     to === '/' ? pathname === '/' : pathname.startsWith(to);
 
   return (
-    <nav className={navCss}>
-      <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', color: colors.brand }}>
-        <CococLogo size={44} color={colors.brand} compact />
+    <nav className={cx(navCss, scrolled && navScrolledCss)}>
+      <Link to="/" className={logoLinkCss}>
+        <CococLogo size={36} color={colors.textPrimary} compact />
+        <span className={logoWordmarkCss}>cococ</span>
       </Link>
 
       <div className={desktopNavCss}>
@@ -141,9 +198,9 @@ export default function Navbar() {
           onClick={() => setMobileOpen((o) => !o)}
           aria-label="Toggle menu"
         >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          {mobileOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
-        <Link to="/apply" className={joinBtnCss}>JOIN US</Link>
+        <Link to="/apply" className={joinBtnCss}>Join</Link>
       </div>
 
       {mobileOpen && (

@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
 import BackButton from "@/components/ui/BackButton";
 import { css } from "@/lib/css";
-import { colors } from "@/lib/tokens";
+import { colors, fonts } from "@/lib/tokens";
 import type { ArchiveItem } from "@/domain/archive/archive-dto";
 
 const heroSectionCss = css({
   position: "relative",
-  height: "55vh",
+  height: "62vh",
+  minHeight: "440px",
   overflow: "hidden",
 });
 
@@ -15,41 +16,46 @@ const heroImgCss = css({ width: "100%", height: "100%", objectFit: "cover" });
 const heroOverlayCss = css({
   position: "absolute",
   inset: "0",
-  background: "linear-gradient(to top, #0a0a0a, rgba(0,0,0,0.4), transparent)",
+  background: "linear-gradient(to top, rgba(33,27,18,0.78) 0%, rgba(33,27,18,0.32) 50%, rgba(33,27,18,0.18) 100%)",
 });
 
 const heroBackBtnCss = css({
   position: "absolute",
-  top: "24px",
+  top: "104px",
   left: "24px",
+  color: colors.bgPage,
   "@md": { left: "48px" },
 });
 
 const heroCategoryCss = css({
   display: "inline-block",
-  backgroundColor: colors.brand,
+  backgroundColor: "transparent",
   color: colors.bgPage,
+  border: "1px solid rgba(251,246,236,0.55)",
+  fontFamily: fonts.mono,
   fontSize: "10px",
-  fontWeight: "900",
+  fontWeight: "700",
+  letterSpacing: "0.22em",
   paddingInline: "12px",
   paddingBlock: "4px",
   borderRadius: "9999px",
   textTransform: "uppercase",
-  marginBottom: "16px",
+  marginBottom: "20px",
 });
 
 const heroTitleCss = css({
-  fontSize: "36px",
-  fontWeight: "900",
-  color: colors.textPrimary,
-  lineHeight: "1.25",
+  fontFamily: fonts.display,
+  fontSize: "clamp(36px, 6vw, 72px)",
+  fontWeight: "500",
+  color: colors.bgPage,
+  lineHeight: "1.04",
+  letterSpacing: "-0.014em",
   maxWidth: "48rem",
-  "@md": { fontSize: "60px" },
 });
 
 const heroBottomCss = css({
   position: "absolute",
-  bottom: "40px",
+  bottom: "48px",
   left: "24px",
   right: "24px",
   "@md": { left: "48px", right: "48px" },
@@ -77,7 +83,7 @@ export default function HeroSection({ item }: HeroSectionProps) {
         transition={{ delay: 0.3 }}
         className={heroBackBtnCss}
       >
-        <BackButton label="Archive" />
+        <BackButton label="Archive" tone="onDark" />
       </motion.div>
       <div className={heroBottomCss}>
         <motion.span

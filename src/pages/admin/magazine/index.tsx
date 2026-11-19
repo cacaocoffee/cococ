@@ -18,6 +18,7 @@ import LoadingButton from "@/components/ui/LoadingButton";
 import TabSkeleton from "../components/TabSkeleton";
 import { css } from "@/lib/css";
 import { colors } from "@/lib/tokens";
+import { fetchInstagramThumbnail } from "@/lib/microlink";
 import type { MagazineItem } from "@/domain/magazine/magazine-dto";
 import { EMPTY_MAG } from "../constants";
 import {
@@ -204,18 +205,18 @@ function MagazineForm({ initial = EMPTY_MAG as MagazineFormState, onSave, onCanc
   const firstUrl = magType === "cardnews" ? (instagramUrls[0] || "") : "";
   useEffect(() => {
     if (!firstUrl || !firstUrl.includes("instagram.com")) return;
-    const timer = setTimeout(async () => {
-      try {
-        const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(firstUrl)}`);
-        const json = await res.json() as { status: string; data?: { image?: { url?: string } } };
-        if (json.status === "success" && json.data?.image?.url) {
-          setF((p) => ({ ...p, img: json.data!.image!.url! }));
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      void fetchInstagramThumbnail(firstUrl, { signal: controller.signal }).then((url) => {
+        if (url && !controller.signal.aborted) {
+          setF((p) => ({ ...p, img: url }));
         }
-      } catch {
-        // 네트워크 오류 시 무시
-      }
+      });
     }, 800);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [firstUrl]);
 
   const handleSave = () => {

@@ -5,6 +5,7 @@ import { applyService } from "@/domain/apply/apply-service";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 import LoadingButton from "@/components/ui/LoadingButton";
+import { AlertModal, useAlert } from "@/components/ui/Modal";
 import { inputCss, scrollTableWrapCss } from "../styles";
 import DatePicker from "../components/DatePicker";
 import TabSkeleton from "../components/TabSkeleton";
@@ -278,6 +279,7 @@ export default function PeriodTab() {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [dateInput, setDateInput] = useState("");
+  const { alertProps, openAlert } = useAlert();
 
   useEffect(() => {
     let cancelled = false;
@@ -292,12 +294,20 @@ export default function PeriodTab() {
         if (p) setPeriod({ start: p.start ?? "", end: p.end ?? "", enabled: !p.forceClosed, generation: p.generation ?? 1 });
         if (i) setInterview(i);
         setOpen(isOpen);
+      } catch (err) {
+        if (cancelled) return;
+        console.error("[admin/period] load failed", err);
+        openAlert({
+          title: "불러오기 실패",
+          description: "지원 기간 정보를 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.",
+          type: "error",
+        });
       } finally {
         if (!cancelled) setLoading(false);
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [openAlert]);
 
   const save = async () => {
     if (saving) return;
@@ -312,6 +322,13 @@ export default function PeriodTab() {
       await applyService.saveInterviewSettings(interview);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      console.error("[admin/period] save failed", err);
+      openAlert({
+        title: "저장 실패",
+        description: "변경사항을 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+        type: "error",
+      });
     } finally {
       setSaving(false);
     }
@@ -615,6 +632,8 @@ export default function PeriodTab() {
         * 시작/종료 일시를 비워두면 기간 제한 없이 항상 열립니다.
         <br />* 설정 후 /apply 페이지에서 즉시 반영됩니다.
       </p>
+
+      <AlertModal {...alertProps} />
     </div>
   );
 }
