@@ -35,16 +35,17 @@ const linkCss = css({
   alignItems: 'center',
   textDecoration: 'none',
   color: 'inherit',
-  paddingBottom: '64px',
-  borderBottom: `1px solid ${colors.borderMedium}`,
-  '@md': { gridTemplateColumns: '2fr 3fr', gap: '48px' },
+  backgroundColor: colors.bgCard,
+  borderRadius: '20px',
+  padding: '12px 12px 24px',
+  '@md': { gridTemplateColumns: '2fr 3fr', gap: '48px', padding: '16px 40px 16px 16px' },
 });
 
 const imgWrapCss = css({
   overflow: 'hidden',
-  borderRadius: '4px',
+  borderRadius: '14px',
   aspectRatio: '4/5',
-  border: `1px solid ${colors.borderSubtle}`,
+  backgroundColor: colors.bgSection,
 });
 
 const imgCss = css({
@@ -56,25 +57,21 @@ const imgCss = css({
 });
 
 const metaCss = css({
-  fontFamily: fonts.mono,
-  color: colors.brand,
-  fontSize: '11px',
+  color: colors.textMuted,
+  fontSize: "12px",
   fontWeight: '700',
-  letterSpacing: '0.2em',
-  textTransform: 'uppercase',
+  letterSpacing: "0",
   marginBottom: '16px',
 });
 
 const titleCss = css({
   fontFamily: fonts.display,
   fontSize: 'clamp(28px, 3vw, 38px)',
-  fontWeight: '500',
+  fontWeight: "700",
   color: colors.textPrimary,
   marginBottom: '20px',
-  lineHeight: '1.12',
-  letterSpacing: '-0.014em',
-  transition: 'color 0.2s',
-  _groupHover: { color: colors.brand },
+  lineHeight: '1.15',
+  letterSpacing: '-0.025em',
 });
 
 const excerptCss = css({
@@ -82,7 +79,7 @@ const excerptCss = css({
   marginBottom: '28px',
   fontSize: '15px',
   lineHeight: '1.7',
-  fontWeight: '400',
+  fontWeight: '500',
   display: '-webkit-box',
   '-webkit-line-clamp': '3',
   '-webkit-box-orient': 'vertical',
@@ -93,16 +90,15 @@ const readMoreCss = css({
   display: 'inline-flex',
   alignItems: 'center',
   gap: '8px',
-  color: colors.textPrimary,
-  fontFamily: fonts.mono,
-  fontSize: '11px',
+  color: colors.onInk,
+  backgroundColor: colors.bgInk,
+  fontSize: "14px",
   fontWeight: '700',
-  textTransform: 'uppercase',
-  letterSpacing: '0.2em',
-  paddingBlock: '4px',
-  borderBottom: `1px solid ${colors.textPrimary}`,
-  transition: 'gap 0.2s, color 0.2s, border-color 0.2s',
-  _groupHover: { color: colors.brand, gap: '14px', borderColor: colors.brand },
+  paddingInline: '16px',
+  paddingBlock: '10px',
+  borderRadius: '9999px',
+  transition: 'gap 0.2s',
+  _groupHover: { gap: '12px' },
 });
 
 export default function MagazineCard({ post, index = 0 }: MagazineCardProps) {

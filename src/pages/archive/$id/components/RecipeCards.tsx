@@ -6,9 +6,9 @@ import { colors } from "@/lib/tokens";
 const sectionCss = css({ marginBottom: "64px" });
 
 const titleCss = css({
-  fontFamily: "'Newsreader', 'Iowan Old Style', Georgia, serif",
+  fontFamily: "'Space Grotesk', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif",
   fontSize: "28px",
-  fontWeight: "500",
+  fontWeight: "700",
   color: colors.textPrimary,
   marginBottom: "28px",
   letterSpacing: "-0.012em",
@@ -26,8 +26,8 @@ const cardCss = css({
   alignItems: "center",
   gap: "16px",
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderLight}`,
-  borderRadius: "1rem",
+  border: "none",
+  borderRadius: "20px",
   padding: "20px",
 });
 
@@ -35,9 +35,8 @@ const iconWrapCss = css({
   width: "48px",
   height: "48px",
   borderRadius: "10px",
-  backgroundColor: "rgba(194,96,63,0.10)",
-  border: `1px solid rgba(194,96,63,0.22)`,
-  color: colors.brand,
+  backgroundColor: colors.bgSection,
+  color: colors.textPrimary,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -48,7 +47,7 @@ const cardBodyCss = css({ flex: "1 1 0%", minWidth: "0" });
 
 const cardTitleCss = css({
   color: colors.textPrimary,
-  fontWeight: "900",
+  fontWeight: "700",
   fontSize: "14px",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -58,10 +57,9 @@ const cardTitleCss = css({
 
 const cardSubCss = css({
   color: colors.textDimmer,
-  fontSize: "11px",
+  fontSize: "12px",
   fontWeight: "700",
-  textTransform: "uppercase",
-  letterSpacing: "0.05em",
+  letterSpacing: "0",
 });
 
 const actionsCss = css({ display: "flex", gap: "6px", flexShrink: "0" });
@@ -69,7 +67,7 @@ const actionsCss = css({ display: "flex", gap: "6px", flexShrink: "0" });
 const btnCss = css({
   width: "32px",
   height: "32px",
-  borderRadius: "0.5rem",
+  borderRadius: "10px",
   border: `1px solid ${colors.borderLight}`,
   backgroundColor: "transparent",
   color: colors.textDimmer,

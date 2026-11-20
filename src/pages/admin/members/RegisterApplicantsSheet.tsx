@@ -15,7 +15,7 @@ import type { Notify } from "./shared/ui";
 const listBoxCss = css({
   border: `1px solid ${colors.borderLight}`,
   borderRadius: radii.md,
-  backgroundColor: colors.bgPage,
+  backgroundColor: colors.bgSection,
   overflow: "hidden",
 });
 const rowCss = css({

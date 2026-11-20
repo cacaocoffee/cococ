@@ -10,23 +10,21 @@ interface TagBadgeProps {
 }
 
 const baseCss = css({
-  fontFamily: fonts.mono,
-  fontSize: '10px',
+  fontSize: "12px",
   fontWeight: '700',
-  letterSpacing: '0.16em',
-  textTransform: 'uppercase',
+  letterSpacing: "0",
   paddingInline: '10px',
   paddingBlock: '4px',
   borderRadius: '9999px',
   display: 'inline-flex',
   alignItems: 'center',
   gap: '5px',
-  border: `1px solid ${colors.borderMedium}`,
 });
 
 const variantCss: Record<TagBadgeVariant, string> = {
-  default: css({ backgroundColor: colors.bgCard, color: colors.textMuted }),
-  amber:   css({ backgroundColor: 'rgba(194,96,63,0.10)', color: colors.brand, borderColor: 'rgba(194,96,63,0.30)' }),
+  default: css({ backgroundColor: colors.bgSection, color: colors.textMuted }),
+  // 강조 태그: 라임 바탕에 잉크 글자 (이름은 예전 그대로 둔다)
+  amber:   css({ backgroundColor: colors.lime, color: colors.textPrimary }),
 };
 
 export default function TagBadge({ label, variant = 'default' }: TagBadgeProps) {

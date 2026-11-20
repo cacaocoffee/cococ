@@ -22,8 +22,8 @@ const listCss = css({
   marginTop: "6px",
   maxHeight: "232px",
   overflowY: "auto",
-  backgroundColor: colors.bgPage,
-  border: `1px solid ${colors.borderInput}`,
+  backgroundColor: colors.bgSection,
+  border: "none",
   borderRadius: radii.md,
   padding: "4px",
 });
@@ -42,9 +42,9 @@ const optionCss = css({
   fontFamily: "inherit",
   textAlign: "left",
   cursor: "pointer",
-  _hover: { backgroundColor: colors.bgSection },
+  _hover: { backgroundColor: colors.bgCard },
 });
-const optionActiveCss = css({ backgroundColor: colors.bgSection });
+const optionActiveCss = css({ backgroundColor: colors.bgCard });
 const optionNameCss = css({ fontSize: "14px", fontWeight: "700", color: colors.textPrimary });
 const optionMetaCss = css({ fontSize: "12px", color: colors.textFaint, marginLeft: "6px" });
 const optionDuesCss = css({
@@ -62,8 +62,8 @@ const selectedCss = css({
   minHeight: "44px",
   paddingLeft: "14px",
   paddingRight: "4px",
-  backgroundColor: colors.bgPage,
-  border: `1px solid ${colors.borderInput}`,
+  backgroundColor: colors.bgSection,
+  border: "none",
   borderRadius: radii.md,
 });
 

@@ -15,11 +15,9 @@ const btnBaseCss = css({
   display: 'inline-flex',
   alignItems: 'center',
   gap: '8px',
-  fontFamily: fonts.mono,
-  fontSize: '11px',
+  fontSize: "14px",
   fontWeight: '700',
-  letterSpacing: '0.18em',
-  textTransform: 'uppercase',
+  letterSpacing: "0",
   background: 'none',
   border: 'none',
   cursor: 'pointer',
@@ -29,12 +27,12 @@ const btnBaseCss = css({
 
 const toneDefaultCss = css({
   color: colors.textMuted,
-  _hover: { color: colors.brand },
+  _hover: { color: colors.textPrimary },
 });
 
 const toneOnDarkCss = css({
-  color: 'rgba(251,246,236,0.85)',
-  _hover: { color: colors.bgPage, opacity: '1' },
+  color: colors.onInk,
+  _hover: { opacity: '0.8' },
 });
 
 export default function BackButton({ label = '뒤로가기', tone = 'default' }: BackButtonProps) {

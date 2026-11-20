@@ -168,7 +168,7 @@ const sheetBackdropCss = css({
   display: "flex",
   alignItems: "flex-end",
   justifyContent: "center",
-  backgroundColor: "rgba(33,27,18,0.5)",
+  backgroundColor: "rgba(15,17,21,0.5)",
   "@sm": { alignItems: "center", padding: "24px" },
 });
 const sheetPanelCss = css({
@@ -201,7 +201,7 @@ const sheetHeadCss = css({
 const sheetTitleCss = css({
   fontFamily: fonts.display,
   fontSize: "22px",
-  fontWeight: "600",
+  fontWeight: "700",
   color: colors.textPrimary,
   letterSpacing: "-0.01em",
 });
@@ -322,7 +322,7 @@ const toastCss = css({
   paddingBlock: "12px",
   borderRadius: radii.md,
   backgroundColor: colors.textPrimary,
-  color: colors.bgPage,
+  color: colors.onInk,
   fontSize: "14px",
   lineHeight: "1.5",
   boxShadow: shadows.card,

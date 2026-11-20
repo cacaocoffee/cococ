@@ -9,9 +9,12 @@ interface ArchiveCardProps {
   item: ArchiveItem;
 }
 
+// 흰 카드 안에 사진과 글. 테두리와 그림자는 없다
 const linkCss = css({
   display: 'block',
-  backgroundColor: 'transparent',
+  backgroundColor: colors.bgCard,
+  borderRadius: '20px',
+  padding: '10px 10px 18px',
   textDecoration: 'none',
   color: 'inherit',
 });
@@ -20,10 +23,9 @@ const imgWrapCss = css({
   position: 'relative',
   overflow: 'hidden',
   aspectRatio: '4/5',
-  borderRadius: '4px',
-  border: `1px solid ${colors.borderSubtle}`,
+  borderRadius: '14px',
   marginBottom: '16px',
-  backgroundColor: colors.bgCard,
+  backgroundColor: colors.bgSection,
 });
 
 const imgCss = css({
@@ -34,42 +36,31 @@ const imgCss = css({
   _groupHover: { transform: 'scale(1.04)' },
 });
 
-const overlayCss = css({
-  position: 'absolute',
-  inset: '0',
-  background: 'linear-gradient(to top, rgba(33,27,18,0.42), rgba(33,27,18,0) 50%)',
-  pointerEvents: 'none',
-});
 
 const categoryBadgeCss = css({
   position: 'absolute',
   top: '14px',
   left: '14px',
-  backgroundColor: colors.bgPage,
+  backgroundColor: colors.bgCard,
   color: colors.textPrimary,
-  fontFamily: fonts.mono,
-  fontSize: '10px',
+  fontSize: "12px",
   fontWeight: '700',
-  letterSpacing: '0.16em',
-  textTransform: 'uppercase',
   paddingInline: '10px',
   paddingBlock: '4px',
   borderRadius: '9999px',
-  border: `1px solid ${colors.borderMedium}`,
 });
 
 const metaCss = css({
   display: 'flex',
   alignItems: 'center',
   gap: '14px',
-  marginBottom: '10px',
+  marginBottom: '8px',
+  paddingInline: '8px',
 });
 
 const metaItemCss = css({
-  fontFamily: fonts.mono,
-  fontSize: '10px',
-  letterSpacing: '0.12em',
-  textTransform: 'uppercase',
+  fontSize: "12px",
+  letterSpacing: "0",
   color: colors.textFaint,
   display: 'inline-flex',
   alignItems: 'center',
@@ -79,12 +70,11 @@ const metaItemCss = css({
 const titleCss = css({
   fontFamily: fonts.display,
   fontSize: '20px',
-  fontWeight: '500',
+  fontWeight: "700",
   color: colors.textPrimary,
-  lineHeight: '1.2',
-  letterSpacing: '-0.008em',
-  transition: 'color 0.2s',
-  _groupHover: { color: colors.brand },
+  lineHeight: '1.25',
+  letterSpacing: '-0.02em',
+  paddingInline: '8px',
 });
 
 export default function ArchiveCard({ item }: ArchiveCardProps) {
@@ -97,12 +87,11 @@ export default function ArchiveCard({ item }: ArchiveCardProps) {
       >
         <div className={imgWrapCss}>
           <img src={item.img} alt={item.title} className={imgCss} />
-          <div className={overlayCss} />
           <span className={categoryBadgeCss}>{item.category}</span>
         </div>
         <div className={metaCss}>
           <span className={metaItemCss}><Calendar size={11} />{item.date}</span>
-          <span style={{ color: colors.textDimmer }}>·</span>
+          <span style={{ color: colors.textDimmest }}>·</span>
           <span className={metaItemCss}><GlassWater size={11} />{item.base}</span>
         </div>
         <h4 className={titleCss}>{item.title}</h4>

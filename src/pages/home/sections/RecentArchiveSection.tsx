@@ -32,11 +32,10 @@ function FadeUp({ children, delay = 0, className = "" }: FadeUpProps) {
 }
 
 const archiveSectionCss = css({
-  paddingBlock: "112px",
-  paddingInline: "24px",
+  paddingBlock: "72px",
+  paddingInline: "16px",
   backgroundColor: colors.bgPage,
-  borderTop: `1px solid ${colors.borderFaint}`,
-  "@md": { paddingInline: "48px" },
+  "@md": { paddingInline: "32px", paddingBlock: "104px" },
 });
 
 const sectionInnerCss = css({
@@ -59,21 +58,19 @@ const headerTextCss = css({
 });
 
 const sectionKickerCss = css({
-  fontFamily: fonts.mono,
-  fontSize: "11px",
-  letterSpacing: "0.24em",
-  textTransform: "uppercase",
-  color: colors.brand,
-  marginBottom: "16px",
+  fontSize: "13px",
+  fontWeight: "700",
+  color: colors.textMuted,
+  marginBottom: "12px",
 });
 
 const sectionHeadlineCss = css({
   fontFamily: fonts.display,
   fontSize: "clamp(32px, 4vw, 48px)",
-  fontWeight: "500",
+  fontWeight: "700",
   color: colors.textPrimary,
-  lineHeight: "1.08",
-  letterSpacing: "-0.014em",
+  lineHeight: "1.1",
+  letterSpacing: "-0.03em",
   textWrap: "balance",
 } as Parameters<typeof css>[0]);
 
@@ -82,20 +79,22 @@ const moreLinkCss = css({
   alignItems: "center",
   gap: "8px",
   color: colors.textPrimary,
-  fontWeight: "600",
+  backgroundColor: colors.bgCard,
+  fontWeight: "700",
   fontSize: "14px",
   textDecoration: "none",
-  paddingBlock: "8px",
-  borderBottom: `1px solid ${colors.textPrimary}`,
+  paddingInline: "18px",
+  minHeight: "44px",
+  borderRadius: "9999px",
   alignSelf: "start",
-  transition: "color 0.2s, border-color 0.2s",
-  _hover: { color: colors.brand, borderColor: colors.brand },
+  transition: "background-color 0.2s",
+  _hover: { backgroundColor: colors.bgPressed },
 });
 
 const archiveGridCss = css({
   display: "grid",
   gridTemplateColumns: "1fr",
-  gap: "32px",
+  gap: "12px",
   "@md": { gridTemplateColumns: "repeat(3,1fr)" },
 });
 
@@ -110,7 +109,7 @@ export default function RecentArchiveSection() {
         <FadeUp>
           <div className={sectionHeaderCss}>
             <div className={headerTextCss}>
-              <span className={sectionKickerCss}>§ Archive — Recent Sessions</span>
+              <span className={sectionKickerCss}>Archive — Recent Sessions</span>
               <h3 className={sectionHeadlineCss}>
                 지난 잔의 기록들.
               </h3>

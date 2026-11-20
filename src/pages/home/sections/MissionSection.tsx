@@ -48,11 +48,10 @@ const VALUES = [
 ];
 
 const missionSectionCss = css({
-  paddingBlock: "112px",
-  paddingInline: "24px",
+  paddingBlock: "72px",
+  paddingInline: "16px",
   backgroundColor: colors.bgPage,
-  borderTop: `1px solid ${colors.borderFaint}`,
-  "@md": { paddingInline: "48px" },
+  "@md": { paddingInline: "32px", paddingBlock: "104px" },
 });
 
 const sectionInnerCss = css({
@@ -69,20 +68,18 @@ const sectionHeaderCss = css({
 });
 
 const sectionKickerCss = css({
-  fontFamily: fonts.mono,
-  fontSize: "11px",
-  letterSpacing: "0.24em",
-  textTransform: "uppercase",
-  color: colors.brand,
+  fontSize: "13px",
+  fontWeight: "700",
+  color: colors.textMuted,
   paddingTop: "10px",
 });
 
 const sectionLeadCss = css({
   fontFamily: fonts.display,
   fontSize: "clamp(28px, 3.6vw, 44px)",
-  fontWeight: "500",
-  lineHeight: "1.18",
-  letterSpacing: "-0.012em",
+  fontWeight: "700",
+  lineHeight: "1.2",
+  letterSpacing: "-0.03em",
   color: colors.textPrimary,
   maxWidth: "48rem",
   textWrap: "balance",
@@ -91,50 +88,51 @@ const sectionLeadCss = css({
 const mvGridCss = css({
   display: "grid",
   gridTemplateColumns: "1fr",
-  gap: "20px",
-  marginBottom: "80px",
+  gap: "12px",
+  marginBottom: "12px",
   "@md": { gridTemplateColumns: "repeat(2,1fr)" },
 });
 
 const missionCardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
-  borderRadius: "20px",
-  padding: "44px",
+  border: "none",
+  borderRadius: "28px",
+  padding: "28px",
   height: "100%",
+  "@md": { padding: "44px" },
 });
 
 const visionCardCss = css({
-  backgroundColor: colors.textPrimary,
-  borderRadius: "20px",
-  padding: "44px",
+  backgroundColor: colors.bgInk,
+  borderRadius: "28px",
+  padding: "28px",
+  "@md": { padding: "44px" },
   height: "100%",
 });
 
 const cardEyebrowCss = css({
-  fontFamily: fonts.mono,
-  fontSize: "10px",
+  fontSize: "12px",
   fontWeight: "700",
-  letterSpacing: "0.28em",
-  textTransform: "uppercase",
+  letterSpacing: "0",
   marginBottom: "24px",
   display: "block",
 });
 
-const missionEyebrowCss = css({ color: colors.brand });
-const visionEyebrowCss = css({ color: "rgba(251,246,236,0.55)" });
+const missionEyebrowCss = css({ color: colors.textMuted });
+// 검정 카드 위라 라임 글자를 쓸 수 있다
+const visionEyebrowCss = css({ color: colors.lime });
 
 const cardTitleCss = css({
   fontFamily: fonts.display,
   fontSize: "32px",
-  fontWeight: "500",
-  lineHeight: "1.12",
-  letterSpacing: "-0.012em",
+  fontWeight: "700",
+  lineHeight: "1.15",
+  letterSpacing: "-0.03em",
   marginBottom: "20px",
 });
 
 const missionTitleCss = css({ color: colors.textPrimary });
-const visionTitleCss = css({ color: colors.bgPage });
+const visionTitleCss = css({ color: colors.onInk });
 
 const missionDescCss = css({
   color: colors.textMuted,
@@ -142,51 +140,49 @@ const missionDescCss = css({
   lineHeight: "1.7",
 });
 const visionDescCss = css({
-  color: "rgba(251,246,236,0.78)",
+  color: colors.onInkMuted,
   fontSize: "15px",
   lineHeight: "1.7",
 });
 
+// 세 가치는 흰 카드 세 장
 const valuesGridCss = css({
   display: "grid",
   gridTemplateColumns: "1fr",
-  gap: "0",
-  borderTop: `1px solid ${colors.borderMedium}`,
+  gap: "12px",
   "@md": { gridTemplateColumns: "repeat(3,1fr)" },
 });
 
 const valueCardCss = css({
-  paddingTop: "40px",
-  paddingBottom: "40px",
-  paddingInline: "0",
-  borderBottom: `1px solid ${colors.borderMedium}`,
-  "@md": {
-    paddingInline: "32px",
-    borderBottom: "none",
-    borderRight: `1px solid ${colors.borderMedium}`,
-  },
+  backgroundColor: colors.bgCard,
+  borderRadius: "20px",
+  padding: "28px",
+  height: "100%",
 });
 
-const valueCardLastCss = css({
-  "@md": { borderRight: "none" },
-});
+const valueCardLastCss = css({});
 
 const valueNoCss = css({
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  minWidth: "44px",
+  height: "44px",
+  paddingInline: "8px",
+  borderRadius: "12px",
+  backgroundColor: colors.bgSection,
   fontFamily: fonts.display,
-  fontStyle: "italic",
-  fontSize: "32px",
-  color: colors.brand,
-  marginBottom: "16px",
-  fontWeight: "500",
+  fontSize: "18px",
+  color: colors.textPrimary,
+  marginBottom: "20px",
+  fontWeight: "700",
 });
 
 const valueKeywordCss = css({
   color: colors.textFaint,
-  fontFamily: fonts.mono,
-  fontSize: "10px",
+  fontSize: "12px",
   fontWeight: "700",
-  letterSpacing: "0.24em",
-  textTransform: "uppercase",
+  letterSpacing: "0",
   marginBottom: "10px",
   display: "block",
 });
@@ -194,11 +190,11 @@ const valueKeywordCss = css({
 const valueTitleCss = css({
   color: colors.textPrimary,
   fontFamily: fonts.display,
-  fontWeight: "500",
+  fontWeight: "700",
   fontSize: "22px",
-  marginBottom: "14px",
-  lineHeight: "1.22",
-  letterSpacing: "-0.008em",
+  marginBottom: "12px",
+  lineHeight: "1.25",
+  letterSpacing: "-0.02em",
 });
 const valueDescCss = css({
   color: colors.textMuted,
@@ -212,7 +208,7 @@ export default function MissionSection() {
       <div className={sectionInnerCss}>
         <FadeUp>
           <div className={sectionHeaderCss}>
-            <span className={sectionKickerCss}>§ Mission &amp; Values</span>
+            <span className={sectionKickerCss}>Mission &amp; Values</span>
             <h2 className={sectionLeadCss}>
               우리는 한 잔의 술 곁에 머무는 시간을 기록합니다.
             </h2>

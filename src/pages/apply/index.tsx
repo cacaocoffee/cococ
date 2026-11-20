@@ -29,18 +29,16 @@ const pageCss = css({
 
 const headerCss = css({ textAlign: "center", marginBottom: "56px" });
 const eyebrowCss = css({
-  color: colors.brand,
-  fontSize: "11px",
+  color: colors.textMuted,
+  fontSize: "12px",
   fontWeight: "700",
-  letterSpacing: "0.24em",
-  textTransform: "uppercase",
+  letterSpacing: "0",
   marginBottom: "16px",
-  fontFamily: "ui-monospace, 'JetBrains Mono', Menlo, monospace",
 });
 const pageTitleCss = css({
-  fontFamily: "'Newsreader', 'Iowan Old Style', Georgia, serif",
+  fontFamily: "'Space Grotesk', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif",
   fontSize: "clamp(36px, 4.6vw, 56px)",
-  fontWeight: "500",
+  fontWeight: "700",
   color: colors.textPrimary,
   marginBottom: "14px",
   letterSpacing: "-0.014em",
@@ -52,7 +50,7 @@ const formBoxCss = css({
   backgroundColor: colors.bgCard,
   borderRadius: "20px",
   overflow: "hidden",
-  border: `1px solid ${colors.borderSubtle}`,
+  border: "none",
   maxWidth: "44rem",
   marginInline: "auto",
   marginBottom: "96px",
@@ -68,19 +66,16 @@ const formTopRowCss = css({
   marginBottom: "32px",
 });
 const stepLabelCss = css({
-  fontSize: "11px",
+  fontSize: "12px",
   fontWeight: "700",
-  color: colors.brand,
-  textTransform: "uppercase",
-  letterSpacing: "0.22em",
-  fontFamily: "ui-monospace, 'JetBrains Mono', Menlo, monospace",
+  color: colors.textMuted,
+  letterSpacing: "0",
 });
 const stepCountCss = css({
   color: colors.textFaint,
   fontSize: "11px",
   fontWeight: "700",
   letterSpacing: "0.16em",
-  fontFamily: "ui-monospace, 'JetBrains Mono', Menlo, monospace",
 });
 
 const formNavCss = css({
@@ -107,7 +102,7 @@ const prevBtnCss = css({
 
 const nextBtnCss = css({
   backgroundColor: colors.textPrimary,
-  color: colors.bgPage,
+  color: colors.onInk,
   paddingInline: "32px",
   paddingBlock: "12px",
   borderRadius: "10px",
@@ -127,7 +122,7 @@ const nextBtnDisabledCss = css({
 
 const submitBtnCss = css({
   backgroundColor: colors.brand,
-  color: colors.bgPage,
+  color: colors.onInk,
   paddingInline: "32px",
   paddingBlock: "12px",
   borderRadius: "10px",
@@ -152,8 +147,8 @@ const successInnerCss = css({ textAlign: "center", maxWidth: "28rem" });
 const successIconWrapCss = css({
   width: "96px",
   height: "96px",
-  backgroundColor: "rgba(194,96,63,0.10)",
-  color: colors.brand,
+  backgroundColor: colors.lime,
+  color: colors.textPrimary,
   borderRadius: "9999px",
   display: "flex",
   alignItems: "center",
@@ -161,12 +156,11 @@ const successIconWrapCss = css({
   marginInline: "auto",
   marginBottom: "32px",
   fontSize: "44px",
-  border: `1px solid rgba(194,96,63,0.22)`,
 });
 const successTitleCss = css({
-  fontFamily: "'Newsreader', 'Iowan Old Style', Georgia, serif",
+  fontFamily: "'Space Grotesk', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif",
   fontSize: "40px",
-  fontWeight: "500",
+  fontWeight: "700",
   color: colors.textPrimary,
   marginBottom: "16px",
   letterSpacing: "-0.014em",
@@ -180,8 +174,8 @@ const successDescCss = css({
 const successNameCss = css({ color: colors.textPrimary, fontWeight: "700" });
 const successCardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
-  borderRadius: "1rem",
+  border: "none",
+  borderRadius: "20px",
   padding: "24px",
   textAlign: "left",
   display: "flex",

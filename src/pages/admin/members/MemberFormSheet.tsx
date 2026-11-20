@@ -23,7 +23,6 @@ import {
 } from "@/domain/hr/hr-format";
 import { useCreateMember, useUpdateMember } from "@/domain/hr/hr-mutation-options";
 import {
-  BRAND_BG,
   formGridCss,
   ghostBtnCss,
   hintCss,
@@ -47,10 +46,10 @@ const chipsBoxCss = css({
   gap: "6px",
   minHeight: "44px",
   padding: "6px",
-  backgroundColor: colors.bgPage,
-  border: `1px solid ${colors.borderInput}`,
+  backgroundColor: colors.bgSection,
+  border: "1px solid transparent",
   borderRadius: radii.md,
-  ":focus-within": { borderColor: colors.brand, boxShadow: `0 0 0 3px ${BRAND_BG}` },
+  ":focus-within": { borderColor: colors.textPrimary },
 });
 const chipRemoveCss = css({
   display: "inline-flex",
@@ -64,7 +63,7 @@ const chipRemoveCss = css({
   color: "inherit",
   cursor: "pointer",
   borderRadius: "9999px",
-  _hover: { backgroundColor: "rgba(194,96,63,0.18)" },
+  _hover: { backgroundColor: colors.bgPressed },
 });
 const chipsInputCss = css({
   flex: "1 1 120px",
@@ -110,7 +109,7 @@ function NamesInput({ value, onChange }: NamesInputProps) {
   return (
     <div className={chipsBoxCss}>
       {value.map((name) => (
-        <span key={name} className={pillCss.brand}>
+        <span key={name} className={pillCss.outline} style={{ backgroundColor: colors.bgCard }}>
           {name}
           <button
             type="button"

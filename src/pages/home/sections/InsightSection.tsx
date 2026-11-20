@@ -31,20 +31,26 @@ function FadeUp({ children, delay = 0, className = "" }: FadeUpProps) {
 }
 
 const insightSectionCss = css({
-  paddingBlock: "112px",
-  backgroundColor: colors.bgSection,
-  borderTop: `1px solid ${colors.borderFaint}`,
+  paddingBlock: "24px 72px",
+  backgroundColor: colors.bgPage,
+  "@md": { paddingBlock: "32px 104px" },
 });
 
+// 흰 카드 하나 안에 글과 표지 사진
 const insightInnerCss = css({
   maxWidth: "80rem",
   marginInline: "auto",
-  paddingInline: "24px",
+  marginLeft: "16px",
+  marginRight: "16px",
+  backgroundColor: colors.bgCard,
+  borderRadius: "28px",
+  padding: "24px",
   display: "grid",
   gridTemplateColumns: "1fr",
   gap: "48px",
   alignItems: "center",
-  "@md": { paddingInline: "48px", gridTemplateColumns: "1.05fr 0.95fr", gap: "80px" },
+  "@md": { padding: "48px", gridTemplateColumns: "1.05fr 0.95fr", gap: "64px", marginLeft: "32px", marginRight: "32px" },
+  "@xl": { marginLeft: "auto", marginRight: "auto" },
 });
 
 const insightSideCss = css({
@@ -53,21 +59,19 @@ const insightSideCss = css({
 });
 
 const insightKickerCss = css({
-  fontFamily: fonts.mono,
-  fontSize: "11px",
-  letterSpacing: "0.24em",
-  textTransform: "uppercase",
-  color: colors.brand,
-  marginBottom: "24px",
+  fontSize: "13px",
+  fontWeight: "700",
+  color: colors.textMuted,
+  marginBottom: "16px",
 });
 
 const insightHeadlineCss = css({
   fontFamily: fonts.display,
   fontSize: "clamp(34px, 4.4vw, 56px)",
-  fontWeight: "500",
+  fontWeight: "700",
   color: colors.textPrimary,
-  lineHeight: "1.06",
-  letterSpacing: "-0.014em",
+  lineHeight: "1.1",
+  letterSpacing: "-0.03em",
   marginBottom: "24px",
   textWrap: "balance",
 } as Parameters<typeof css>[0]);
@@ -84,17 +88,17 @@ const insightBtnCss = css({
   display: "inline-flex",
   alignItems: "center",
   gap: "8px",
-  paddingInline: "28px",
-  paddingBlock: "14px",
-  border: `1px solid ${colors.textPrimary}`,
-  color: colors.textPrimary,
-  fontWeight: "600",
-  borderRadius: "9999px",
+  paddingInline: "24px",
+  minHeight: "52px",
+  backgroundColor: colors.bgInk,
+  color: colors.onInk,
+  fontWeight: "700",
+  borderRadius: "16px",
   textDecoration: "none",
-  transition: "background-color 0.2s, color 0.2s",
-  fontSize: "14px",
+  transition: "background-color 0.2s",
+  fontSize: "15px",
   alignSelf: "flex-start",
-  _hover: { backgroundColor: colors.textPrimary, color: colors.bgPage },
+  _hover: { backgroundColor: colors.brandHover },
 });
 
 const insightCardLinkCss = css({
@@ -105,10 +109,10 @@ const insightCardLinkCss = css({
 
 const insightImgWrapCss = css({
   position: "relative",
-  borderRadius: "4px",
+  borderRadius: "20px",
   overflow: "hidden",
   aspectRatio: "4/5",
-  border: `1px solid ${colors.borderSubtle}`,
+  backgroundColor: colors.bgInk,
 });
 
 const insightImgCss = css({
@@ -125,36 +129,34 @@ const insightPlaceholderCss = css({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  backgroundColor: colors.bgCard,
-  color: colors.textFaint,
+  backgroundColor: colors.bgInk,
+  color: colors.onInkMuted,
   fontFamily: fonts.display,
-  fontStyle: "italic",
   fontSize: "20px",
 });
 
-const insightOverlayCss = css({
-  position: "absolute",
-  inset: "0",
-  background: "linear-gradient(to top, rgba(33,27,18,0.62), rgba(33,27,18,0) 55%)",
-});
+// 사진 아래쪽에 검정 면을 깔아 흰 제목이 어떤 사진 위에서도 읽히게 한다
+const insightOverlayCss = css({ display: "none" });
 
 const insightCaptionCss = css({
   position: "absolute",
-  bottom: "24px",
-  left: "24px",
-  right: "24px",
-  color: colors.bgPage,
+  bottom: "12px",
+  left: "12px",
+  right: "12px",
+  color: colors.onInk,
+  backgroundColor: colors.bgInk,
+  borderRadius: "16px",
+  padding: "16px 18px",
 });
 
 const insightBadgeCss = css({
-  fontFamily: fonts.mono,
-  fontSize: "10px",
+  fontSize: "12px",
   fontWeight: "700",
-  letterSpacing: "0.24em",
-  textTransform: "uppercase",
-  color: colors.bgPage,
-  borderTop: "1px solid rgba(251,246,236,0.55)",
-  paddingTop: "10px",
+  color: colors.textPrimary,
+  backgroundColor: colors.lime,
+  borderRadius: "9999px",
+  paddingInline: "10px",
+  paddingBlock: "3px",
   marginBottom: "10px",
   display: "inline-block",
 });
@@ -162,10 +164,10 @@ const insightBadgeCss = css({
 const insightArticleTitleCss = css({
   fontFamily: fonts.display,
   fontSize: "22px",
-  fontWeight: "500",
-  lineHeight: "1.18",
-  letterSpacing: "-0.005em",
-  color: colors.bgPage,
+  fontWeight: "700",
+  lineHeight: "1.25",
+  letterSpacing: "-0.02em",
+  color: colors.onInk,
 });
 
 export default function InsightSection() {
@@ -180,7 +182,7 @@ export default function InsightSection() {
       <div className={insightInnerCss}>
         <FadeUp>
           <div className={insightSideCss}>
-            <span className={insightKickerCss}>§ Insight — Latest Issue</span>
+            <span className={insightKickerCss}>Insight — Latest Issue</span>
             <h3 className={insightHeadlineCss}>
               주류 전문가들이 한 잔의 술 너머를 이야기합니다.
             </h3>

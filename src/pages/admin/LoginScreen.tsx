@@ -18,8 +18,8 @@ const headerCss = css({ textAlign: "center", marginBottom: "40px" });
 const iconCss = css({
   width: "64px",
   height: "64px",
-  backgroundColor: "rgba(245,158,11,0.1)",
-  color: colors.brand,
+  backgroundColor: colors.lime,
+  color: colors.textPrimary,
   borderRadius: "9999px",
   display: "flex",
   alignItems: "center",
@@ -29,7 +29,7 @@ const iconCss = css({
 });
 const titleCss = css({
   fontSize: "24px",
-  fontWeight: "900",
+  fontWeight: "700",
   color: colors.textPrimary,
   marginBottom: "8px",
 });
@@ -38,10 +38,10 @@ const formCss = css({ display: "flex", flexDirection: "column", gap: "16px" });
 const btnCss = css({
   width: "100%",
   backgroundColor: colors.brand,
-  color: colors.bgPage,
+  color: colors.onInk,
   paddingBlock: "16px",
-  borderRadius: "0.75rem",
-  fontWeight: "900",
+  borderRadius: "16px",
+  fontWeight: "700",
   fontSize: "14px",
   border: "none",
   cursor: "pointer",

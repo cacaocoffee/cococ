@@ -2,28 +2,36 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import BackButton from "@/components/ui/BackButton";
 import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 import { fetchInstagramThumbnail } from "@/lib/microlink";
 import type { MagazineItem } from "@/domain/magazine/magazine-dto";
 
+// 표지 사진은 둥근 카드로 화면 양옆 여백 안에 둔다. 사진 위에 글자를 얹지 않아 그라데이션이 필요 없다
 const heroSectionCss = css({
   position: "relative",
-  height: "50vh",
+  height: "44vh",
+  minHeight: "260px",
+  marginInline: "16px",
+  marginTop: "8px",
+  borderRadius: "28px",
   overflow: "hidden",
+  backgroundColor: colors.bgInk,
+  "@md": { marginInline: "32px", height: "50vh" },
 });
 
 const heroImgCss = css({ width: "100%", height: "100%", objectFit: "cover" });
 
-const heroOverlayCss = css({
-  position: "absolute",
-  inset: "0",
-  background: "linear-gradient(to top, #F6EFE2 0%, rgba(246,239,226,0.55) 25%, rgba(33,27,18,0.18) 70%, rgba(33,27,18,0.42) 100%)",
-});
+const heroOverlayCss = css({ display: "none" });
 
+// 사진 위의 뒤로 가기: 흰 알약
 const heroBackBtnCss = css({
   position: "absolute",
-  top: "24px",
-  left: "24px",
-  "@md": { left: "48px" },
+  top: "14px",
+  left: "14px",
+  backgroundColor: colors.bgCard,
+  borderRadius: "9999px",
+  paddingInline: "14px",
+  paddingBlock: "4px",
 });
 
 interface ArticleHeroProps {
@@ -61,7 +69,7 @@ export default function ArticleHero({ item }: ArticleHeroProps) {
         transition={{ delay: 0.3 }}
         className={heroBackBtnCss}
       >
-        <BackButton label="Magazine" tone="onDark" />
+        <BackButton label="Magazine" />
       </motion.div>
     </div>
   );

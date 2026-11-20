@@ -54,12 +54,13 @@ const btnBaseCss = css({
   fontSize: "11px",
   fontWeight: "800",
   color: "transparent",
-  _hover: { borderColor: "rgba(194,96,63,0.50)", backgroundColor: "rgba(194,96,63,0.06)" },
+  _hover: { borderColor: colors.borderStrong, backgroundColor: colors.bgPressed },
 });
 
 const btnActiveCss = css({
-  backgroundColor: "rgba(194,96,63,0.16)",
-  borderColor: "rgba(194,96,63,0.50)",
+  // 고른 칸: 라임 바탕에 잉크 글자
+  backgroundColor: colors.lime,
+  borderColor: colors.textPrimary,
   color: colors.brand,
 });
 
@@ -69,7 +70,7 @@ const emptyMsgCss = css({
   paddingBlock: "16px",
   textAlign: "center",
   border: `1px dashed ${colors.borderInput}`,
-  borderRadius: "0.75rem",
+  borderRadius: "14px",
 });
 
 /**

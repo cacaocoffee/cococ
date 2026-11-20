@@ -45,7 +45,7 @@ const monthNavCss = css({ display: "inline-flex", alignItems: "center", gap: "2p
 const monthLabelCss = css({
   fontFamily: fonts.display,
   fontSize: "20px",
-  fontWeight: "600",
+  fontWeight: "700",
   color: colors.textPrimary,
   minWidth: "116px",
   textAlign: "center",

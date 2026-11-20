@@ -11,10 +11,10 @@ if (typeof document !== "undefined" && !document.getElementById("__skeleton_shim
 
 const baseCss = css({
   background:
-    "linear-gradient(90deg, rgba(60,40,15,0.05) 0%, rgba(60,40,15,0.12) 50%, rgba(60,40,15,0.05) 100%)",
+    "linear-gradient(90deg, rgba(15,17,21,0.05) 0%, rgba(15,17,21,0.12) 50%, rgba(15,17,21,0.05) 100%)",
   backgroundSize: "200% 100%",
   animation: "sk-shimmer 1.6s ease-in-out infinite",
-  borderRadius: "0.5rem",
+  borderRadius: "10px",
   display: "block",
 });
 

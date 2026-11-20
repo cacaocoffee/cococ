@@ -2,251 +2,221 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { css } from "@/lib/css";
-import { colors, shadows, fonts } from "@/lib/tokens";
+import { colors, fonts, radii } from "@/lib/tokens";
 import CococLogo from "@/components/ui/CococLogo";
 
+// 홈 첫 화면: 회색 바탕 위에 큰 검정 카드 하나. 라임은 강조 한 군데와 버튼에만 쓴다.
 const heroSectionCss = css({
-  position: "relative",
-  minHeight: "92vh",
+  paddingInline: "16px",
+  paddingTop: "16px",
+  paddingBottom: "24px",
+  backgroundColor: colors.bgPage,
+  "@md": { paddingInline: "32px", paddingTop: "24px", paddingBottom: "32px" },
+});
+
+const heroCardCss = css({
+  maxWidth: "80rem",
+  marginInline: "auto",
+  backgroundColor: colors.bgInk,
+  color: colors.onInk,
+  borderRadius: radii.xl,
+  padding: "28px 22px 22px",
   display: "grid",
   gridTemplateColumns: "1fr",
-  alignItems: "center",
-  paddingInline: "24px",
-  paddingTop: "40px",
-  paddingBottom: "80px",
-  backgroundColor: colors.bgPage,
+  gap: "28px",
   overflow: "hidden",
-  "@md": { paddingInline: "64px", gridTemplateColumns: "1.05fr 0.95fr", gap: "56px" },
-  "@lg": { paddingInline: "88px", gap: "88px" },
+  "@md": {
+    gridTemplateColumns: "1.1fr 0.9fr",
+    alignItems: "stretch",
+    gap: "40px",
+    padding: "48px",
+  },
+  "@lg": { padding: "64px", gap: "56px" },
 });
 
 const heroInnerCss = css({
-  maxWidth: "780px",
-  marginInline: "auto",
-  width: "100%",
-  position: "relative",
-  zIndex: "10",
-  "@md": { marginInline: "0" },
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
+  gap: "36px",
+  minWidth: "0",
 });
 
-const heroEyebrowRowCss = css({
+const topRowCss = css({
   display: "flex",
   alignItems: "center",
-  gap: "14px",
-  marginBottom: "32px",
+  justifyContent: "space-between",
+  gap: "12px",
+  flexWrap: "wrap",
 });
 
-const heroEyebrowLineCss = css({
-  width: "48px",
-  height: "1px",
-  backgroundColor: colors.brand,
+const logoRowCss = css({ display: "flex", alignItems: "center", gap: "12px" });
+
+const smallMutedCss = css({
+  fontSize: "13px",
+  fontWeight: "500",
+  color: colors.onInkMuted,
 });
 
-const heroEyebrowCss = css({
-  color: colors.brand,
-  fontSize: "11px",
+const folioCss = css({
+  fontSize: "12px",
   fontWeight: "700",
-  letterSpacing: "0.32em",
-  textTransform: "uppercase",
-  fontFamily: fonts.mono,
+  color: colors.onInk,
+  backgroundColor: colors.onInkLine,
+  borderRadius: radii.pill,
+  paddingInline: "10px",
+  paddingBlock: "4px",
+  whiteSpace: "nowrap",
 });
 
 const heroTitleCss = css({
   fontFamily: fonts.display,
-  fontSize: "clamp(56px, 8.6vw, 112px)",
-  fontWeight: "500",
-  color: colors.textPrimary,
-  lineHeight: "0.96",
-  letterSpacing: "-0.018em",
-  marginBottom: "32px",
-  textWrap: "balance",
-} as Parameters<typeof css>[0]);
+  fontSize: "clamp(48px, 8vw, 104px)",
+  fontWeight: "700",
+  color: colors.onInk,
+  lineHeight: "1.02",
+  letterSpacing: "-0.035em",
+  marginTop: "14px",
+});
 
+// 라임 바탕에 잉크 글자: 화면에서 하나뿐인 라임 강조
 const heroAccentCss = css({
-  color: colors.brand,
-  fontStyle: "italic",
+  display: "inline-block",
+  backgroundColor: colors.lime,
+  color: colors.textPrimary,
+  borderRadius: "14px",
+  paddingInline: "0.14em",
+  marginTop: "0.08em",
 });
 
 const heroSubCss = css({
-  fontSize: "18px",
-  color: colors.textMuted,
-  marginBottom: "44px",
-  fontWeight: "400",
-  lineHeight: "1.65",
+  fontSize: "16px",
+  color: colors.onInkMuted,
+  fontWeight: "500",
+  lineHeight: "1.7",
   maxWidth: "32rem",
+  "@md": { fontSize: "17px" },
 });
 
 const heroActionRowCss = css({
   display: "flex",
   alignItems: "center",
-  gap: "20px",
+  gap: "10px",
   flexWrap: "wrap",
 });
 
 const heroCTACss = css({
   display: "inline-flex",
   alignItems: "center",
-  gap: "12px",
-  backgroundColor: colors.textPrimary,
-  color: colors.bgPage,
-  paddingInline: "32px",
-  paddingBlock: "18px",
-  borderRadius: "9999px",
-  fontWeight: "600",
+  gap: "10px",
+  backgroundColor: colors.lime,
+  color: colors.textPrimary,
+  paddingInline: "24px",
+  minHeight: "52px",
+  borderRadius: radii.btn,
+  fontWeight: "700",
   fontSize: "15px",
-  letterSpacing: "0.01em",
   textDecoration: "none",
-  transition: "background-color 0.2s, transform 0.2s",
-  boxShadow: shadows.card,
-  _hover: { backgroundColor: colors.brand },
+  transition: "background-color 0.2s",
+  _hover: { backgroundColor: colors.limeHover },
 });
 
 const heroSecondaryCss = css({
   display: "inline-flex",
   alignItems: "center",
   gap: "6px",
-  color: colors.textPrimary,
-  fontSize: "14px",
-  fontWeight: "600",
+  color: colors.onInk,
+  paddingInline: "20px",
+  minHeight: "52px",
+  borderRadius: radii.btn,
+  border: `1px solid ${colors.onInkLine}`,
+  fontSize: "15px",
+  fontWeight: "700",
   textDecoration: "none",
-  paddingBlock: "8px",
-  borderBottom: `1px solid ${colors.textPrimary}`,
-  transition: "color 0.2s, border-color 0.2s",
-  _hover: { color: colors.brand, borderColor: colors.brand },
+  transition: "background-color 0.2s",
+  _hover: { backgroundColor: colors.onInkLine },
 });
 
 const heroVisualCss = css({
   position: "relative",
   width: "100%",
-  height: "62vh",
-  minHeight: "440px",
-  marginTop: "48px",
-  borderRadius: "2px",
+  minHeight: "320px",
+  borderRadius: radii.lg,
   overflow: "hidden",
-  "@md": { marginTop: "0", height: "78vh" },
+  "@md": { minHeight: "520px" },
 });
 
 const heroImgCss = css({
+  position: "absolute",
+  inset: "0",
   width: "100%",
   height: "100%",
   objectFit: "cover",
-  filter: "saturate(1.05) contrast(0.98)",
 });
 
 const heroCaptionCss = css({
   position: "absolute",
-  bottom: "20px",
-  right: "20px",
-  fontSize: "10px",
-  fontFamily: fonts.mono,
-  letterSpacing: "0.16em",
-  textTransform: "uppercase",
-  color: "rgba(251,246,236,0.85)",
-  textShadow: "0 1px 2px rgba(0,0,0,0.35)",
-});
-
-const heroFolioCss = css({
-  position: "absolute",
-  top: "32px",
-  right: "32px",
-  fontSize: "10px",
-  fontFamily: fonts.mono,
-  letterSpacing: "0.22em",
-  textTransform: "uppercase",
-  color: colors.textFaint,
-  zIndex: "10",
-  display: "none",
-  "@md": { display: "block" },
-});
-
-const heroLogoRowCss = css({
-  display: "flex",
-  alignItems: "center",
-  gap: "14px",
-  marginBottom: "28px",
-});
-
-const heroLogoLabelCss = css({
-  fontFamily: fonts.mono,
-  fontSize: "10px",
-  letterSpacing: "0.24em",
-  textTransform: "uppercase",
-  color: colors.textMuted,
+  left: "12px",
+  bottom: "12px",
+  fontSize: "12px",
+  fontWeight: "700",
+  color: colors.onInk,
+  backgroundColor: "rgba(15,17,21,0.72)",
+  borderRadius: radii.pill,
+  paddingInline: "10px",
+  paddingBlock: "5px",
 });
 
 export default function HeroSection() {
   return (
     <section className={heroSectionCss}>
-      <div className={heroFolioCss}>Vol. 01 — 2026</div>
-
-      <div className={heroInnerCss}>
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className={heroLogoRowCss}
-        >
-          <CococLogo size={56} color={colors.textPrimary} />
-          <span className={heroLogoLabelCss}>Cocktail Journal — Seoul</span>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.05 }}
-          className={heroEyebrowRowCss}
-        >
-          <span className={heroEyebrowLineCss} />
-          <span className={heroEyebrowCss}>Creations Over Cocktail · Offbeat Culture</span>
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.12, ease: [0.25, 0.1, 0.25, 1] }}
-          className={heroTitleCss}
-        >
-          아는 만큼,<br />
-          <span className={heroAccentCss}>맛있으니까.</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.28 }}
-          className={heroSubCss}
-        >
-          코콕은 2030세대의 취향 있는 주류 생활을 기록하는 칵테일 저널입니다.
-          경험을 지식으로, 지식은 미식으로 — 한 잔 한 잔 천천히 쌓아갑니다.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.42 }}
-          className={heroActionRowCss}
-        >
-          <Link to="/apply" className={heroCTACss}>
-            코콕 합류하기 <ArrowRight size={18} />
-          </Link>
-          <Link to="/magazine" className={heroSecondaryCss}>
-            이번 호 매거진 읽기
-          </Link>
-        </motion.div>
-      </div>
-
       <motion.div
-        initial={{ opacity: 0, scale: 1.04 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.0, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-        className={heroVisualCss}
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className={heroCardCss}
       >
-        <img
-          src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=1600"
-          alt="A backlit cocktail glass on a softly-lit bar counter"
-          className={heroImgCss}
-        />
-        <div className={heroCaptionCss}>Photograph — Negroni, Itaewon</div>
+        <div className={heroInnerCss}>
+          <div className={topRowCss}>
+            <div className={logoRowCss}>
+              <CococLogo size={44} color={colors.onInk} />
+              <span className={smallMutedCss}>Cocktail Journal — Seoul</span>
+            </div>
+            <span className={folioCss}>Vol. 01 — 2026</span>
+          </div>
+
+          <div>
+            <span className={smallMutedCss}>Creations Over Cocktail · Offbeat Culture</span>
+            <h1 className={heroTitleCss}>
+              아는 만큼,<br />
+              <span className={heroAccentCss}>맛있으니까.</span>
+            </h1>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            <p className={heroSubCss}>
+              코콕은 2030세대의 취향 있는 주류 생활을 기록하는 칵테일 저널입니다.
+              경험을 지식으로, 지식은 미식으로 — 한 잔 한 잔 천천히 쌓아갑니다.
+            </p>
+            <div className={heroActionRowCss}>
+              <Link to="/apply" className={heroCTACss}>
+                코콕 합류하기 <ArrowRight size={18} />
+              </Link>
+              <Link to="/magazine" className={heroSecondaryCss}>
+                이번 호 매거진 읽기
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className={heroVisualCss}>
+          <img
+            src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=1600"
+            alt="A backlit cocktail glass on a softly-lit bar counter"
+            className={heroImgCss}
+          />
+          <div className={heroCaptionCss}>Photograph — Negroni, Itaewon</div>
+        </div>
       </motion.div>
     </section>
   );

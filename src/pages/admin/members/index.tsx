@@ -12,8 +12,6 @@ import { useHrOverview } from "@/domain/hr/hr-query-options";
 import { newBtnCss, tabHeaderRowCss, tabTitleCss } from "../styles";
 import DuesPill from "./shared/DuesPill";
 import {
-  BRAND_BG,
-  BRAND_BORDER,
   avatarCss,
   cardCss,
   checkRowCss,
@@ -42,11 +40,21 @@ const bannerCss = css({
   flexWrap: "wrap",
   padding: "16px 18px",
   marginBottom: "20px",
-  backgroundColor: BRAND_BG,
-  border: `1px solid ${BRAND_BORDER}`,
+  backgroundColor: colors.bgCard,
   borderRadius: radii.lg,
 });
 const bannerTextCss = css({ display: "flex", alignItems: "center", gap: "12px", minWidth: "0", flex: "1 1 240px" });
+// 라임 칸 안의 아이콘: 이 화면에서 하나뿐인 라임 강조
+const bannerIconCss = css({
+  width: "44px",
+  height: "44px",
+  borderRadius: "12px",
+  backgroundColor: colors.lime,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexShrink: "0",
+});
 const bannerTitleCss = css({ fontSize: "14px", fontWeight: "700", color: colors.textPrimary, lineHeight: "1.5" });
 const bannerDescCss = css({ fontSize: "13px", color: colors.textMuted, lineHeight: "1.5" });
 
@@ -85,7 +93,7 @@ const rowBtnCss = css({
   textAlign: "left",
   cursor: "pointer",
   transition: "background-color 0.15s",
-  _hover: { backgroundColor: "rgba(60,40,15,0.03)" },
+  _hover: { backgroundColor: "rgba(15,17,21,0.03)" },
 });
 const rowMainCss = css({ flex: "1 1 0%", minWidth: "0" });
 const nameLineCss = css({ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" });
@@ -225,7 +233,7 @@ export default function MembersTab() {
           {pass2 > 0 && (
             <div className={bannerCss}>
               <div className={bannerTextCss}>
-                <UserPlus size={20} color={colors.brand} style={{ flexShrink: 0 }} />
+                <span className={bannerIconCss}><UserPlus size={20} color={colors.textPrimary} /></span>
                 <div>
                   <p className={bannerTitleCss}>최종 합격자 {pass2}명이 아직 회원으로 등록되지 않았어요</p>
                   <p className={bannerDescCss}>등록하면 가입월부터 회비를 부과해요.</p>
@@ -262,7 +270,7 @@ export default function MembersTab() {
               <select
                 aria-label="기수로 거르기"
                 className={selectCss}
-                style={{ width: "auto", minWidth: "108px" }}
+                style={{ width: "auto", minWidth: "108px", backgroundColor: colors.bgCard }}
                 value={generation}
                 onChange={(e) => setGeneration(e.target.value)}
               >
@@ -276,7 +284,7 @@ export default function MembersTab() {
                 <input
                   type="search"
                   className={inputCss}
-                  style={{ paddingLeft: "36px" }}
+                  style={{ paddingLeft: "36px", backgroundColor: colors.bgCard }}
                   placeholder="이름, 전화번호"
                   aria-label="이름이나 전화번호로 찾기"
                   value={query}
@@ -329,7 +337,7 @@ export default function MembersTab() {
                         <span className={nameLineCss}>
                           <span className={nameCss}>{m.name}</span>
                           {m.generation > 0 && <span className={genCss}>{m.generation}기</span>}
-                          {m.role && <span className={cx(pillCss.brand, wideInlineCss)}>{m.role}</span>}
+                          {m.role && <span className={cx(pillCss.neutral, wideInlineCss)}>{m.role}</span>}
                           {m.status !== "active" && (
                             <span className={narrowOnlyCss}><StatusPill status={m.status} /></span>
                           )}

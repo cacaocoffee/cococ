@@ -7,10 +7,10 @@ const gallerySectionCss = css({ marginBottom: "72px" });
 const galleryTitleCss = css({
   fontFamily: fonts.display,
   fontSize: "28px",
-  fontWeight: "500",
+  fontWeight: "700",
   color: colors.textPrimary,
-  marginBottom: "28px",
-  letterSpacing: "-0.012em",
+  marginBottom: "20px",
+  letterSpacing: "-0.03em",
 });
 
 const galleryCss = css({
@@ -22,15 +22,13 @@ const galleryCss = css({
 
 const galleryWideItemCss = css({
   overflow: "hidden",
-  borderRadius: "6px",
-  border: `1px solid ${colors.borderSubtle}`,
+  borderRadius: "20px",
   "@sm": { gridColumn: "span 2 / span 2", aspectRatio: "16/9" },
 });
 
 const gallerySquareItemCss = css({
   overflow: "hidden",
-  borderRadius: "6px",
-  border: `1px solid ${colors.borderSubtle}`,
+  borderRadius: "20px",
   aspectRatio: "1/1",
 });
 

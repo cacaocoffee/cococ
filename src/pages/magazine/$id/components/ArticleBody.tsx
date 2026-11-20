@@ -13,9 +13,8 @@ const excerptCss = css({
   marginBottom: "56px",
   paddingBottom: "56px",
   borderBottom: `1px solid ${colors.borderMedium}`,
-  fontWeight: "500",
+  fontWeight: "700",
   letterSpacing: "-0.005em",
-  fontStyle: "italic",
 });
 
 const contentListCss = css({
@@ -32,21 +31,24 @@ const sectionHeaderCss = css({
 });
 
 const sectionNumCss = css({
-  color: colors.brand,
-  fontFamily: fonts.mono,
+  color: colors.textPrimary,
+  backgroundColor: colors.bgCard,
+  borderRadius: "9999px",
+  paddingInline: "10px",
+  paddingBlock: "3px",
+  fontFamily: fonts.display,
   fontWeight: "700",
-  fontSize: "12px",
-  letterSpacing: "0.18em",
+  fontSize: "13px",
   flexShrink: "0",
 });
 
 const sectionTitleCss = css({
   fontFamily: fonts.display,
   fontSize: "28px",
-  fontWeight: "500",
+  fontWeight: "700",
   color: colors.textPrimary,
-  lineHeight: "1.18",
-  letterSpacing: "-0.012em",
+  lineHeight: "1.2",
+  letterSpacing: "-0.03em",
 });
 
 const sectionBodyCss = css({
@@ -56,34 +58,31 @@ const sectionBodyCss = css({
   paddingLeft: "0",
   "& p": { marginBottom: "1em" },
   "& strong": { color: colors.textPrimary, fontWeight: "700" },
-  "& em": { fontStyle: "italic" },
+  "& em": { },
   "& ul": { listStyleType: "disc", paddingLeft: "1.5em", marginBottom: "1em" },
   "& ol": { listStyleType: "decimal", paddingLeft: "1.5em", marginBottom: "1em" },
   "& li": { marginBottom: "0.25em" },
   "& a": { color: colors.brand, textDecoration: "underline" },
   "& blockquote": {
-    borderLeft: `3px solid ${colors.brand}`,
-    paddingLeft: "1em",
-    color: colors.textDimmer,
-    fontStyle: "italic",
+    backgroundColor: colors.bgCard,
+    borderRadius: "16px",
+    padding: "16px 20px",
+    color: colors.textMuted,
     margin: "1em 0",
   },
 });
 
 const blockImageCss = css({
   width: "100%",
-  borderRadius: "4px",
+  borderRadius: "20px",
   objectFit: "cover",
   maxHeight: "560px",
-  border: `1px solid ${colors.borderSubtle}`,
 });
 
 const captionCss = css({
   textAlign: "center",
   color: colors.textFaint,
-  fontSize: "12px",
-  fontFamily: fonts.mono,
-  letterSpacing: "0.06em",
+  fontSize: "13px",
   marginTop: "14px",
 });
 
@@ -183,12 +182,12 @@ function ArticleBlockItem({ block, textIndex }: ArticleBlockItemProps) {
         color: colors.textSecondary, lineHeight: "1.85", fontSize: "17px",
         "& p": { marginBottom: "1em" },
         "& strong": { color: colors.textPrimary, fontWeight: "700" },
-        "& em": { fontStyle: "italic" },
+        "& em": { },
         "& ul": { listStyleType: "disc", paddingLeft: "1.5em", marginBottom: "1em" },
         "& ol": { listStyleType: "decimal", paddingLeft: "1.5em", marginBottom: "1em" },
         "& li": { marginBottom: "0.25em" },
         "& a": { color: colors.brand, textDecoration: "underline" },
-        "& blockquote": { borderLeft: `3px solid ${colors.brand}`, paddingLeft: "1em", color: colors.textDimmer, fontStyle: "italic", margin: "1em 0" },
+        "& blockquote": { backgroundColor: colors.bgCard, borderRadius: "16px", padding: "16px 20px", color: colors.textMuted, margin: "1em 0" },
       })}>
         <ReactMarkdown>{block.body}</ReactMarkdown>
       </div>

@@ -3,9 +3,10 @@ import { colors } from "@/lib/tokens";
 
 // ─── Form ─────────────────────────────────────────────────────
 export const inputCss = css({
-  backgroundColor: "rgba(0,0,0,0.3)",
-  border: `1px solid ${colors.borderInput}`,
-  borderRadius: "0.75rem",
+  // 흰 카드 안의 입력칸: 회색 면, 테두리 없음. 누르면 잉크 테두리
+  backgroundColor: colors.bgSection,
+  border: "1px solid transparent",
+  borderRadius: "14px",
   paddingInline: "16px",
   paddingBlock: "12px",
   color: colors.textPrimary,
@@ -13,13 +14,13 @@ export const inputCss = css({
   outline: "none",
   width: "100%",
   transition: "border-color 0.2s",
-  _focus: { borderColor: colors.brand },
+  _focus: { borderColor: colors.textPrimary },
 });
 
 export const inputErrorCss = css({ borderColor: colors.danger });
 
 export const labelCss = css({
-  fontSize: "11px",
+  fontSize: "12px",
   fontWeight: "700",
   color: colors.textMuted,
   marginBottom: "6px",
@@ -28,9 +29,9 @@ export const labelCss = css({
 
 export const formCardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
-  borderRadius: "1rem",
-  padding: "18px",
+  border: "none",
+  borderRadius: "20px",
+  padding: "20px",
   display: "flex",
   flexDirection: "column",
   gap: "20px",
@@ -53,23 +54,23 @@ export const formBtnRowCss = css({
 export const cancelBtnCss = css({
   paddingInline: "20px",
   paddingBlock: "10px",
-  borderRadius: "0.75rem",
-  backgroundColor: "rgba(255,255,255,0.05)",
-  color: colors.textMuted,
+  borderRadius: "16px",
+  backgroundColor: colors.bgSection,
+  color: colors.textPrimary,
   fontSize: "14px",
   fontWeight: "700",
   border: "none",
   cursor: "pointer",
-  _hover: { color: colors.textPrimary },
+  _hover: { backgroundColor: colors.bgPressed },
 });
 
 export const saveBtnCss = css({
   paddingInline: "28px",
   paddingBlock: "10px",
-  borderRadius: "0.75rem",
+  borderRadius: "16px",
   backgroundColor: colors.brand,
-  color: colors.bgPage,
-  fontWeight: "900",
+  color: colors.onInk,
+  fontWeight: "700",
   fontSize: "14px",
   border: "none",
   cursor: "pointer",
@@ -87,8 +88,10 @@ export const tabHeaderRowCss = css({
 });
 
 export const tabTitleCss = css({
-  fontSize: "20px",
-  fontWeight: "900",
+  fontSize: "28px",
+  fontWeight: "700",
+  letterSpacing: "-0.03em",
+  lineHeight: "1.2",
   color: colors.textPrimary,
 });
 
@@ -97,11 +100,11 @@ export const newBtnCss = css({
   alignItems: "center",
   gap: "8px",
   backgroundColor: colors.brand,
-  color: colors.bgPage,
+  color: colors.onInk,
   paddingInline: "20px",
-  paddingBlock: "10px",
-  borderRadius: "0.75rem",
-  fontWeight: "900",
+  minHeight: "44px",
+  borderRadius: "16px",
+  fontWeight: "700",
   fontSize: "14px",
   border: "none",
   cursor: "pointer",
@@ -109,11 +112,10 @@ export const newBtnCss = css({
 });
 
 export const subSectionLabelCss = css({
-  fontSize: "11px",
-  fontWeight: "900",
-  color: colors.brand,
-  textTransform: "uppercase",
-  letterSpacing: "0.1em",
+  fontSize: "12px",
+  fontWeight: "700",
+  color: colors.textMuted,
+  letterSpacing: "0",
   marginBottom: "16px",
 });
 
@@ -127,8 +129,8 @@ export const listCss = css({
 // 좁은 폭에서 액션 버튼이 자동으로 다음 줄로 wrap 되도록 flexWrap 사용.
 export const itemCardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
-  borderRadius: "1rem",
+  border: "none",
+  borderRadius: "20px",
   padding: "12px",
   display: "flex",
   alignItems: "center",
@@ -140,7 +142,7 @@ export const itemCardCss = css({
 export const itemThumbWrapCss = css({
   width: "64px",
   height: "64px",
-  borderRadius: "0.75rem",
+  borderRadius: "14px",
   overflow: "hidden",
   flexShrink: "0",
   backgroundColor: colors.bgSection,
@@ -156,10 +158,9 @@ export const itemBodyCss = css({
   minWidth: "0",
 });
 export const itemCatCss = css({
-  color: colors.brand,
-  fontSize: "10px",
-  fontWeight: "900",
-  textTransform: "uppercase",
+  color: colors.textMuted,
+  fontSize: "12px",
+  fontWeight: "700",
 });
 export const itemTitleCss = css({
   color: colors.textPrimary,
@@ -181,8 +182,8 @@ export const itemActionsCss = css({
 export const editBtnCss = css({
   width: "36px",
   height: "36px",
-  borderRadius: "0.75rem",
-  backgroundColor: "rgba(255,255,255,0.05)",
+  borderRadius: "14px",
+  backgroundColor: colors.bgSection,
   color: colors.textMuted,
   border: "none",
   cursor: "pointer",
@@ -195,7 +196,7 @@ export const editBtnCss = css({
 export const deleteBtnCss = css({
   width: "36px",
   height: "36px",
-  borderRadius: "0.75rem",
+  borderRadius: "14px",
   backgroundColor: colors.dangerBg,
   color: colors.dangerMuted,
   border: "none",
@@ -203,7 +204,7 @@ export const deleteBtnCss = css({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  _hover: { backgroundColor: "rgba(239,68,68,0.2)" },
+  _hover: { backgroundColor: colors.dangerShadow },
 });
 
 // ─── Search bar ───────────────────────────────────────────────
@@ -214,13 +215,13 @@ export const searchBarWrapCss = css({
 
 export const searchBarInputCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderLight}`,
+  border: "none",
   color: colors.textPrimary,
   fontSize: "12px",
   paddingBlock: "8px",
   paddingLeft: "36px",
   paddingRight: "16px",
-  borderRadius: "0.5rem",
+  borderRadius: "10px",
   outline: "none",
   width: "100%",
   maxWidth: "224px",

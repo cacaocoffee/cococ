@@ -10,26 +10,26 @@ const wrapCss = css({
 
 const cardCss = css({
   height: "84px",
-  borderRadius: "1rem",
+  borderRadius: "20px",
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
+  border: "none",
   position: "relative",
   overflow: "hidden",
 });
 
 const formBlockCss = css({
   height: "60px",
-  borderRadius: "0.75rem",
+  borderRadius: "14px",
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
+  border: "none",
   position: "relative",
   overflow: "hidden",
 });
 
 const lineCss = css({
   height: "16px",
-  borderRadius: "0.5rem",
-  backgroundColor: "rgba(255,255,255,0.06)",
+  borderRadius: "10px",
+  backgroundColor: colors.bgSection,
   position: "relative",
   overflow: "hidden",
 });
@@ -38,7 +38,7 @@ const shimmerCss = css({
   position: "absolute",
   inset: "0",
   background:
-    "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.05) 60%, transparent 100%)",
+    "linear-gradient(90deg, transparent 0%, rgba(15,17,21,0.04) 40%, rgba(15,17,21,0.07) 50%, rgba(15,17,21,0.04) 60%, transparent 100%)",
   animation: "tab-skel 1.4s ease-in-out infinite",
   transform: "translateX(-100%)",
 });

@@ -15,12 +15,12 @@ const tagsRowCss = css({
 });
 
 const titleCss = css({
-  fontFamily: "'Newsreader', 'Iowan Old Style', Georgia, serif",
+  fontFamily: "'Space Grotesk', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif",
   fontSize: "clamp(36px, 5vw, 60px)",
-  fontWeight: "500",
+  fontWeight: "700",
   color: colors.textPrimary,
-  lineHeight: "1.06",
-  letterSpacing: "-0.016em",
+  lineHeight: "1.1",
+  letterSpacing: "-0.035em",
   marginBottom: "28px",
 });
 
@@ -28,16 +28,13 @@ const metaRowCss = css({
   display: "flex",
   alignItems: "center",
   gap: "16px",
-  fontSize: "13px",
-  fontFamily: "ui-monospace, 'JetBrains Mono', Menlo, monospace",
-  letterSpacing: "0.06em",
+  fontSize: "14px",
   color: colors.textFaint,
 });
 
 const authorCss = css({
   fontWeight: "700",
   color: colors.textPrimary,
-  letterSpacing: "0.04em",
 });
 
 const readTimeCss = css({

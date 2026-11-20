@@ -28,7 +28,7 @@ const gridCss = css({
 const thumbWrapCss = css({
   position: 'relative',
   aspectRatio: '1',
-  borderRadius: '0.5rem',
+  borderRadius: "10px",
   overflow: 'hidden',
   backgroundColor: colors.bgSection,
 });
@@ -42,7 +42,7 @@ const removeBtnCss = css({
   width: '22px',
   height: '22px',
   borderRadius: '9999px',
-  backgroundColor: 'rgba(33,27,18,0.78)',
+  backgroundColor: 'rgba(15,17,21,0.78)',
   color: colors.textPrimary,
   border: 'none',
   cursor: 'pointer',
@@ -54,7 +54,7 @@ const removeBtnCss = css({
 
 const addBtnCss = css({
   aspectRatio: '1',
-  borderRadius: '0.5rem',
+  borderRadius: "10px",
   backgroundColor: colors.bgSection,
   border: `1px dashed ${colors.borderInput}`,
   display: 'flex',
@@ -72,7 +72,7 @@ const addBtnCss = css({
 
 const loadingThumbCss = css({
   aspectRatio: '1',
-  borderRadius: '0.5rem',
+  borderRadius: "10px",
   backgroundColor: colors.bgSection,
   display: 'flex',
   alignItems: 'center',

@@ -18,8 +18,8 @@ const closedInnerCss = css({
   maxWidth: "42rem",
   marginInline: "auto",
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
-  borderRadius: "1.5rem",
+  border: "none",
+  borderRadius: "20px",
   boxShadow: shadows.card,
   paddingBlock: "64px",
   paddingInline: "32px",
@@ -41,7 +41,7 @@ const closedIconWrapCss = css({
 
 const closedTitleCss = css({
   fontSize: "30px",
-  fontWeight: "900",
+  fontWeight: "700",
   color: colors.textPrimary,
   marginBottom: "12px",
 });

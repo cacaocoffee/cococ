@@ -24,21 +24,22 @@ const navCss = css({
   left: '0',
   right: '0',
   zIndex: '50',
-  backgroundColor: 'rgba(246,239,226,0.82)',
-  backdropFilter: 'blur(14px) saturate(1.2)',
-  borderBottom: `1px solid ${colors.borderSubtle}`,
-  paddingInline: '24px',
-  paddingBlock: '14px',
+  backgroundColor: 'rgba(242,243,245,0.88)',
+  backdropFilter: 'blur(14px)',
+  borderBottom: '1px solid transparent',
+  paddingInline: '16px',
+  paddingBlock: '12px',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   transition: 'border-color 0.25s, background-color 0.25s',
-  '@md': { paddingInline: '48px', paddingBlock: '16px' },
+  '@md': { paddingInline: '32px', paddingBlock: '14px' },
 });
 
+// 스크롤하면 아래쪽에만 가는 선을 보인다
 const navScrolledCss = css({
-  borderColor: colors.borderMedium,
-  backgroundColor: 'rgba(246,239,226,0.94)',
+  borderColor: colors.borderSubtle,
+  backgroundColor: 'rgba(242,243,245,0.96)',
 });
 
 const logoLinkCss = css({
@@ -52,47 +53,41 @@ const logoLinkCss = css({
 const logoWordmarkCss = css({
   fontFamily: fonts.display,
   fontSize: '22px',
-  fontWeight: '600',
-  letterSpacing: '-0.01em',
+  fontWeight: "700",
+  letterSpacing: '-0.03em',
   color: colors.textPrimary,
   display: 'none',
   '@sm': { display: 'inline' },
 });
 
+// 넓은 화면의 메뉴: 흰 알약 안에 글자 버튼, 지금 페이지는 잉크로 채운다
 const desktopNavCss = css({
   display: 'none',
-  gap: '32px',
+  gap: '2px',
+  padding: '4px',
+  backgroundColor: colors.bgCard,
+  borderRadius: '9999px',
   '@md': { display: 'flex' },
 });
 
 const navLinkBaseCss = css({
-  fontFamily: fonts.mono,
-  fontSize: '11px',
+  fontSize: "14px",
   fontWeight: '700',
-  letterSpacing: '0.22em',
-  textTransform: 'uppercase',
-  transition: 'color 0.2s',
-  paddingBlock: '6px',
+  transition: 'color 0.2s, background-color 0.2s',
+  paddingInline: '16px',
+  paddingBlock: '8px',
+  borderRadius: '9999px',
   textDecoration: 'none',
-  position: 'relative',
 });
 
 const navLinkActiveCss = css({
-  color: colors.textPrimary,
-  _after: {
-    content: '""',
-    position: 'absolute',
-    left: '0',
-    right: '0',
-    bottom: '-2px',
-    height: '1px',
-    backgroundColor: colors.brand,
-  },
+  color: colors.onInk,
+  backgroundColor: colors.bgInk,
 });
 
 const navLinkInactiveCss = css({
-  color: colors.textFaint,
-  _hover: { color: colors.textPrimary },
+  color: colors.textMuted,
+  _hover: { color: colors.textPrimary, backgroundColor: colors.bgSection },
 });
 
 const rightGroupCss = css({ display: 'flex', alignItems: 'center', gap: '12px' });
@@ -104,58 +99,53 @@ const menuBtnCss = css({
   width: '40px',
   height: '40px',
   color: colors.textPrimary,
-  background: 'none',
-  border: `1px solid ${colors.borderMedium}`,
+  backgroundColor: colors.bgCard,
+  border: 'none',
   borderRadius: '9999px',
   cursor: 'pointer',
-  transition: 'background-color 0.2s, border-color 0.2s',
-  _hover: { backgroundColor: colors.bgCard, borderColor: colors.borderStrong },
+  transition: 'background-color 0.2s',
+  _hover: { backgroundColor: colors.bgPressed },
   '@md': { display: 'none' },
 });
 
 const joinBtnCss = css({
   display: 'none',
-  backgroundColor: colors.textPrimary,
-  color: colors.bgPage,
+  backgroundColor: colors.lime,
+  color: colors.textPrimary,
   paddingInline: '20px',
   paddingBlock: '10px',
   borderRadius: '9999px',
-  fontSize: '11px',
-  fontFamily: fonts.mono,
-  letterSpacing: '0.18em',
+  fontSize: "14px",
   fontWeight: '700',
   textDecoration: 'none',
-  textTransform: 'uppercase',
   transition: 'background-color 0.2s',
-  _hover: { backgroundColor: colors.brand },
+  _hover: { backgroundColor: colors.limeHover },
   '@md': { display: 'inline-block' },
 });
 
 const mobileMenuCss = css({
   position: 'absolute',
-  top: '100%',
-  left: '0',
-  width: '100%',
-  backgroundColor: colors.bgPage,
-  borderBottom: `1px solid ${colors.borderMedium}`,
+  top: 'calc(100% + 4px)',
+  left: '12px',
+  right: '12px',
+  backgroundColor: colors.bgCard,
+  borderRadius: '20px',
   display: 'flex',
   flexDirection: 'column',
-  paddingBlock: '12px',
+  padding: '8px',
 });
 
 const mobileLinkBaseCss = css({
-  paddingInline: '24px',
+  paddingInline: '16px',
   paddingBlock: '14px',
-  fontFamily: fonts.mono,
-  fontSize: '12px',
+  borderRadius: '14px',
+  fontSize: '16px',
   fontWeight: '700',
-  letterSpacing: '0.18em',
-  textTransform: 'uppercase',
   transition: 'color 0.2s',
   textDecoration: 'none',
 });
 
-const mobileLinkActiveCss = css({ color: colors.brand });
+const mobileLinkActiveCss = css({ color: colors.onInk, backgroundColor: colors.bgInk });
 const mobileLinkInactiveCss = css({
   color: colors.textMuted,
   _hover: { color: colors.textPrimary },

@@ -6,14 +6,14 @@ import { colors } from "@/lib/tokens";
 
 const faqItemBaseCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
+  border: "none",
   borderRadius: "12px",
   padding: "20px 22px",
   cursor: "pointer",
   transition: "border-color 0.2s",
 });
 
-const faqItemActiveCss = css({ borderColor: "rgba(194,96,63,0.30)" });
+const faqItemActiveCss = css({});
 const faqHeaderRowCss = css({
   display: "flex",
   justifyContent: "space-between",
@@ -38,7 +38,7 @@ export default function FaqItem({ q, a }) {
   return (
     <motion.div
       onClick={() => setOpen((o) => !o)}
-      whileHover={{ borderColor: "rgba(194,96,63,0.25)" }}
+      
       className={cx(faqItemBaseCss, open ? faqItemActiveCss : "")}
     >
       <div className={faqHeaderRowCss}>

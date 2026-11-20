@@ -39,7 +39,7 @@ const notFoundLinkCss = css({
   fontWeight: "700",
   textDecoration: "none",
   transition: "all 0.2s",
-  _hover: { backgroundColor: colors.brand, color: colors.bgPage },
+  _hover: { backgroundColor: colors.brand, color: colors.onInk },
 });
 
 function NotFoundPage() {
@@ -94,11 +94,16 @@ const marqueeStyle = `
 `;
 
 // ─── Root layout ───
+const rootLayoutCss = css({
+  minHeight: "100vh",
+  backgroundColor: colors.bgPage,
+  color: colors.textPrimary,
+});
 function RootLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isAdmin = pathname.startsWith("/admin");
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-amber-500 selection:text-black">
+    <div className={rootLayoutCss}>
       <TopProgressBar />
       {!isAdmin && <Navbar />}
       <main>

@@ -91,7 +91,7 @@ const typeTabBaseCss = css({
   justifyContent: "center",
   gap: "7px",
   paddingBlock: "10px",
-  borderRadius: "0.75rem",
+  borderRadius: "14px",
   fontSize: "13px",
   fontWeight: "700",
   cursor: "pointer",
@@ -114,7 +114,7 @@ const slideRowCss = css({
 });
 const slideNumCss = css({
   fontSize: "11px",
-  fontWeight: "900",
+  fontWeight: "700",
   color: colors.textDimmer,
   width: "20px",
   textAlign: "right",
@@ -124,17 +124,16 @@ const slideNumCss = css({
 // ─── 블록 에디터 스타일 ────────────────────────────────────────
 const blockWrapCss = css({
   border: `1px solid ${colors.borderInput}`,
-  borderRadius: "0.75rem",
+  borderRadius: "14px",
   overflow: "hidden",
 });
 const blockHeaderCss = css({
   display: "flex", alignItems: "center", gap: "8px",
-  backgroundColor: "rgba(0,0,0,0.25)",
+  backgroundColor: colors.bgSection,
   paddingInline: "12px", paddingBlock: "8px",
 });
 const blockTypeLabelCss = css({
-  fontSize: "11px", fontWeight: "900", color: colors.textDimmer,
-  textTransform: "uppercase", letterSpacing: "0.05em", flex: "1",
+  fontSize: "12px", fontWeight: "700", color: colors.textDimmer, letterSpacing: "0", flex: "1",
   display: "flex", alignItems: "center", gap: "5px",
 });
 const blockBodyCss = css({ padding: "12px", display: "flex", flexDirection: "column", gap: "8px" });
@@ -142,12 +141,12 @@ const blockIconBtnCss = css({
   width: "24px", height: "24px", borderRadius: "0.375rem",
   border: "none", cursor: "pointer", background: "none",
   color: colors.textDimmer, display: "flex", alignItems: "center", justifyContent: "center",
-  _hover: { color: colors.textPrimary, backgroundColor: "rgba(255,255,255,0.06)" },
+  _hover: { color: colors.textPrimary, backgroundColor: colors.bgSection },
 });
 const addBlockRowCss = css({ display: "flex", gap: "8px" });
 const addBlockBtnCss = css({
   flex: "1", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
-  paddingBlock: "10px", borderRadius: "0.75rem", fontSize: "12px", fontWeight: "700",
+  paddingBlock: "10px", borderRadius: "14px", fontSize: "12px", fontWeight: "700",
   border: `1px dashed ${colors.borderInput}`, cursor: "pointer", background: "none",
   color: colors.textDimmer, transition: "all 0.15s",
   _hover: { color: colors.textPrimary, borderColor: colors.borderStrong },
@@ -303,7 +302,7 @@ function MagazineForm({ initial = EMPTY_MAG as MagazineFormState, onSave, onCanc
                   </span>
                   <button className={blockIconBtnCss} onClick={() => moveBlock(i, -1)} disabled={i === 0}><ChevronUp size={13} /></button>
                   <button className={blockIconBtnCss} onClick={() => moveBlock(i, 1)} disabled={i === blocks.length - 1}><ChevronDown size={13} /></button>
-                  <button className={css({ ...blockIconBtnCss, _hover: { color: "#f87171", backgroundColor: "rgba(239,68,68,0.1)" } })} onClick={() => removeBlock(i)}><X size={13} /></button>
+                  <button className={css({ ...blockIconBtnCss, _hover: { color: colors.danger, backgroundColor: "rgba(196,48,28,0.1)" } })} onClick={() => removeBlock(i)}><X size={13} /></button>
                 </div>
                 <div className={blockBodyCss}>
                   {block.type === "text" ? (
@@ -366,7 +365,7 @@ function MagazineForm({ initial = EMPTY_MAG as MagazineFormState, onSave, onCanc
                 />
                 <button className={blockIconBtnCss} onClick={() => moveInstagramUrl(i, -1)} disabled={i === 0}><ChevronUp size={13} /></button>
                 <button className={blockIconBtnCss} onClick={() => moveInstagramUrl(i, 1)} disabled={i === instagramUrls.length - 1}><ChevronDown size={13} /></button>
-                <button className={css({ ...blockIconBtnCss, _hover: { color: "#f87171", backgroundColor: "rgba(239,68,68,0.1)" } })} onClick={() => removeInstagramUrl(i)}><X size={13} /></button>
+                <button className={css({ ...blockIconBtnCss, _hover: { color: colors.danger, backgroundColor: "rgba(196,48,28,0.1)" } })} onClick={() => removeInstagramUrl(i)}><X size={13} /></button>
               </div>
             ))}
             <button className={addBlockBtnCss} onClick={addInstagramUrl} style={{ width: "100%" }}>

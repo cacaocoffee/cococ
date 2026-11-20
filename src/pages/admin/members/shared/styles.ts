@@ -1,10 +1,11 @@
 // 회원·회비 탭이 함께 쓰는 스타일.
-// 크림색 종이 위에 놓이는 화면이라 `src/lib/tokens.ts`의 색만 쓴다.
+// 회색 바탕에 흰 카드, 잉크 버튼, 라임 강조 (디자인 A). 색은 `src/lib/tokens.ts`의 것만 쓴다.
 import { css } from "@/lib/css";
 import { colors, fonts, radii, shadows } from "@/lib/tokens";
 
-export const BRAND_BG = "rgba(194,96,63,0.10)";
-export const BRAND_BORDER = "rgba(194,96,63,0.28)";
+// 입력칸을 눌렀을 때 바깥에 두르는 옅은 띠, 옅은 강조 면
+export const BRAND_BG = colors.bgPressed;
+export const BRAND_BORDER = colors.borderStrong;
 
 // 두 탭의 가장 바깥에 건다. 한글 문장이 낱말 중간에서 줄바꿈되지 않게 한다.
 export const hrRootCss = css({ wordBreak: "keep-all", overflowWrap: "anywhere" });
@@ -32,7 +33,7 @@ export const sheetActionsCss = css({
 // ─── 글 ───────────────────────────────────────────────────────
 export const displayCss = css({
   fontFamily: fonts.display,
-  fontWeight: "500",
+  fontWeight: "700",
   letterSpacing: "-0.01em",
 });
 
@@ -40,10 +41,10 @@ export const numCss = css({ fontVariantNumeric: "tabular-nums" });
 
 export const sectionTitleCss = css({
   fontFamily: fonts.display,
-  fontSize: "20px",
-  fontWeight: "600",
+  fontSize: "22px",
+  fontWeight: "700",
   color: colors.textPrimary,
-  letterSpacing: "-0.01em",
+  letterSpacing: "-0.03em",
 });
 
 export const sectionDescCss = css({
@@ -70,7 +71,7 @@ export const errorTextCss = css({
 // ─── 면 ───────────────────────────────────────────────────────
 export const cardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderLight}`,
+  border: "none",
   borderRadius: radii.lg,
 });
 
@@ -99,8 +100,8 @@ export const fieldLabelCss = css({
 export const inputCss = css({
   width: "100%",
   minHeight: "44px",
-  backgroundColor: colors.bgPage,
-  border: `1px solid ${colors.borderInput}`,
+  backgroundColor: colors.bgSection,
+  border: "1px solid transparent",
   borderRadius: radii.md,
   paddingInline: "14px",
   paddingBlock: "10px",
@@ -121,8 +122,8 @@ export const inputInvalidCss = css({ borderColor: colors.danger });
 export const selectCss = css({
   width: "100%",
   minHeight: "44px",
-  backgroundColor: colors.bgPage,
-  border: `1px solid ${colors.borderInput}`,
+  backgroundColor: colors.bgSection,
+  border: "1px solid transparent",
   borderRadius: radii.md,
   paddingLeft: "14px",
   paddingRight: "34px",
@@ -135,7 +136,7 @@ export const selectCss = css({
   appearance: "none",
   // 화살표: 잉크색 꺾쇠
   backgroundImage:
-    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B5C46' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
+    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230F1115' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
   backgroundRepeat: "no-repeat",
   backgroundPosition: "right 12px center",
   _focus: { borderColor: colors.brand, boxShadow: `0 0 0 3px ${BRAND_BG}` },
@@ -144,8 +145,8 @@ export const selectCss = css({
 
 export const textareaCss = css({
   width: "100%",
-  backgroundColor: colors.bgPage,
-  border: `1px solid ${colors.borderInput}`,
+  backgroundColor: colors.bgSection,
+  border: "1px solid transparent",
   borderRadius: radii.md,
   paddingInline: "14px",
   paddingBlock: "10px",
@@ -175,9 +176,9 @@ const btnBase = {
   alignItems: "center",
   justifyContent: "center",
   gap: "6px",
-  minHeight: "40px",
-  paddingInline: "16px",
-  borderRadius: radii.md,
+  minHeight: "44px",
+  paddingInline: "18px",
+  borderRadius: radii.btn,
   fontSize: "14px",
   fontWeight: "700",
   fontFamily: "inherit",
@@ -190,7 +191,7 @@ const btnBase = {
 export const primaryBtnCss = css({
   ...btnBase,
   backgroundColor: colors.brand,
-  color: colors.bgPage,
+  color: colors.onInk,
   border: `1px solid ${colors.brand}`,
   _hover: { backgroundColor: colors.brandHover, borderColor: colors.brandHover },
 });
@@ -261,9 +262,10 @@ const pillBase = {
 export const pillCss = {
   neutral: css({ ...pillBase, backgroundColor: colors.bgSection, color: colors.textMuted }),
   success: css({ ...pillBase, backgroundColor: colors.successBg, color: colors.success }),
-  warning: css({ ...pillBase, backgroundColor: colors.warningBg, color: "#8E621B" }),
+  warning: css({ ...pillBase, backgroundColor: colors.warningBg, color: colors.warning }),
   danger: css({ ...pillBase, backgroundColor: colors.dangerBg, color: colors.danger }),
-  brand: css({ ...pillBase, backgroundColor: BRAND_BG, color: colors.brandHover }),
+  // 강조 알약: 라임 바탕에 잉크 글자
+  brand: css({ ...pillBase, backgroundColor: colors.lime, color: colors.textPrimary }),
   outline: css({
     ...pillBase,
     backgroundColor: "transparent",
@@ -277,8 +279,8 @@ export const segWrapCss = css({
   display: "inline-flex",
   padding: "3px",
   gap: "2px",
-  backgroundColor: colors.bgSection,
-  borderRadius: radii.md,
+  backgroundColor: colors.bgCard,
+  borderRadius: radii.pill,
   maxWidth: "100%",
   overflowX: "auto",
   scrollbarWidth: "none",
@@ -291,29 +293,31 @@ export const segBtnCss = css({
   gap: "6px",
   minHeight: "36px",
   paddingInline: "14px",
-  borderRadius: "8px",
+  borderRadius: radii.pill,
   border: "none",
   background: "none",
   fontSize: "13px",
   fontWeight: "700",
   fontFamily: "inherit",
-  color: colors.textFaint,
+  color: colors.textMuted,
   whiteSpace: "nowrap",
   cursor: "pointer",
   transition: "color 0.15s, background-color 0.15s",
   _hover: { color: colors.textPrimary },
 });
 
+// 고른 것: 잉크로 채운다
 export const segBtnOnCss = css({
-  backgroundColor: colors.bgCard,
-  color: colors.textPrimary,
-  boxShadow: "0 1px 2px rgba(80,50,15,0.12)",
+  backgroundColor: colors.bgInk,
+  color: colors.onInk,
+  _hover: { color: colors.onInk },
 });
 
 export const segCountCss = css({
   fontSize: "12px",
-  fontWeight: "600",
-  color: colors.textDimmer,
+  fontWeight: "700",
+  color: "inherit",
+  opacity: "0.7",
   fontVariantNumeric: "tabular-nums",
 });
 
@@ -321,9 +325,9 @@ export const segCountCss = css({
 export const avatarCss = css({
   width: "40px",
   height: "40px",
-  borderRadius: radii.pill,
-  backgroundColor: BRAND_BG,
-  color: colors.brandHover,
+  borderRadius: radii.md,
+  backgroundColor: colors.bgSection,
+  color: colors.textPrimary,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",

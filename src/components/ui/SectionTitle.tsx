@@ -15,20 +15,19 @@ const wrapperCss = css({
 });
 
 const kickerCss = css({
-  fontFamily: fonts.mono,
-  fontSize: '11px',
-  letterSpacing: '0.24em',
-  textTransform: 'uppercase',
-  color: colors.brand,
+  fontSize: "13px",
+  fontWeight: "700",
+  letterSpacing: "0",
+  color: colors.textMuted,
 });
 
 const titleCss = css({
   fontFamily: fonts.display,
   fontSize: 'clamp(32px, 3.6vw, 48px)',
-  fontWeight: '500',
+  fontWeight: "700",
   color: colors.textPrimary,
-  lineHeight: '1.08',
-  letterSpacing: '-0.014em',
+  lineHeight: '1.1',
+  letterSpacing: '-0.03em',
   marginTop: '4px',
 });
 
@@ -42,7 +41,7 @@ const subtitleCss = css({
 export default function SectionTitle({ title, subtitle, kicker }: SectionTitleProps) {
   return (
     <div className={wrapperCss}>
-      {kicker && <span className={kickerCss}>§ {kicker}</span>}
+      {kicker && <span className={kickerCss}>{kicker}</span>}
       <h3 className={titleCss}>{title}</h3>
       {subtitle && <p className={subtitleCss}>{subtitle}</p>}
     </div>

@@ -48,7 +48,7 @@ const chipRemoveCss = css({
   color: "inherit",
   cursor: "pointer",
   borderRadius: "9999px",
-  _hover: { backgroundColor: "rgba(194,96,63,0.18)" },
+  _hover: { backgroundColor: "rgba(15,17,21,0.18)" },
 });
 const hoursCss = css({ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: "8px", alignItems: "center" });
 const hoursSepCss = css({ fontSize: "13px", color: colors.textFaint });
@@ -67,7 +67,7 @@ const warnCss = css({
   fontSize: "12px",
   lineHeight: "1.6",
   marginTop: "6px",
-  color: "#8E621B",
+  color: colors.warning,
 });
 const deviceRowCss = css({
   display: "flex",

@@ -33,8 +33,9 @@ const itemCss = css({
 const whoCss = css({ fontSize: "16px", fontWeight: "700", color: colors.textPrimary, wordBreak: "break-all" });
 const amountCss = css({
   fontFamily: fonts.display,
-  fontSize: "26px",
-  fontWeight: "500",
+  fontSize: "32px",
+  fontWeight: "700",
+  letterSpacing: "-0.03em",
   color: colors.textPrimary,
   fontVariantNumeric: "tabular-nums",
   marginTop: "2px",
@@ -73,7 +74,7 @@ const suggestBtnCss = css({
   transition: "background-color 0.15s, border-color 0.15s",
   _hover: { backgroundColor: colors.bgSection },
 });
-const suggestOnCss = css({ borderColor: colors.brand, backgroundColor: "rgba(194,96,63,0.10)" });
+const suggestOnCss = css({ borderColor: colors.textPrimary, backgroundColor: colors.bgSection });
 const suggestMetaCss = css({ fontSize: "12px", fontWeight: "500", color: colors.textFaint, fontVariantNumeric: "tabular-nums" });
 const btnRowCss = css({ display: "flex", gap: "8px", flexWrap: "wrap" });
 

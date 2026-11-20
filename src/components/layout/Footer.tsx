@@ -18,8 +18,9 @@ const TABS: Tab[] = [
 ];
 
 const footerCss = css({
+  // 검정 면이라 글자는 흰색과 옅은 회색을 쓴다
   backgroundColor: colors.bgFooter,
-  borderTop: `1px solid ${colors.borderSubtle}`,
+  color: colors.onInk,
   paddingTop: "80px",
   paddingBottom: "40px",
   paddingInline: "24px",
@@ -31,22 +32,22 @@ const colophonCss = css({
   marginInline: "auto",
   marginBottom: "56px",
   paddingBottom: "56px",
-  borderBottom: `1px solid ${colors.borderMedium}`,
+  borderBottom: `1px solid ${colors.onInkLine}`,
 });
 
 const colophonHeadlineCss = css({
   fontFamily: fonts.display,
   fontSize: "clamp(28px, 3.4vw, 44px)",
-  fontWeight: "500",
-  color: colors.textPrimary,
-  lineHeight: "1.12",
-  letterSpacing: "-0.012em",
+  fontWeight: "700",
+  color: colors.onInk,
+  lineHeight: "1.15",
+  letterSpacing: "-0.025em",
   maxWidth: "32rem",
   marginBottom: "16px",
 });
 
 const colophonSubCss = css({
-  color: colors.textMuted,
+  color: colors.onInkMuted,
   fontSize: "14px",
   lineHeight: "1.65",
   maxWidth: "28rem",
@@ -72,29 +73,28 @@ const brandRowCss = css({
   display: "inline-flex",
   alignItems: "center",
   gap: "12px",
-  color: colors.textPrimary,
+  color: colors.onInk,
   textDecoration: "none",
 });
 
 const brandWordmarkCss = css({
   fontFamily: fonts.display,
   fontSize: "24px",
-  fontWeight: "600",
-  color: colors.textPrimary,
+  fontWeight: "700",
+  letterSpacing: "-0.02em",
+  color: colors.onInk,
 });
 
 const sectionLabelCss = css({
-  fontFamily: fonts.mono,
-  fontSize: "10px",
+  fontSize: "12px",
   fontWeight: "700",
-  letterSpacing: "0.24em",
-  textTransform: "uppercase",
-  color: colors.textFaint,
+  letterSpacing: "0",
+  color: colors.onInkMuted,
   marginBottom: "20px",
 });
 
 const descCss = css({
-  color: colors.textMuted,
+  color: colors.onInkMuted,
   fontSize: "14px",
   maxWidth: "22rem",
   lineHeight: "1.65",
@@ -106,26 +106,25 @@ const socialBtnCss = css({
   width: "40px",
   height: "40px",
   borderRadius: "9999px",
-  backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderMedium}`,
+  backgroundColor: colors.onInkLine,
+  border: "none",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  color: colors.textPrimary,
+  color: colors.onInk,
   cursor: "pointer",
   transition: "background-color 0.2s, color 0.2s, border-color 0.2s",
   textDecoration: "none",
   flexShrink: "0",
   _hover: {
-    backgroundColor: colors.textPrimary,
-    color: colors.bgPage,
-    borderColor: colors.textPrimary,
+    backgroundColor: colors.lime,
+    color: colors.textPrimary,
   },
 });
 
 const naverLetterCss = css({
   fontSize: "14px",
-  fontWeight: "900",
+  fontWeight: "700",
   lineHeight: "1",
 });
 
@@ -137,22 +136,23 @@ const linkListCss = css({
 });
 
 const footerLinkCss = css({
-  color: colors.textMuted,
+  color: colors.onInkMuted,
   fontSize: "14px",
   textDecoration: "none",
   transition: "color 0.2s",
-  _hover: { color: colors.brand },
+  _hover: { color: colors.onInk },
 });
 
 const partnerDescCss = css({
-  color: colors.textMuted,
+  color: colors.onInkMuted,
   fontSize: "14px",
   marginBottom: "12px",
   lineHeight: "1.65",
 });
 
+// 검정 면 위라 라임 글자를 쓸 수 있다
 const emailLinkCss = css({
-  color: colors.brand,
+  color: colors.lime,
   fontWeight: "700",
   fontSize: "14px",
   textDecoration: "none",
@@ -166,7 +166,7 @@ const bottomCss = css({
   maxWidth: "80rem",
   marginInline: "auto",
   paddingTop: "28px",
-  borderTop: `1px solid ${colors.borderSubtle}`,
+  borderTop: `1px solid ${colors.onInkLine}`,
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
@@ -176,22 +176,18 @@ const bottomCss = css({
 });
 
 const copyCss = css({
-  fontFamily: fonts.mono,
-  fontSize: "10px",
-  color: colors.textFaint,
-  fontWeight: "600",
-  letterSpacing: "0.18em",
-  textTransform: "uppercase",
+  fontSize: "12px",
+  color: colors.onInkMuted,
+  fontWeight: "700",
+  letterSpacing: "0",
 });
 
 const adminLinkCss = css({
-  fontFamily: fonts.mono,
-  fontSize: "10px",
-  letterSpacing: "0.18em",
-  textTransform: "uppercase",
-  color: colors.textDimmer,
+  fontSize: "12px",
+  letterSpacing: "0",
+  color: colors.onInkMuted,
   textDecoration: "none",
-  _hover: { color: colors.brand },
+  _hover: { color: colors.onInk },
 });
 
 export default function Footer() {
@@ -210,7 +206,7 @@ export default function Footer() {
       <div className={innerCss}>
         <div className={brandColCss}>
           <Link to="/" className={brandRowCss}>
-            <CococLogo size={40} color={colors.textPrimary} />
+            <CococLogo size={40} color={colors.onInk} />
             <span className={brandWordmarkCss}>cococ</span>
           </Link>
           <p className={descCss}>

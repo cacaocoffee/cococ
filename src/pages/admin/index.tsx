@@ -30,7 +30,7 @@ const TABS: Tab[] = [
 const pageCss = css({
   paddingTop: "40px",
   paddingBottom: "64px",
-  paddingInline: "24px",
+  paddingInline: "16px",
   maxWidth: "72rem",
   marginInline: "auto",
   "@md": { paddingInline: "48px" },
@@ -57,16 +57,16 @@ const headerCss = css({
   gap: "16px",
 });
 const eyebrowCss = css({
-  color: colors.brand,
-  fontSize: "11px",
-  fontWeight: "900",
-  letterSpacing: "3px",
-  textTransform: "uppercase",
+  color: colors.textMuted,
+  fontSize: "12px",
+  fontWeight: "700",
+  letterSpacing: "0",
   marginBottom: "4px",
 });
 const titleCss = css({
-  fontSize: "30px",
-  fontWeight: "900",
+  fontSize: "32px",
+  fontWeight: "700",
+  letterSpacing: "-0.035em",
   color: colors.textPrimary,
 });
 const logoutBtnCss = css({
@@ -74,22 +74,24 @@ const logoutBtnCss = css({
   alignItems: "center",
   gap: "8px",
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderStrong}`,
-  color: colors.textMuted,
+  border: "none",
+  color: colors.textPrimary,
   paddingInline: "16px",
-  paddingBlock: "10px",
-  borderRadius: "0.75rem",
+  minHeight: "44px",
+  borderRadius: "16px",
   fontSize: "14px",
   fontWeight: "700",
   cursor: "pointer",
   transition: "all 0.2s",
-  _hover: { color: colors.dangerMuted },
+  _hover: { backgroundColor: colors.bgPressed },
 });
+// 탭: 알약 모양 버튼 줄. 지금 탭은 잉크로 채운다. 좁은 화면에서는 옆으로 밀어 넘긴다
 const tabBarCss = css({
   display: "flex",
-  gap: "4px",
+  gap: "6px",
   marginBottom: "32px",
-  borderBottom: `1px solid ${colors.borderMedium}`,
+  marginInline: "-16px",
+  paddingInline: "16px",
   overflowX: "auto",
   scrollbarWidth: "none",
   "::-webkit-scrollbar": { display: "none" },
@@ -98,25 +100,24 @@ const tabBtnBaseCss = css({
   display: "flex",
   alignItems: "center",
   gap: "8px",
-  paddingInline: "20px",
-  paddingBlock: "12px",
+  paddingInline: "16px",
+  minHeight: "40px",
   fontSize: "14px",
   fontWeight: "700",
   transition: "all 0.2s",
-  marginBottom: "-1px",
   whiteSpace: "nowrap",
-  background: "none",
   border: "none",
-  borderBottom: "2px solid transparent",
+  borderRadius: "9999px",
   cursor: "pointer",
+  flexShrink: "0",
 });
 const tabBtnActiveCss = css({
-  color: colors.brand,
-  borderBottomColor: colors.brand,
+  color: colors.onInk,
+  backgroundColor: colors.bgInk,
 });
 const tabBtnInactiveCss = css({
-  color: colors.textFaint,
-  borderBottomColor: "transparent",
+  color: colors.textMuted,
+  backgroundColor: colors.bgCard,
   _hover: { color: colors.textPrimary },
 });
 

@@ -8,7 +8,7 @@ const sectionCss = css({ marginBottom: "72px" });
 const titleCss = css({
   fontFamily: fonts.display,
   fontSize: "28px",
-  fontWeight: "500",
+  fontWeight: "700",
   color: colors.textPrimary,
   marginBottom: "28px",
   letterSpacing: "-0.012em",
@@ -24,7 +24,7 @@ const gridCss = css({
 
 const cardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
+  border: "none",
   borderRadius: "14px",
   overflow: "hidden",
 });
@@ -60,7 +60,7 @@ const bodyCss = css({ padding: "20px" });
 const nameCss = css({
   color: colors.textPrimary,
   fontFamily: fonts.display,
-  fontWeight: "500",
+  fontWeight: "700",
   fontSize: "20px",
   marginBottom: "12px",
   letterSpacing: "-0.008em",

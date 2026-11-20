@@ -12,11 +12,8 @@ const baseBtnCss = css({
   paddingInline: '16px',
   paddingBlock: '8px',
   borderRadius: '9999px',
-  fontFamily: fonts.mono,
-  fontSize: '11px',
+  fontSize: "14px",
   fontWeight: '700',
-  letterSpacing: '0.14em',
-  textTransform: 'uppercase',
   transition: 'all 0.2s',
   cursor: 'pointer',
   border: '1px solid transparent',
@@ -25,17 +22,16 @@ const baseBtnCss = css({
 
 const activeCss = css({
   backgroundColor: colors.textPrimary,
-  color: colors.bgPage,
+  color: colors.onInk,
   borderColor: colors.textPrimary,
 });
 
 const inactiveCss = css({
-  backgroundColor: 'transparent',
+  backgroundColor: colors.bgCard,
   color: colors.textMuted,
-  borderColor: colors.borderMedium,
   _hover: {
     color: colors.textPrimary,
-    borderColor: colors.borderStrong,
+    backgroundColor: colors.bgPressed,
   },
 });
 

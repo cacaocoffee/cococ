@@ -86,7 +86,7 @@ export default function Step4Confirm({ form, setForm }) {
             {form.privacyAgree && (
               <span
                 style={{
-                  color: colors.bgPage,
+                  color: colors.onInk,
                   fontSize: "12px",
                   fontWeight: "900",
                 }}

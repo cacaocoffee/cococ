@@ -69,7 +69,7 @@ const cellCss = css({
 const cellStateCss = css({ fontSize: "11px", fontWeight: "600", minHeight: "15px", display: "flex", alignItems: "center" });
 const CELL: Record<MonthState | "waiting", string> = {
   paid: css({ backgroundColor: colors.successBg, color: colors.success }),
-  partial: css({ backgroundColor: colors.warningBg, color: "#8E621B" }),
+  partial: css({ backgroundColor: colors.warningBg, color: colors.warning }),
   unpaid: css({ backgroundColor: colors.dangerBg, color: colors.danger }),
   // 이번 달 회비인데 아직 마감일 전
   waiting: css({ boxShadow: `inset 0 0 0 1px ${colors.borderStrong}`, color: colors.textMuted }),

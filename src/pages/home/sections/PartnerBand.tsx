@@ -1,12 +1,14 @@
 import { PARTNERS } from "@/data";
 import { css } from "@/lib/css";
-import { colors, fonts } from "@/lib/tokens";
+import { colors, fonts, radii } from "@/lib/tokens";
 
 const bandSectionCss = css({
   paddingBlock: "20px",
+  // 검정 띠 위로 협업처 이름이 흘러간다. 앞뒤 섹션과 같은 여백 안에 둥근 띠로 둔다
   backgroundColor: colors.bgBand,
-  borderTop: `1px solid ${colors.borderFaint}`,
-  borderBottom: `1px solid ${colors.borderFaint}`,
+  borderRadius: radii.lg,
+  maxWidth: "80rem",
+  marginInline: "auto",
   overflow: "hidden",
   userSelect: "none",
   position: "relative",
@@ -17,13 +19,16 @@ const bandLabelCss = css({
   top: "50%",
   left: "24px",
   transform: "translateY(-50%)",
-  fontFamily: fonts.mono,
-  fontSize: "10px",
-  letterSpacing: "0.24em",
-  textTransform: "uppercase",
-  color: colors.brand,
+  fontSize: "12px",
+  letterSpacing: "0",
+  fontWeight: "700",
+  color: colors.onInkMuted,
   backgroundColor: colors.bgBand,
-  paddingRight: "16px",
+  borderRadius: radii.pill,
+  paddingInline: "10px",
+  paddingBlock: "4px",
+  boxShadow: `0 0 0 16px ${colors.bgBand}`,
+  paddingLeft: "0",
   zIndex: "2",
   "@md": { left: "48px" },
 });
@@ -38,23 +43,28 @@ const marqueeCss = css({
 
 const partnerNameCss = css({
   fontFamily: fonts.display,
-  fontStyle: "italic",
   fontSize: "22px",
-  fontWeight: "500",
-  letterSpacing: "0.005em",
-  color: colors.textMuted,
+  fontWeight: "700",
+  letterSpacing: "-0.01em",
+  color: colors.onInk,
 });
 
 const partnerDotCss = css({
   width: "5px",
   height: "5px",
   borderRadius: "9999px",
-  backgroundColor: colors.brand,
+  backgroundColor: colors.lime,
   flexShrink: "0",
+});
+
+const bandOuterCss = css({
+  paddingInline: "16px",
+  "@md": { paddingInline: "32px" },
 });
 
 export default function PartnerBand() {
   return (
+    <div className={bandOuterCss}>
     <section className={bandSectionCss}>
       <span className={bandLabelCss}>In partnership</span>
       <div className={`${marqueeCss} animate-marquee`}>
@@ -66,5 +76,6 @@ export default function PartnerBand() {
         ))}
       </div>
     </section>
+    </div>
   );
 }

@@ -3,9 +3,9 @@ import { colors, shadows } from "@/lib/tokens";
 
 const boxCss = css({
   backgroundColor: colors.bgCard,
-  borderRadius: "1.5rem",
+  borderRadius: "20px",
   overflow: "hidden",
-  border: `1px solid ${colors.borderSubtle}`,
+  border: "none",
   maxWidth: "42rem",
   marginInline: "auto",
   marginBottom: "80px",
@@ -19,16 +19,16 @@ const boxCss = css({
 
 const lineBaseCss = css({
   height: "16px",
-  borderRadius: "0.5rem",
-  backgroundColor: "rgba(60,40,15,0.07)",
+  borderRadius: "10px",
+  backgroundColor: "rgba(15,17,21,0.07)",
   position: "relative",
   overflow: "hidden",
 });
 
 const lineTallCss = css({
   height: "44px",
-  borderRadius: "0.75rem",
-  backgroundColor: "rgba(60,40,15,0.07)",
+  borderRadius: "14px",
+  backgroundColor: "rgba(15,17,21,0.07)",
   position: "relative",
   overflow: "hidden",
 });
@@ -36,8 +36,8 @@ const lineTallCss = css({
 const lineHeadCss = css({
   height: "12px",
   width: "30%",
-  borderRadius: "0.5rem",
-  backgroundColor: "rgba(60,40,15,0.05)",
+  borderRadius: "10px",
+  backgroundColor: "rgba(15,17,21,0.05)",
   marginBottom: "4px",
   position: "relative",
   overflow: "hidden",
@@ -47,7 +47,7 @@ const shimmerCss = css({
   position: "absolute",
   inset: "0",
   background:
-    "linear-gradient(90deg, transparent 0%, rgba(60,40,15,0.06) 40%, rgba(60,40,15,0.12) 50%, rgba(60,40,15,0.06) 60%, transparent 100%)",
+    "linear-gradient(90deg, transparent 0%, rgba(15,17,21,0.06) 40%, rgba(15,17,21,0.12) 50%, rgba(15,17,21,0.06) 60%, transparent 100%)",
   animation: "apply-skel 1.6s ease-in-out infinite",
   transform: "translateX(-100%)",
 });

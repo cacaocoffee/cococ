@@ -39,19 +39,19 @@ const matrixTdCss = css({
 const matrixBtnBaseCss = css({
   width: "32px",
   height: "32px",
-  borderRadius: "0.5rem",
+  borderRadius: "10px",
   border: `1px solid ${colors.borderInput}`,
   transition: "all 0.2s",
   cursor: "pointer",
   background: "none",
   color: colors.textDimmer,
-  _hover: { borderColor: "rgba(194,96,63,0.40)" },
+  _hover: { borderColor: colors.borderStrong },
 });
 
 const matrixBtnActiveCss = css({
   backgroundColor: colors.brand,
   borderColor: colors.brand,
-  color: colors.bgPage,
+  color: colors.onInk,
 });
 
 export default function TimeMatrix({ value, onChange }) {
