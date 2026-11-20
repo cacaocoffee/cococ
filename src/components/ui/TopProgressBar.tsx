@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { subscribeInflight } from "@/lib/api";
 import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
 
 const wrapCss = css({
   position: "fixed",
@@ -16,9 +17,8 @@ const wrapCss = css({
 
 const barCss = css({
   height: "100%",
-  background:
-    "linear-gradient(90deg, rgba(245,158,11,0.2) 0%, #f59e0b 35%, #fbbf24 65%, rgba(245,158,11,0.2) 100%)",
-  boxShadow: "0 0 12px rgba(245,158,11,0.85), 0 0 4px rgba(251,191,36,0.6)",
+  // 라임 막대 (그라데이션·빛 번짐 없음)
+  backgroundColor: colors.lime,
   transformOrigin: "left center",
   transition: "transform 0.25s ease-out, opacity 0.3s ease-out",
 });

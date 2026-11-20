@@ -19,15 +19,17 @@ const dividerLineCss = css({
 
 const dividerStarCss = css({
   color: colors.brand,
-  fontWeight: "900",
-  fontSize: "18px",
+  fontFamily: "'Space Grotesk', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif",
+  fontSize: "22px",
 });
 
 const othersTitleCss = css({
-  fontSize: "18px",
-  fontWeight: "900",
+  fontFamily: "'Space Grotesk', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif",
+  fontSize: "24px",
+  fontWeight: "700",
   color: colors.textPrimary,
-  marginBottom: "24px",
+  marginBottom: "28px",
+  letterSpacing: "-0.012em",
 });
 
 const othersGridCss = css({
@@ -39,14 +41,16 @@ const othersGridCss = css({
 
 const otherCardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
-  borderRadius: "1rem",
+  border: "none",
+  borderRadius: "20px",
   overflow: "hidden",
   textDecoration: "none",
   display: "block",
+  transition: "border-color 0.2s",
+  _hover: { borderColor: colors.borderStrong },
 });
 
-const otherImgWrapCss = css({ height: "144px", overflow: "hidden" });
+const otherImgWrapCss = css({ height: "144px", overflow: "hidden", backgroundColor: colors.bgSection });
 
 const otherImgCss = css({
   width: "100%",
@@ -59,17 +63,20 @@ const otherImgCss = css({
 const otherBodyCss = css({ padding: "20px" });
 
 const otherMetaCss = css({
-  color: colors.brand,
-  fontSize: "10px",
+  color: colors.textMuted,
+  fontSize: "12px",
   fontWeight: "700",
-  marginBottom: "8px",
+  letterSpacing: "0",
+  marginBottom: "10px",
 });
 
 const otherTitleCss = css({
   color: colors.textPrimary,
+  fontFamily: "'Space Grotesk', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif",
   fontWeight: "700",
-  fontSize: "14px",
-  lineHeight: "1.375",
+  fontSize: "17px",
+  letterSpacing: "-0.005em",
+  lineHeight: "1.22",
   transition: "color 0.2s",
   display: "-webkit-box",
   "-webkit-line-clamp": "2",

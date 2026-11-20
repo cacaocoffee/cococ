@@ -1,58 +1,71 @@
 import { motion } from "framer-motion";
 import BackButton from "@/components/ui/BackButton";
 import { css } from "@/lib/css";
-import { colors } from "@/lib/tokens";
+import { colors, fonts } from "@/lib/tokens";
 import type { ArchiveItem } from "@/domain/archive/archive-dto";
 
+// 큰 검정 카드 안에 사진을 두고, 제목은 사진 위가 아니라 사진 아래 검정 면에 쓴다.
+// 사진의 밝기와 상관없이 글자가 읽히고, 그라데이션을 깔 필요가 없다.
 const heroSectionCss = css({
   position: "relative",
-  height: "55vh",
+  marginInline: "16px",
+  marginTop: "8px",
+  backgroundColor: colors.bgInk,
+  borderRadius: "28px",
+  padding: "10px",
+  "@md": { marginInline: "32px", padding: "12px" },
+});
+
+const heroPhotoCss = css({
+  position: "relative",
+  height: "44vh",
+  minHeight: "280px",
+  borderRadius: "20px",
   overflow: "hidden",
+  backgroundColor: colors.onInkLine,
+  "@md": { height: "56vh", minHeight: "420px" },
 });
 
 const heroImgCss = css({ width: "100%", height: "100%", objectFit: "cover" });
 
-const heroOverlayCss = css({
-  position: "absolute",
-  inset: "0",
-  background: "linear-gradient(to top, #0a0a0a, rgba(0,0,0,0.4), transparent)",
-});
+const heroOverlayCss = css({ display: "none" });
 
+// 사진 위의 뒤로 가기: 흰 알약
 const heroBackBtnCss = css({
   position: "absolute",
-  top: "24px",
-  left: "24px",
-  "@md": { left: "48px" },
+  top: "12px",
+  left: "12px",
+  backgroundColor: colors.bgCard,
+  borderRadius: "9999px",
+  paddingInline: "14px",
+  paddingBlock: "4px",
 });
 
 const heroCategoryCss = css({
   display: "inline-block",
-  backgroundColor: colors.brand,
-  color: colors.bgPage,
-  fontSize: "10px",
-  fontWeight: "900",
+  backgroundColor: colors.lime,
+  color: colors.textPrimary,
+  fontSize: "12px",
+  fontWeight: "700",
   paddingInline: "12px",
   paddingBlock: "4px",
   borderRadius: "9999px",
-  textTransform: "uppercase",
   marginBottom: "16px",
 });
 
 const heroTitleCss = css({
-  fontSize: "36px",
-  fontWeight: "900",
-  color: colors.textPrimary,
-  lineHeight: "1.25",
+  fontFamily: fonts.display,
+  fontSize: "clamp(36px, 6vw, 72px)",
+  fontWeight: "700",
+  color: colors.onInk,
+  lineHeight: "1.08",
+  letterSpacing: "-0.035em",
   maxWidth: "48rem",
-  "@md": { fontSize: "60px" },
 });
 
 const heroBottomCss = css({
-  position: "absolute",
-  bottom: "40px",
-  left: "24px",
-  right: "24px",
-  "@md": { left: "48px", right: "48px" },
+  padding: "24px 14px 18px",
+  "@md": { padding: "36px 36px 32px" },
 });
 
 interface HeroSectionProps {
@@ -62,6 +75,7 @@ interface HeroSectionProps {
 export default function HeroSection({ item }: HeroSectionProps) {
   return (
     <div className={heroSectionCss}>
+      <div className={heroPhotoCss}>
       <motion.img
         src={item.img}
         alt={item.title}
@@ -79,6 +93,7 @@ export default function HeroSection({ item }: HeroSectionProps) {
       >
         <BackButton label="Archive" />
       </motion.div>
+      </div>
       <div className={heroBottomCss}>
         <motion.span
           initial={{ opacity: 0, y: 12 }}

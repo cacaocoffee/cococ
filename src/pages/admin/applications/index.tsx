@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { applyService } from "@/domain/apply/apply-service";
 import type { ApplicationItem } from "@/domain/apply/apply-dto";
-import { ConfirmModal, useConfirm } from "@/components/ui/Modal";
+import { AlertModal, ConfirmModal, useAlert, useConfirm } from "@/components/ui/Modal";
 import LoadingButton from "@/components/ui/LoadingButton";
 import TabSkeleton from "../components/TabSkeleton";
 import { css, cx } from "@/lib/css";
@@ -49,8 +49,8 @@ interface AdminApplicationItem {
 // ─── Styles ───────────────────────────────────────────────────
 const cardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
-  borderRadius: "1rem",
+  border: "none",
+  borderRadius: "20px",
   overflow: "hidden",
 });
 const headerCss = css({
@@ -59,9 +59,9 @@ const headerCss = css({
 });
 const avatarCss = css({
   width: "40px", height: "40px", borderRadius: "9999px",
-  backgroundColor: "rgba(245,158,11,0.1)", color: colors.brand,
+  backgroundColor: colors.bgSection, color: colors.textPrimary,
   display: "flex", alignItems: "center", justifyContent: "center",
-  fontSize: "14px", fontWeight: "900", flexShrink: "0",
+  fontSize: "14px", fontWeight: "700", flexShrink: "0",
 });
 const infoCss = css({ flex: "1 1 0%", minWidth: "0" });
 const nameRowCss = css({ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" });
@@ -69,12 +69,11 @@ const nameCss = css({ color: colors.textPrimary, fontWeight: "700", fontSize: "1
 const genderCss = css({ color: colors.textFaint, fontSize: "12px" });
 const genChipCss = css({
   display: "inline-flex", alignItems: "center",
-  backgroundColor: "rgba(245,158,11,0.12)",
-  color: colors.brand,
-  fontSize: "11px", fontWeight: "900",
+  backgroundColor: colors.bgSection,
+  color: colors.textPrimary,
+  fontSize: "12px", fontWeight: "700",
   paddingInline: "8px", paddingBlock: "2px",
   borderRadius: "9999px",
-  border: "1px solid rgba(245,158,11,0.22)",
 });
 const metaRowCss = css({
   display: "flex", gap: "8px", marginTop: "4px",
@@ -85,9 +84,9 @@ const sepCss = css({ color: colors.textDimmest });
 // 확정 면접 일정 배지
 const confirmedBadgeCss = css({
   display: "inline-flex", alignItems: "center", gap: "5px",
-  backgroundColor: "rgba(52,211,153,0.12)",
-  color: "#34d399", fontSize: "11px", fontWeight: "700",
-  paddingInline: "8px", paddingBlock: "3px", borderRadius: "0.5rem",
+  backgroundColor: colors.successBg,
+  color: colors.success, fontSize: "12px", fontWeight: "700",
+  paddingInline: "8px", paddingBlock: "3px", borderRadius: "10px",
   marginTop: "6px",
 });
 
@@ -109,51 +108,50 @@ const grid2Css = css({
   "@md": { gridTemplateColumns: "repeat(2,1fr)" },
 });
 const infoItemCss = css({
-  backgroundColor: "rgba(0,0,0,0.2)", borderRadius: "0.75rem", padding: "12px",
+  backgroundColor: colors.bgSection, borderRadius: "14px", padding: "12px",
 });
 const infoItemLabelCss = css({
-  color: colors.textDimmer, fontSize: "10px", fontWeight: "700", marginBottom: "4px",
+  color: colors.textFaint, fontSize: "12px", fontWeight: "700", marginBottom: "4px",
 });
 const infoItemValueCss = css({
-  color: colors.textPrimary, fontSize: "12px", fontWeight: "700",
+  color: colors.textPrimary, fontSize: "14px", fontWeight: "700",
   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
 });
 const infoItemValueWrapCss = css({
-  color: colors.textPrimary, fontSize: "12px", fontWeight: "700",
+  color: colors.textPrimary, fontSize: "14px", fontWeight: "700",
   whiteSpace: "pre-wrap", wordBreak: "break-all",
 });
 const sectionLabelCss = css({
-  fontSize: "11px", fontWeight: "900", color: colors.brand,
-  textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "8px",
+  fontSize: "12px", fontWeight: "700", color: colors.textMuted, letterSpacing: "0", marginBottom: "8px",
 });
 const scaleRowCss = css({ display: "flex", gap: "12px" });
 const scaleCardCss = css({
-  backgroundColor: "rgba(0,0,0,0.2)", borderRadius: "0.75rem",
+  backgroundColor: colors.bgSection, borderRadius: "14px",
   padding: "16px", flex: "1 1 0%", textAlign: "center",
 });
 const scaleLabelCss = css({ color: colors.textFaint, fontSize: "12px", marginBottom: "4px" });
-const scaleValueCss = css({ color: colors.brand, fontSize: "24px", fontWeight: "900" });
-const scaleUnitCss = css({ color: colors.textDimmer, fontSize: "10px" });
+const scaleValueCss = css({ color: colors.textPrimary, fontSize: "32px", fontWeight: "700", letterSpacing: "-0.03em" });
+const scaleUnitCss = css({ color: colors.textFaint, fontSize: "12px" });
 const qaBodyCss = css({
   color: colors.textSecondary, fontSize: "13px", lineHeight: "1.7",
-  backgroundColor: "rgba(0,0,0,0.2)", borderRadius: "0.75rem",
+  backgroundColor: colors.bgSection, borderRadius: "14px",
   padding: "14px", whiteSpace: "pre-wrap",
 });
 const visionTagCss = css({
   display: "inline-block",
-  backgroundColor: "rgba(245,158,11,0.12)", color: colors.brand,
-  fontSize: "12px", fontWeight: "700",
-  paddingInline: "10px", paddingBlock: "5px", borderRadius: "0.5rem",
+  backgroundColor: colors.lime, color: colors.textPrimary,
+  fontSize: "13px", fontWeight: "700",
+  paddingInline: "12px", paddingBlock: "5px", borderRadius: "9999px",
 });
 const statusBtnBaseCss = css({
-  fontSize: "10px", fontWeight: "900",
+  fontSize: "12px", fontWeight: "700",
   paddingInline: "10px", paddingBlock: "5px",
   borderRadius: "9999px", border: "1px solid",
   transition: "all 0.2s", cursor: "pointer", background: "none", whiteSpace: "nowrap",
 });
 const statusBtnInactiveCss = css({
-  color: colors.textDimmer, borderColor: colors.borderStrong,
-  _hover: { color: colors.textPrimary },
+  color: colors.textMuted, borderColor: colors.borderSubtle,
+  _hover: { color: colors.textPrimary, borderColor: colors.borderStrong },
 });
 const deleteBtnCss = css({
   width: "30px", height: "30px", borderRadius: "9999px",
@@ -161,7 +159,7 @@ const deleteBtnCss = css({
   border: "none", cursor: "pointer",
   display: "flex", alignItems: "center", justifyContent: "center",
   marginLeft: "4px", transition: "background-color 0.2s",
-  _hover: { backgroundColor: "rgba(239,68,68,0.2)" },
+  _hover: { backgroundColor: colors.dangerShadow },
 });
 
 
@@ -220,18 +218,15 @@ function InterviewScheduleEditor({ app, onSave, settings }: InterviewScheduleEdi
                         cursor: isAvail ? "pointer" : "default",
                         transition: "all 0.15s",
                         fontWeight: "800", fontSize: "10px",
+                        // 확정: 라임 바탕, 가능: 회색 바탕, 불가: 빈 칸
                         backgroundColor: isConfirmed
-                          ? "rgba(52,211,153,0.3)"
+                          ? colors.lime
                           : isAvail
-                          ? "rgba(245,158,11,0.18)"
-                          : "rgba(255,255,255,0.03)",
-                        color: isConfirmed
-                          ? "#34d399"
-                          : isAvail
-                          ? "rgba(245,158,11,0.85)"
-                          : "transparent",
-                        outline: isConfirmed ? "1.5px solid #34d399" : "none",
-                        _hover: isAvail && !isConfirmed ? { backgroundColor: "rgba(245,158,11,0.32)" } : {},
+                          ? colors.bgPressed
+                          : colors.bgSection,
+                        color: isConfirmed || isAvail ? colors.textPrimary : "transparent",
+                        outline: isConfirmed ? `1.5px solid ${colors.textPrimary}` : "none",
+                        _hover: isAvail && !isConfirmed ? { backgroundColor: colors.borderStrong } : {},
                       })}
                     >
                       {isConfirmed ? "✓ 확정" : isAvail ? "가능" : ""}
@@ -454,11 +449,11 @@ function ApplicationRow({ app, onStatusChange, onSaveField, onDelete, settings, 
 // ─── ApplicationsTab ──────────────────────────────────────────
 const exportBtnCss = css({
   display: "flex", alignItems: "center", gap: "8px",
-  backgroundColor: colors.bgCard, border: `1px solid ${colors.borderStrong}`,
-  color: colors.textSecondary, paddingInline: "16px", paddingBlock: "10px",
-  borderRadius: "0.75rem", fontSize: "14px", fontWeight: "700",
-  cursor: "pointer", transition: "color 0.2s",
-  _hover: { color: colors.textPrimary },
+  backgroundColor: colors.bgCard, border: "none",
+  color: colors.textPrimary, paddingInline: "16px", paddingBlock: "10px",
+  borderRadius: "16px", fontSize: "14px", fontWeight: "700",
+  cursor: "pointer", transition: "background-color 0.2s",
+  _hover: { backgroundColor: colors.bgPressed },
 });
 const statsGridCss = css({
   display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "12px", marginBottom: "24px",
@@ -466,22 +461,22 @@ const statsGridCss = css({
 });
 const statCardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
-  borderRadius: "1rem", padding: "20px",
+  border: "none",
+  borderRadius: "20px", padding: "20px",
 });
 const statLabelCss = css({ color: colors.textFaint, fontSize: "12px", fontWeight: "700", marginBottom: "8px" });
-const statValueBaseCss = css({ fontSize: "28px", fontWeight: "900" });
+const statValueBaseCss = css({ fontSize: "40px", fontWeight: "700", letterSpacing: "-0.03em", lineHeight: "1.1" });
 const filterRowCss = css({
   display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "20px", alignItems: "center",
 });
 const chipBaseCss = css({
   paddingInline: "14px", paddingBlock: "6px", borderRadius: "9999px",
-  fontSize: "12px", fontWeight: "700", transition: "all 0.2s", border: "none", cursor: "pointer",
+  fontSize: "13px", fontWeight: "700", transition: "all 0.2s", border: "none", cursor: "pointer",
 });
-const chipActiveCss = css({ backgroundColor: colors.brand, color: colors.bgPage });
+const chipActiveCss = css({ backgroundColor: colors.brand, color: colors.onInk });
 const chipInactiveCss = css({
   backgroundColor: colors.bgCard, color: colors.textMuted,
-  border: `1px solid ${colors.borderLight}`,
+  border: "none",
   _hover: { color: colors.textPrimary },
 });
 const searchWrapCss = css({
@@ -491,11 +486,11 @@ const searchWrapCss = css({
   maxWidth: "240px",
 });
 const searchInputCss = css({
-  backgroundColor: colors.bgCard, border: `1px solid ${colors.borderLight}`,
-  color: colors.textPrimary, fontSize: "12px",
-  paddingBlock: "8px", paddingLeft: "36px", paddingRight: "16px",
-  borderRadius: "0.5rem", outline: "none", width: "100%",
-  transition: "border-color 0.2s", _focus: { borderColor: colors.brand },
+  backgroundColor: colors.bgCard, border: "none",
+  color: colors.textPrimary, fontSize: "14px",
+  paddingBlock: "10px", paddingLeft: "36px", paddingRight: "16px",
+  borderRadius: "9999px", outline: "none", width: "100%",
+  transition: "box-shadow 0.2s", _focus: { boxShadow: `0 0 0 2px ${colors.textPrimary}` },
 });
 const searchIconCss = css({
   position: "absolute", left: "12px", top: "50%",
@@ -503,13 +498,13 @@ const searchIconCss = css({
 });
 const sortBtnCss = css({
   display: "flex", alignItems: "center", gap: "6px",
-  backgroundColor: colors.bgCard, border: `1px solid ${colors.borderStrong}`,
-  color: colors.textMuted, paddingInline: "12px", paddingBlock: "6px",
-  borderRadius: "0.5rem", fontSize: "12px", fontWeight: "700",
+  backgroundColor: colors.bgCard, border: "none",
+  color: colors.textMuted, paddingInline: "14px", paddingBlock: "10px",
+  borderRadius: "16px", fontSize: "13px", fontWeight: "700",
   cursor: "pointer", transition: "color 0.2s",
   _hover: { color: colors.textPrimary },
 });
-const sortActiveCss = css({ color: "#34d399", borderColor: "#34d399" });
+const sortActiveCss = css({ color: colors.onInk, backgroundColor: colors.bgInk, _hover: { color: colors.onInk } });
 
 export default function ApplicationsTab() {
   const [apps, setApps] = useState<AdminApplicationItem[]>([]);
@@ -525,6 +520,7 @@ export default function ApplicationsTab() {
   // 진행 중인 행 ID — 같은 row 의 모든 액션 버튼을 disabled + spinner 처리
   const [pendingIds, setPendingIds] = useState<Set<string>>(() => new Set());
   const { confirmProps, openConfirm } = useConfirm();
+  const { alertProps, openAlert } = useAlert();
 
   const withPending = useCallback(async (id: string, fn: () => Promise<void>) => {
     setPendingIds((prev) => {
@@ -535,6 +531,13 @@ export default function ApplicationsTab() {
     });
     try {
       await fn();
+    } catch (err) {
+      console.error("[admin/applications] action failed", err);
+      openAlert({
+        title: "처리 실패",
+        description: "요청을 처리하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+        type: "error",
+      });
     } finally {
       setPendingIds((prev) => {
         if (!prev.has(id)) return prev;
@@ -543,7 +546,7 @@ export default function ApplicationsTab() {
         return next;
       });
     }
-  }, []);
+  }, [openAlert]);
 
   const refreshApps = useCallback(async () => {
     const data = await applyService.loadApplications();
@@ -669,10 +672,10 @@ export default function ApplicationsTab() {
 
   const statItems: [string, number, string][] = [
     ["전체", counts.total, colors.textPrimary],
-    ["검토 중", counts.pending, "#facc15"],
-    ["1차 합격", counts.pass1, "#34d399"],
-    ["2차 합격", counts.pass2, "#10b981"],
-    ["불합격", counts.fail, colors.dangerMuted],
+    ["검토 중", counts.pending, colors.warning],
+    ["1차 합격", counts.pass1, colors.success],
+    ["2차 합격", counts.pass2, colors.textPrimary],
+    ["불합격", counts.fail, colors.danger],
   ];
 
   if (loading) {
@@ -822,6 +825,7 @@ export default function ApplicationsTab() {
         </div>
       )}
       <ConfirmModal {...confirmProps} />
+      <AlertModal {...alertProps} />
     </div>
   );
 }

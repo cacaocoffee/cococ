@@ -2,80 +2,88 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { css } from "@/lib/css";
-import { colors } from "@/lib/tokens";
+import { colors, fonts } from "@/lib/tokens";
 import type { MagazineItem } from "@/domain/magazine/magazine-dto";
 
 const excerptCss = css({
-  fontSize: "20px",
-  color: colors.textSecondary,
-  lineHeight: "1.85",
+  fontFamily: fonts.display,
+  fontSize: "22px",
+  color: colors.textPrimary,
+  lineHeight: "1.55",
   marginBottom: "56px",
   paddingBottom: "56px",
   borderBottom: `1px solid ${colors.borderMedium}`,
-  fontWeight: "300",
+  fontWeight: "700",
+  letterSpacing: "-0.005em",
 });
 
 const contentListCss = css({
   display: "flex",
   flexDirection: "column",
-  gap: "48px",
+  gap: "56px",
 });
 
 const sectionHeaderCss = css({
   display: "flex",
-  alignItems: "flex-start",
+  alignItems: "baseline",
   gap: "16px",
-  marginBottom: "16px",
+  marginBottom: "20px",
 });
 
 const sectionNumCss = css({
-  color: colors.brand,
-  fontWeight: "900",
-  fontSize: "14px",
-  marginTop: "4px",
+  color: colors.textPrimary,
+  backgroundColor: colors.bgCard,
+  borderRadius: "9999px",
+  paddingInline: "10px",
+  paddingBlock: "3px",
+  fontFamily: fonts.display,
+  fontWeight: "700",
+  fontSize: "13px",
   flexShrink: "0",
 });
 
 const sectionTitleCss = css({
-  fontSize: "24px",
-  fontWeight: "900",
+  fontFamily: fonts.display,
+  fontSize: "28px",
+  fontWeight: "700",
   color: colors.textPrimary,
-  lineHeight: "1.375",
+  lineHeight: "1.2",
+  letterSpacing: "-0.03em",
 });
 
 const sectionBodyCss = css({
-  color: colors.textMuted,
-  lineHeight: "1.9",
-  fontSize: "16px",
-  paddingLeft: "36px",
+  color: colors.textSecondary,
+  lineHeight: "1.85",
+  fontSize: "17px",
+  paddingLeft: "0",
   "& p": { marginBottom: "1em" },
   "& strong": { color: colors.textPrimary, fontWeight: "700" },
-  "& em": { fontStyle: "italic" },
+  "& em": { },
   "& ul": { listStyleType: "disc", paddingLeft: "1.5em", marginBottom: "1em" },
   "& ol": { listStyleType: "decimal", paddingLeft: "1.5em", marginBottom: "1em" },
   "& li": { marginBottom: "0.25em" },
   "& a": { color: colors.brand, textDecoration: "underline" },
   "& blockquote": {
-    borderLeft: `3px solid ${colors.brand}`,
-    paddingLeft: "1em",
-    color: colors.textDimmer,
-    fontStyle: "italic",
+    backgroundColor: colors.bgCard,
+    borderRadius: "16px",
+    padding: "16px 20px",
+    color: colors.textMuted,
     margin: "1em 0",
   },
 });
 
 const blockImageCss = css({
   width: "100%",
-  borderRadius: "1rem",
+  borderRadius: "20px",
   objectFit: "cover",
-  maxHeight: "480px",
+  maxHeight: "560px",
 });
 
 const captionCss = css({
   textAlign: "center",
-  color: colors.textDimmer,
+  color: colors.textFaint,
   fontSize: "13px",
-  marginTop: "12px",
+  marginTop: "14px",
 });
 
 const instagramWrapCss = css({
@@ -171,15 +179,15 @@ function ArticleBlockItem({ block, textIndex }: ArticleBlockItemProps) {
         )}
       </div>
       <div className={block.heading ? sectionBodyCss : css({
-        color: colors.textMuted, lineHeight: "1.9", fontSize: "16px",
+        color: colors.textSecondary, lineHeight: "1.85", fontSize: "17px",
         "& p": { marginBottom: "1em" },
         "& strong": { color: colors.textPrimary, fontWeight: "700" },
-        "& em": { fontStyle: "italic" },
+        "& em": { },
         "& ul": { listStyleType: "disc", paddingLeft: "1.5em", marginBottom: "1em" },
         "& ol": { listStyleType: "decimal", paddingLeft: "1.5em", marginBottom: "1em" },
         "& li": { marginBottom: "0.25em" },
         "& a": { color: colors.brand, textDecoration: "underline" },
-        "& blockquote": { borderLeft: `3px solid ${colors.brand}`, paddingLeft: "1em", color: colors.textDimmer, fontStyle: "italic", margin: "1em 0" },
+        "& blockquote": { backgroundColor: colors.bgCard, borderRadius: "16px", padding: "16px 20px", color: colors.textMuted, margin: "1em 0" },
       })}>
         <ReactMarkdown>{block.body}</ReactMarkdown>
       </div>

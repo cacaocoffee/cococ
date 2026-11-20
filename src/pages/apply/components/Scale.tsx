@@ -15,20 +15,20 @@ const scaleBtnRowCss = css({ display: "flex", gap: "8px" });
 const scaleBtnBaseCss = css({
   flex: "1 1 0%",
   height: "40px",
-  borderRadius: "0.75rem",
+  borderRadius: "14px",
   border: `1px solid ${colors.borderMedium}`,
   fontSize: "14px",
-  fontWeight: "900",
+  fontWeight: "700",
   transition: "all 0.2s",
   cursor: "pointer",
   background: "none",
-  _hover: { borderColor: "rgba(245,158,11,0.4)" },
+  _hover: { borderColor: colors.borderStrong },
 });
 
 const scaleBtnActiveCss = css({
   borderColor: colors.brand,
   backgroundColor: colors.brand,
-  color: colors.bgPage,
+  color: colors.onInk,
 });
 const scaleBtnInactiveCss = css({ color: colors.textMuted });
 

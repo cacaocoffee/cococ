@@ -47,9 +47,10 @@ import {
 
 type ScheduleType = ScheduleEvent["type"];
 
+// 점 색: 클래스는 잉크, 내부행사는 라임. 라임은 글자색으로 쓰지 않는다
 const TYPE_COLOR: Record<ScheduleType, string> = {
-  클래스: colors.brand,
-  내부행사: "#a78bfa",
+  클래스: colors.bgInk,
+  내부행사: colors.lime,
 };
 
 const SCHEDULE_TYPES: ScheduleType[] = ["클래스", "내부행사"];
@@ -176,12 +177,12 @@ const dotCss = css({
 const thumbWrapCss = css({
   width: "64px",
   height: "64px",
-  borderRadius: "0.75rem",
+  borderRadius: "14px",
   flexShrink: "0",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  backgroundColor: "rgba(255,255,255,0.04)",
+  backgroundColor: colors.bgSection,
 });
 
 const toForm = (item: ScheduleEvent): ScheduleFormState => ({
@@ -282,10 +283,10 @@ export default function ScheduleTab() {
           return (
             <div key={item.id} className={itemCardCss}>
               <div className={thumbWrapCss}>
-                <CalendarDays size={28} color={TYPE_COLOR[item.type]} />
+                <CalendarDays size={28} color={colors.textPrimary} />
               </div>
               <div className={itemBodyCss}>
-                <span className={itemCatCss} style={{ color: TYPE_COLOR[item.type] }}>
+                <span className={itemCatCss} style={{ color: colors.textMuted }}>
                   <span className={dotCss} style={{
                     backgroundColor: TYPE_COLOR[item.type],
                     display: "inline-block",

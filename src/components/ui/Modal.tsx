@@ -31,7 +31,7 @@ const panelCss = css({
   maxWidth: '24rem',
   backgroundColor: colors.bgCard,
   border: `1px solid ${colors.borderStrong}`,
-  borderRadius: '1rem',
+  borderRadius: "20px",
   overflow: 'hidden',
   boxShadow: shadows.card,
 });
@@ -41,7 +41,7 @@ const bodyPadCss = css({ padding: '28px' });
 const iconWrapBaseCss = css({
   width: '48px',
   height: '48px',
-  borderRadius: '1rem',
+  borderRadius: "20px",
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -50,7 +50,7 @@ const iconWrapBaseCss = css({
 
 const modalTitleCss = css({
   color: colors.textPrimary,
-  fontWeight: '900',
+  fontWeight: "700",
   fontSize: '18px',
   marginBottom: '8px',
 });
@@ -67,27 +67,27 @@ const btnRowCss = css({ display: 'flex', gap: '12px' });
 const cancelBtnCss = css({
   flex: '1 1 0%',
   paddingBlock: '12px',
-  borderRadius: '0.75rem',
-  backgroundColor: 'rgba(255,255,255,0.05)',
-  color: colors.textSecondary,
+  borderRadius: "14px",
+  backgroundColor: 'transparent',
+  border: `1px solid ${colors.borderMedium}`,
+  color: colors.textMuted,
   fontWeight: '700',
   fontSize: '14px',
-  border: 'none',
   cursor: 'pointer',
   transition: 'all 0.2s',
-  _hover: { color: colors.textPrimary, backgroundColor: 'rgba(255,255,255,0.1)' },
+  _hover: { color: colors.textPrimary, backgroundColor: colors.bgSection, borderColor: colors.borderStrong },
 });
 
 const fullBtnBaseCss = css({
   width: '100%',
   paddingBlock: '12px',
-  borderRadius: '0.75rem',
-  color: colors.textPrimary,
-  fontWeight: '900',
+  borderRadius: "14px",
+  color: colors.onInk,
+  fontWeight: "700",
   fontSize: '14px',
   border: 'none',
   cursor: 'pointer',
-  transition: 'colors 0.2s',
+  transition: 'background-color 0.2s',
 });
 
 // ─── Overlay ──────────────────────────────────────────────────
@@ -113,7 +113,7 @@ function Overlay({ open, onClose, children }: OverlayProps) {
         <motion.div
           className={backdropCss}
           variants={BACKDROP} initial="hidden" animate="visible" exit="hidden"
-          style={{ background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)' }}
+          style={{ background: 'rgba(15,17,21,0.55)', backdropFilter: 'blur(6px)' }}
           onClick={onClose}
         >
           <motion.div
@@ -133,10 +133,10 @@ function Overlay({ open, onClose, children }: OverlayProps) {
 const dangerBtnCss = css({
   flex: '1 1 0%',
   paddingBlock: '12px',
-  borderRadius: '0.75rem',
+  borderRadius: "14px",
   backgroundColor: colors.danger,
-  color: colors.textPrimary,
-  fontWeight: '900',
+  color: colors.onInk,
+  fontWeight: "700",
   fontSize: '14px',
   border: 'none',
   cursor: 'pointer',
@@ -210,8 +210,8 @@ const ALERT_CFG: Record<AlertType, AlertConfig> = {
   },
   info: {
     icon: Info,
-    iconColor: colors.brand,
-    bgColor:   'rgba(245,158,11,0.1)',
+    iconColor: colors.textPrimary,
+    bgColor:   colors.lime,
     btnCss: css({ backgroundColor: colors.brand,    boxShadow: shadows.amberSm,  _hover: { backgroundColor: colors.brandHover   } }),
   },
 };

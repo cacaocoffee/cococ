@@ -1,3 +1,6 @@
+/* ─── COCOC 전역 스타일 (디자인 A: 잉크와 라임) ─────────────── */
+/* Space Grotesk는 index.html에서 불러온다. 한글은 기기 글꼴로 나온다. */
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -6,14 +9,41 @@
 
 html {
   scroll-behavior: smooth;
+  /* 화면 끝을 넘겨 당겨도 같은 회색 바탕이 보이게 */
+  background-color: #F2F3F5;
 }
 
 body {
-  background-color: #0a0a0a;
-  color: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #F2F3F5;
+  color: #0F1115;
+  font-family: 'Space Grotesk', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
+  font-weight: 500;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  font-feature-settings: 'kern', 'liga', 'calt';
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
+
+.font-display { font-family: 'Space Grotesk', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+.font-mono    { font-family: ui-monospace, 'JetBrains Mono', Menlo, monospace; }
+
+::selection { background-color: #C8F53C; color: #0F1115; }
+
+/* 숫자 폭을 맞춰 금액과 날짜가 줄마다 어긋나지 않게 */
+body { font-variant-numeric: tabular-nums; }
+
+/* 브라우저 기본 입력칸·버튼도 같은 글꼴을 쓴다 */
+button, input, select, textarea { font-family: inherit; }
+
+:focus-visible { outline: 2px solid #0F1115; outline-offset: 2px; }
+
+/* 회색 바탕에 맞춘 스크롤 막대 */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CDD1D8; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #A9AFBC; }
 
 /* ─── Global animations ─────────────────────────────── */
 @keyframes marquee {
@@ -23,17 +53,12 @@ body {
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
-  50%       { opacity: 0.5; }
-}
-
-.animate-marquee {
-  animation: marquee 35s linear infinite;
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  50%       { opacity: 0.45; }
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.animate-marquee { animation: marquee 45s linear infinite; }
+.animate-pulse   { animation: pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }

@@ -9,28 +9,30 @@ interface StatusConfig {
   icon: LucideIcon;
 }
 
+// 지원서 상태 색. 검토 중은 주의(주황), 1차 합격은 초록, 최종 합격은 라임 바탕에 잉크 글자, 불합격은 붉은색.
+// color는 글자색, bg는 바탕색이다. 라임은 바탕으로만 쓴다.
 export const STATUS_CFG: Record<string, StatusConfig> = {
   pending: {
     label: "검토 중",
-    color: "#facc15",
-    bg: "rgba(250,204,21,0.1)",
+    color: colors.warning,
+    bg: colors.warningBg,
     icon: Clock,
   },
   pass1: {
     label: "1차 합격",
-    color: "#34d399",
-    bg: "rgba(52,211,153,0.1)",
+    color: colors.success,
+    bg: colors.successBg,
     icon: CheckCircle,
   },
   pass2: {
     label: "2차 합격",
-    color: "#10b981",
-    bg: "rgba(16,185,129,0.15)",
+    color: colors.textPrimary,
+    bg: colors.lime,
     icon: Star,
   },
   fail: {
     label: "불합격",
-    color: colors.dangerMuted,
+    color: colors.danger,
     bg: colors.dangerBg,
     icon: XCircle,
   },

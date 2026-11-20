@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { css } from '@/lib/css';
+import { colors, fonts } from '@/lib/tokens';
 
 interface FilterButtonProps {
   label: string;
@@ -8,28 +9,29 @@ interface FilterButtonProps {
 }
 
 const baseBtnCss = css({
-  paddingInline: '20px',
+  paddingInline: '16px',
   paddingBlock: '8px',
   borderRadius: '9999px',
-  fontSize: '12px',
+  fontSize: "14px",
   fontWeight: '700',
   transition: 'all 0.2s',
   cursor: 'pointer',
-  border: 'none',
+  border: '1px solid transparent',
   outline: 'none',
 });
 
 const activeCss = css({
-  backgroundColor: '#f59e0b',
-  color: '#000',
+  backgroundColor: colors.textPrimary,
+  color: colors.onInk,
+  borderColor: colors.textPrimary,
 });
 
 const inactiveCss = css({
-  backgroundColor: '#1a1a1a',
-  color: '#9ca3af',
-  border: '1px solid rgba(255, 255, 255, 0.06)',
+  backgroundColor: colors.bgCard,
+  color: colors.textMuted,
   _hover: {
-    color: '#ffffff',
+    color: colors.textPrimary,
+    backgroundColor: colors.bgPressed,
   },
 });
 
@@ -37,7 +39,7 @@ export default function FilterButton({ label, active, onClick }: FilterButtonPro
   return (
     <motion.button
       onClick={onClick}
-      whileTap={{ scale: 0.95 }}
+      whileTap={{ scale: 0.96 }}
       className={`${baseBtnCss} ${active ? activeCss : inactiveCss}`}
     >
       {label}

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   fieldGroupCss,
   stepTitleCss,
@@ -17,8 +18,23 @@ function Err({ msg }) {
 }
 
 export default function Step2Activity({ form, set, setV, errors = {} }) {
-  const settings = applyService.loadInterviewSettings() ?? applyService.DEFAULT_INTERVIEW_SETTINGS;
-  const { mtDate, interviewDates, interviewTimes } = settings;
+  // 면접 날짜와 시간은 서버에서 받아 온다 (loadInterviewSettings는 비동기 함수라 값을 바로 쓸 수 없다)
+  const [settings, setSettings] = useState<{ mtDate: string; interviewDates: string[]; interviewTimes: string[] } | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    applyService
+      .loadInterviewSettings()
+      .then((s) => {
+        if (!cancelled) setSettings(s ?? applyService.DEFAULT_INTERVIEW_SETTINGS);
+      })
+      .catch(() => {
+        if (!cancelled) setSettings({ mtDate: "", interviewDates: [], interviewTimes: [] });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  const { mtDate, interviewDates, interviewTimes } = settings ?? { mtDate: "", interviewDates: [], interviewTimes: [] };
 
   return (
     <div className={fieldGroupCss}>
@@ -29,12 +45,16 @@ export default function Step2Activity({ form, set, setV, errors = {} }) {
         <span className={sublabelCss}>
           가능한 날짜와 시간대를 모두 선택해 주세요. (중복 선택 가능)
         </span>
-        <InterviewMatrix
-          dates={interviewDates}
-          times={interviewTimes}
-          value={form.interviewTimes}
-          onChange={setV("interviewTimes")}
-        />
+        {settings === null ? (
+          <span className={sublabelCss}>면접 일정을 불러오는 중이에요…</span>
+        ) : (
+          <InterviewMatrix
+            dates={interviewDates}
+            times={interviewTimes}
+            value={form.interviewTimes}
+            onChange={setV("interviewTimes")}
+          />
+        )}
         <Err msg={errors.interviewTimes} />
       </div>
 

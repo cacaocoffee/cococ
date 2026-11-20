@@ -2,27 +2,36 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import BackButton from "@/components/ui/BackButton";
 import { css } from "@/lib/css";
+import { colors } from "@/lib/tokens";
+import { fetchInstagramThumbnail } from "@/lib/microlink";
 import type { MagazineItem } from "@/domain/magazine/magazine-dto";
 
+// 표지 사진은 둥근 카드로 화면 양옆 여백 안에 둔다. 사진 위에 글자를 얹지 않아 그라데이션이 필요 없다
 const heroSectionCss = css({
   position: "relative",
-  height: "50vh",
+  height: "44vh",
+  minHeight: "260px",
+  marginInline: "16px",
+  marginTop: "8px",
+  borderRadius: "28px",
   overflow: "hidden",
+  backgroundColor: colors.bgInk,
+  "@md": { marginInline: "32px", height: "50vh" },
 });
 
 const heroImgCss = css({ width: "100%", height: "100%", objectFit: "cover" });
 
-const heroOverlayCss = css({
-  position: "absolute",
-  inset: "0",
-  background: "linear-gradient(to top, #0a0a0a, rgba(0,0,0,0.5), transparent)",
-});
+const heroOverlayCss = css({ display: "none" });
 
+// 사진 위의 뒤로 가기: 흰 알약
 const heroBackBtnCss = css({
   position: "absolute",
-  top: "24px",
-  left: "24px",
-  "@md": { left: "48px" },
+  top: "14px",
+  left: "14px",
+  backgroundColor: colors.bgCard,
+  borderRadius: "9999px",
+  paddingInline: "14px",
+  paddingBlock: "4px",
 });
 
 interface ArticleHeroProps {
@@ -36,14 +45,11 @@ export default function ArticleHero({ item }: ArticleHeroProps) {
     if (item.magazineType !== "cardnews") return;
     const firstUrl = item.instagramUrls?.[0];
     if (!firstUrl) return;
-    fetch(`https://api.microlink.io/?url=${encodeURIComponent(firstUrl)}`)
-      .then((r) => r.json())
-      .then((json) => {
-        if (json.status === "success" && json.data?.image?.url) {
-          setThumb(json.data.image.url);
-        }
-      })
-      .catch(() => {});
+    const controller = new AbortController();
+    void fetchInstagramThumbnail(firstUrl, { signal: controller.signal }).then((url) => {
+      if (url && !controller.signal.aborted) setThumb(url);
+    });
+    return () => controller.abort();
   }, [item.img, item.magazineType, item.instagramUrls?.[0]]);
 
   return (

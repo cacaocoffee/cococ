@@ -5,6 +5,7 @@ import { applyService } from "@/domain/apply/apply-service";
 import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 import LoadingButton from "@/components/ui/LoadingButton";
+import { AlertModal, useAlert } from "@/components/ui/Modal";
 import { inputCss, scrollTableWrapCss } from "../styles";
 import DatePicker from "../components/DatePicker";
 import TabSkeleton from "../components/TabSkeleton";
@@ -14,14 +15,14 @@ const maxCss = css({ maxWidth: "36rem" });
 
 const titleCss = css({
   fontSize: "20px",
-  fontWeight: "900",
+  fontWeight: "700",
   color: colors.textPrimary,
   marginBottom: "24px",
 });
 
 const sectionTitleCss = css({
   fontSize: "20px",
-  fontWeight: "900",
+  fontWeight: "700",
   color: colors.textPrimary,
   marginBottom: "24px",
   marginTop: "40px",
@@ -35,7 +36,7 @@ const badgeBaseCss = css({
   paddingBlock: "8px",
   borderRadius: "9999px",
   fontSize: "14px",
-  fontWeight: "900",
+  fontWeight: "700",
   marginBottom: "32px",
 });
 const badgeOpenCss = css({ backgroundColor: colors.successBg, color: colors.successMuted });
@@ -47,8 +48,8 @@ const dotClosedCss = css({ backgroundColor: colors.dangerMuted });
 
 const cardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
-  borderRadius: "1rem",
+  border: "none",
+  borderRadius: "20px",
   padding: "28px",
   display: "flex",
   flexDirection: "column",
@@ -78,19 +79,19 @@ const timeRowCss = css({
   alignItems: "center",
   gap: "10px",
   marginTop: "8px",
-  backgroundColor: "rgba(0,0,0,0.35)",
-  border: `1px solid ${colors.borderInput}`,
-  borderRadius: "0.75rem",
+  backgroundColor: colors.bgSection,
+  border: "1px solid transparent",
+  borderRadius: "14px",
   paddingInline: "14px",
   paddingBlock: "10px",
   transition: "border-color 0.2s",
-  ":focus-within": { borderColor: colors.brand },
+  ":focus-within": { borderColor: colors.textPrimary },
 });
 const timeIconCss = css({ color: colors.textFaint, flexShrink: "0" });
 const timeLabelSmCss = css({
-  fontSize: "11px",
+  fontSize: "12px",
   fontWeight: "700",
-  color: colors.textDimmer,
+  color: colors.textFaint,
   flexShrink: "0",
 });
 
@@ -102,9 +103,9 @@ const addRowCss = css({
 });
 
 const addInputCss = css({
-  backgroundColor: "rgba(0,0,0,0.35)",
-  border: `1px solid ${colors.borderInput}`,
-  borderRadius: "0.75rem",
+  backgroundColor: colors.bgSection,
+  border: "1px solid transparent",
+  borderRadius: "14px",
   paddingInline: "14px",
   paddingBlock: "11px",
   color: colors.textPrimary,
@@ -119,19 +120,19 @@ const addBtnCss = css({
   display: "flex",
   alignItems: "center",
   gap: "5px",
-  backgroundColor: "rgba(245,158,11,0.08)",
-  color: colors.brand,
-  border: `1px solid rgba(245,158,11,0.18)`,
+  backgroundColor: colors.bgInk,
+  color: colors.onInk,
+  border: "none",
   paddingInline: "16px",
   paddingBlock: "11px",
-  borderRadius: "0.75rem",
+  borderRadius: "14px",
   fontSize: "13px",
   fontWeight: "700",
   cursor: "pointer",
   flexShrink: "0",
   whiteSpace: "nowrap",
   transition: "all 0.2s",
-  _hover: { backgroundColor: "rgba(245,158,11,0.16)" },
+  _hover: { backgroundColor: colors.brandHover },
 });
 
 const chipsCss = css({
@@ -147,10 +148,9 @@ const chipCss = css({
   display: "inline-flex",
   alignItems: "center",
   gap: "5px",
-  backgroundColor: "rgba(245,158,11,0.1)",
-  border: "1px solid rgba(245,158,11,0.22)",
-  color: colors.brand,
-  fontSize: "12px",
+  backgroundColor: colors.lime,
+  color: colors.textPrimary,
+  fontSize: "13px",
   fontWeight: "700",
   paddingInline: "10px",
   paddingBlock: "5px",
@@ -161,7 +161,7 @@ const chipXCss = css({
   background: "none",
   border: "none",
   cursor: "pointer",
-  color: "rgba(245,158,11,0.45)",
+  color: colors.textPrimary,
   display: "flex",
   alignItems: "center",
   padding: "0",
@@ -173,7 +173,6 @@ const chipXCss = css({
 const emptyTagsCss = css({
   fontSize: "12px",
   color: colors.textDimmer,
-  fontStyle: "italic",
 });
 
 // ─── 면접 그리드 ───────────────────────────────────────────────
@@ -194,8 +193,8 @@ const toggleRowCss = css({
   alignItems: "center",
   justifyContent: "space-between",
   padding: "16px",
-  backgroundColor: "rgba(0,0,0,0.2)",
-  borderRadius: "0.75rem",
+  backgroundColor: colors.bgSection,
+  borderRadius: "14px",
 });
 const toggleLabelCss = css({
   color: colors.textPrimary,
@@ -208,19 +207,18 @@ const toggleBtnCss = css({ background: "none", border: "none", cursor: "pointer"
 
 // ─── Preview ───────────────────────────────────────────────────
 const previewCss = css({
-  backgroundColor: "rgba(245,158,11,0.05)",
-  border: "1px solid rgba(245,158,11,0.2)",
-  borderRadius: "0.75rem",
+  backgroundColor: colors.bgSection,
+  border: "none",
+  borderRadius: "14px",
   padding: "16px",
   fontSize: "14px",
 });
 const previewLabelCss = css({
-  color: "rgba(245,158,11,0.9)",
+  color: colors.textMuted,
   fontWeight: "700",
   marginBottom: "4px",
   fontSize: "12px",
-  textTransform: "uppercase",
-  letterSpacing: "0.05em",
+  letterSpacing: "0",
 });
 const previewDateCss = css({ color: colors.textPrimary });
 const previewSepCss = css({ color: colors.textFaint, marginInline: "8px" });
@@ -229,8 +227,8 @@ const previewSepCss = css({ color: colors.textFaint, marginInline: "8px" });
 const saveBtnBaseCss = css({
   width: "100%",
   paddingBlock: "12px",
-  borderRadius: "0.75rem",
-  fontWeight: "900",
+  borderRadius: "16px",
+  fontWeight: "700",
   fontSize: "14px",
   border: "none",
   cursor: "pointer",
@@ -238,12 +236,12 @@ const saveBtnBaseCss = css({
 });
 const saveBtnNormalCss = css({
   backgroundColor: colors.brand,
-  color: colors.bgPage,
+  color: colors.onInk,
   _hover: { backgroundColor: colors.brandHover },
 });
 const saveBtnSavedCss = css({
   backgroundColor: colors.success,
-  color: colors.textPrimary,
+  color: colors.onInk,
 });
 
 const hintCss = css({
@@ -278,6 +276,7 @@ export default function PeriodTab() {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [dateInput, setDateInput] = useState("");
+  const { alertProps, openAlert } = useAlert();
 
   useEffect(() => {
     let cancelled = false;
@@ -292,12 +291,20 @@ export default function PeriodTab() {
         if (p) setPeriod({ start: p.start ?? "", end: p.end ?? "", enabled: !p.forceClosed, generation: p.generation ?? 1 });
         if (i) setInterview(i);
         setOpen(isOpen);
+      } catch (err) {
+        if (cancelled) return;
+        console.error("[admin/period] load failed", err);
+        openAlert({
+          title: "불러오기 실패",
+          description: "지원 기간 정보를 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.",
+          type: "error",
+        });
       } finally {
         if (!cancelled) setLoading(false);
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [openAlert]);
 
   const save = async () => {
     if (saving) return;
@@ -312,6 +319,13 @@ export default function PeriodTab() {
       await applyService.saveInterviewSettings(interview);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      console.error("[admin/period] save failed", err);
+      openAlert({
+        title: "저장 실패",
+        description: "변경사항을 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+        type: "error",
+      });
     } finally {
       setSaving(false);
     }
@@ -567,8 +581,8 @@ export default function PeriodTab() {
                           onClick={() => toggleTime(slot)}
                           style={{
                             background: "none", border: "none", cursor: "pointer", padding: "0",
-                            color: active ? "rgba(245,158,11,0.9)" : colors.textDimmest,
-                            fontWeight: "700", fontSize: "11px",
+                            color: active ? colors.textPrimary : colors.textDimmer,
+                            fontWeight: "700", fontSize: "12px",
                           }}
                         >
                           {slot}
@@ -585,7 +599,8 @@ export default function PeriodTab() {
                                 width: "100%", minWidth: "64px", height: "26px",
                                 borderRadius: "6px", border: "none", cursor: "pointer",
                                 transition: "all 0.15s",
-                                backgroundColor: active ? "rgba(245,158,11,0.18)" : "rgba(255,255,255,0.03)",
+                                // 고른 시간대는 라임으로 채운다
+                                backgroundColor: active ? colors.lime : colors.bgSection,
                               }}
                             />
                           </td>
@@ -615,6 +630,8 @@ export default function PeriodTab() {
         * 시작/종료 일시를 비워두면 기간 제한 없이 항상 열립니다.
         <br />* 설정 후 /apply 페이지에서 즉시 반영됩니다.
       </p>
+
+      <AlertModal {...alertProps} />
     </div>
   );
 }

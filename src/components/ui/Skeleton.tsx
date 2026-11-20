@@ -1,7 +1,6 @@
 import type { CSSProperties } from "react";
 import { css } from "@/lib/css";
 
-// shimmer keyframes — 한 번만 head 에 주입
 if (typeof document !== "undefined" && !document.getElementById("__skeleton_shimmer__")) {
   const style = document.createElement("style");
   style.id = "__skeleton_shimmer__";
@@ -12,10 +11,10 @@ if (typeof document !== "undefined" && !document.getElementById("__skeleton_shim
 
 const baseCss = css({
   background:
-    "linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.04) 100%)",
+    "linear-gradient(90deg, rgba(15,17,21,0.05) 0%, rgba(15,17,21,0.12) 50%, rgba(15,17,21,0.05) 100%)",
   backgroundSize: "200% 100%",
-  animation: "sk-shimmer 1.4s ease-in-out infinite",
-  borderRadius: "0.5rem",
+  animation: "sk-shimmer 1.6s ease-in-out infinite",
+  borderRadius: "10px",
   display: "block",
 });
 

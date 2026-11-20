@@ -5,15 +5,15 @@ import { css, cx } from "@/lib/css";
 import { colors } from "@/lib/tokens";
 
 const faqItemBaseCss = css({
-  backgroundColor: colors.bgSection,
-  border: `1px solid ${colors.borderSubtle}`,
-  borderRadius: "1rem",
-  padding: "20px",
+  backgroundColor: colors.bgCard,
+  border: "none",
+  borderRadius: "12px",
+  padding: "20px 22px",
   cursor: "pointer",
   transition: "border-color 0.2s",
 });
 
-const faqItemActiveCss = css({ borderColor: "rgba(245,158,11,0.3)" });
+const faqItemActiveCss = css({});
 const faqHeaderRowCss = css({
   display: "flex",
   justifyContent: "space-between",
@@ -22,8 +22,9 @@ const faqHeaderRowCss = css({
 });
 const faqQuestionCss = css({
   color: colors.textPrimary,
-  fontWeight: "700",
-  fontSize: "14px",
+  fontWeight: "600",
+  fontSize: "15px",
+  letterSpacing: "-0.003em",
 });
 const faqAnswerCss = css({
   color: colors.textMuted,
@@ -37,7 +38,7 @@ export default function FaqItem({ q, a }) {
   return (
     <motion.div
       onClick={() => setOpen((o) => !o)}
-      whileHover={{ borderColor: "rgba(245,158,11,0.25)" }}
+      
       className={cx(faqItemBaseCss, open ? faqItemActiveCss : "")}
     >
       <div className={faqHeaderRowCss}>

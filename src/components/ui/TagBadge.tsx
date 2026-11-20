@@ -1,6 +1,6 @@
 import { Tag } from 'lucide-react';
 import { css, cx } from '@/lib/css';
-import { colors } from '@/lib/tokens';
+import { colors, fonts } from '@/lib/tokens';
 
 type TagBadgeVariant = 'default' | 'amber';
 
@@ -10,19 +10,21 @@ interface TagBadgeProps {
 }
 
 const baseCss = css({
-  fontSize: '11px',
+  fontSize: "12px",
   fontWeight: '700',
-  paddingInline: '12px',
+  letterSpacing: "0",
+  paddingInline: '10px',
   paddingBlock: '4px',
   borderRadius: '9999px',
   display: 'inline-flex',
   alignItems: 'center',
-  gap: '4px',
+  gap: '5px',
 });
 
 const variantCss: Record<TagBadgeVariant, string> = {
-  default: css({ backgroundColor: 'rgba(255,255,255,0.06)', color: colors.textSecondary }),
-  amber:   css({ backgroundColor: 'rgba(245,158,11,0.1)',   color: colors.brand }),
+  default: css({ backgroundColor: colors.bgSection, color: colors.textMuted }),
+  // 강조 태그: 라임 바탕에 잉크 글자 (이름은 예전 그대로 둔다)
+  amber:   css({ backgroundColor: colors.lime, color: colors.textPrimary }),
 };
 
 export default function TagBadge({ label, variant = 'default' }: TagBadgeProps) {

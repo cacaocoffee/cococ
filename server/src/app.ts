@@ -13,6 +13,7 @@ import { scheduleRouter } from './routes/schedule.js';
 import { uploadRouter } from './routes/upload.js';
 import { adminAuthRouter } from './routes/admin-auth.js';
 import { diagRouter } from './routes/diag.js';
+import { hrRouter } from './routes/hr.js';
 import { errorHandler } from './middleware/error.js';
 
 const app = express();
@@ -90,6 +91,7 @@ app.use('/api/magazines', magazineRouter);
 app.use('/api/apply', applyRouter);
 app.use('/api/schedules', scheduleRouter);
 app.use('/api/upload', uploadRouter);
+app.use('/api/hr', hrRouter);
 
 app.get('/api', (_req, res) => {
   res.json({
@@ -101,6 +103,7 @@ app.get('/api', (_req, res) => {
       apply: '/api/apply',
       schedules: '/api/schedules',
       upload: '/api/upload',
+      hr: '/api/hr',
     },
   });
 });

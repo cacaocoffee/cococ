@@ -1,89 +1,96 @@
 import { css } from "@/lib/css";
-import { colors, shadows } from "@/lib/tokens";
+import { colors, fonts } from "@/lib/tokens";
 
 export const inputCss = css({
-  backgroundColor: "rgba(0,0,0,0.3)",
-  border: `1px solid ${colors.borderInput}`,
-  borderRadius: "0.75rem",
+  // 흰 카드 안의 입력칸: 회색 면, 테두리 없음. 누르면 잉크 테두리
+  backgroundColor: colors.bgSection,
+  border: "1px solid transparent",
+  borderRadius: "14px",
   paddingInline: "16px",
-  paddingBlock: "12px",
+  paddingBlock: "13px",
   color: colors.textPrimary,
-  fontSize: "14px",
+  fontSize: "16px",
   outline: "none",
   width: "100%",
   transition: "border-color 0.2s",
-  _focus: { borderColor: colors.brand },
-  _placeholder: { color: colors.textFaint },
+  _focus: { borderColor: colors.textPrimary },
+  _placeholder: { color: colors.textDimmer },
 });
 
 export const inputErrorCss = css({
-  borderColor: "#f87171",
-  _focus: { borderColor: "#f87171" },
+  borderColor: colors.danger,
+  backgroundColor: colors.dangerBg,
+  _focus: { borderColor: colors.danger },
 });
 
 export const errorTextCss = css({
-  fontSize: "11px",
-  color: "#f87171",
+  fontSize: "13px",
+  color: colors.danger,
   fontWeight: "700",
-  marginTop: "4px",
+  marginTop: "6px",
   display: "flex",
   alignItems: "center",
-  gap: "4px",
+  gap: "5px",
 });
 
 export const labelCss = css({
   fontSize: "12px",
   fontWeight: "700",
-  color: colors.textSecondary,
-  marginBottom: "8px",
+  letterSpacing: "0",
+  color: colors.textMuted,
+  marginBottom: "10px",
   display: "block",
 });
 
 export const sublabelCss = css({
-  fontSize: "11px",
+  fontSize: "12px",
   color: colors.textFaint,
   marginBottom: "12px",
   display: "block",
-  lineHeight: "1.625",
+  lineHeight: "1.6",
 });
 
 export const radioBaseCss = css({
   display: "flex",
   alignItems: "center",
   gap: "12px",
-  padding: "12px",
-  borderRadius: "0.75rem",
-  border: `1px solid ${colors.borderMedium}`,
+  padding: "14px 16px",
+  borderRadius: "14px",
+  border: "1px solid transparent",
   cursor: "pointer",
-  transition: "all 0.2s",
+  transition: "all 0.18s",
   fontSize: "14px",
+  fontWeight: "700",
   color: colors.textSecondary,
-  _hover: { borderColor: "rgba(245,158,11,0.4)" },
+  backgroundColor: colors.bgSection,
+  _hover: { backgroundColor: colors.bgPressed },
 });
 
+// 고른 것은 잉크로 채운다
 export const radioActiveCss = css({
-  borderColor: colors.brand,
-  backgroundColor: "rgba(245,158,11,0.1)",
-  color: "rgba(245,158,11,0.9)",
+  borderColor: colors.bgInk,
+  backgroundColor: colors.bgInk,
+  color: colors.onInk,
+  _hover: { backgroundColor: colors.bgInk },
 });
 
 export const checkBtnBaseCss = css({
   paddingInline: "16px",
   paddingBlock: "8px",
-  borderRadius: "0.75rem",
-  border: `1px solid ${colors.borderMedium}`,
-  fontSize: "14px",
+  borderRadius: "9999px",
+  border: "1px solid transparent",
+  fontSize: "13px",
   fontWeight: "700",
-  transition: "all 0.2s",
+  transition: "all 0.18s",
   cursor: "pointer",
-  background: "none",
-  _hover: { borderColor: "rgba(245,158,11,0.4)" },
+  backgroundColor: colors.bgSection,
+  _hover: { backgroundColor: colors.bgPressed },
 });
 
 export const checkBtnActiveCss = css({
-  borderColor: colors.brand,
-  backgroundColor: "rgba(245,158,11,0.1)",
-  color: "rgba(245,158,11,0.9)",
+  backgroundColor: colors.bgInk,
+  color: colors.onInk,
+  _hover: { backgroundColor: colors.bgInk },
 });
 
 export const checkBtnInactiveCss = css({ color: colors.textMuted });
@@ -91,7 +98,7 @@ export const checkBtnInactiveCss = css({ color: colors.textMuted });
 export const fieldGroupCss = css({
   display: "flex",
   flexDirection: "column",
-  gap: "24px",
+  gap: "26px",
 });
 
 export const gridCols2Css = css({
@@ -102,16 +109,20 @@ export const gridCols2Css = css({
 });
 
 export const stepTitleCss = css({
-  fontSize: "20px",
-  fontWeight: "900",
+  fontFamily: fonts.display,
+  fontSize: "28px",
+  fontWeight: "700",
   color: colors.textPrimary,
-  marginBottom: "24px",
+  marginBottom: "28px",
+  letterSpacing: "-0.012em",
+  lineHeight: "1.16",
 });
 
 export const summaryBoxCss = css({
-  backgroundColor: "rgba(0,0,0,0.2)",
-  borderRadius: "1rem",
-  padding: "20px",
+  backgroundColor: colors.bgCard,
+  border: "none",
+  borderRadius: "12px",
+  padding: "22px",
   display: "flex",
   flexDirection: "column",
   gap: "12px",
@@ -121,30 +132,33 @@ export const summaryRowCss = css({
   justifyContent: "space-between",
   fontSize: "14px",
 });
-export const summaryLabelCss = css({ color: colors.textFaint });
+export const summaryLabelCss = css({
+  color: colors.textFaint,
+  fontSize: "12px",
+  letterSpacing: "0",
+});
 export const summaryValueCss = css({
   color: colors.textPrimary,
-  fontWeight: "700",
+  fontWeight: "600",
 });
 
 export const privacyCss = css({
   backgroundColor: colors.bgSection,
   border: `1px solid ${colors.borderMedium}`,
-  borderRadius: "1rem",
-  padding: "20px",
+  borderRadius: "12px",
+  padding: "22px",
 });
 export const privacyTitleCss = css({
-  fontSize: "11px",
-  fontWeight: "900",
-  color: colors.brand,
-  textTransform: "uppercase",
-  letterSpacing: "0.1em",
+  fontSize: "12px",
+  fontWeight: "700",
+  color: colors.textMuted,
+  letterSpacing: "0",
   marginBottom: "12px",
 });
 export const privacyDescCss = css({
   color: colors.textMuted,
-  fontSize: "12px",
-  lineHeight: "1.625",
+  fontSize: "13px",
+  lineHeight: "1.7",
   marginBottom: "16px",
 });
 export const privacyCheckRowCss = css({
@@ -157,12 +171,12 @@ export const privacyCheckRowCss = css({
 export const checkboxBaseCss = css({
   width: "20px",
   height: "20px",
-  borderRadius: "0.375rem",
-  border: "2px solid",
+  borderRadius: "5px",
+  border: "1.5px solid",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  transition: "all 0.2s",
+  transition: "all 0.18s",
   flexShrink: "0",
 });
 export const checkboxActiveCss = css({
@@ -173,13 +187,13 @@ export const checkboxInactiveCss = css({ borderColor: colors.textDimmer });
 export const checkboxLabelCss = css({
   color: colors.textPrimary,
   fontSize: "14px",
-  fontWeight: "700",
+  fontWeight: "600",
 });
 
 export const warningBoxCss = css({
-  backgroundColor: "rgba(245,158,11,0.05)",
-  border: `1px solid rgba(245,158,11,0.2)`,
-  borderRadius: "1rem",
+  backgroundColor: colors.warningBg,
+  border: "none",
+  borderRadius: "16px",
   padding: "16px",
   display: "flex",
   alignItems: "flex-start",
@@ -187,7 +201,7 @@ export const warningBoxCss = css({
 });
 
 export const warningTextCss = css({
-  color: "rgba(252,211,77,0.8)",
-  fontSize: "12px",
-  lineHeight: "1.625",
+  color: colors.warning,
+  fontSize: "13px",
+  lineHeight: "1.65",
 });

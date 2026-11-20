@@ -11,9 +11,14 @@ import type { ScheduleEvent } from '@/domain/schedule/schedule-dto';
 
 const DAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
 
+// 일정 종류별 표시. 클래스는 잉크, 내부행사는 라임 바탕에 잉크 글자
 const TYPE_COLOR: Record<ScheduleEvent['type'], string> = {
-  클래스: colors.brand,
-  내부행사: '#a78bfa',
+  클래스: colors.bgInk,
+  내부행사: colors.lime,
+};
+const TYPE_TEXT: Record<ScheduleEvent['type'], string> = {
+  클래스: colors.onInk,
+  내부행사: colors.textPrimary,
 };
 
 // ─── Styles ──────────────────────────────────────────────────────
@@ -35,8 +40,8 @@ const layoutCss = css({
 // ── Calendar ──
 const calendarCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderLight}`,
-  borderRadius: '1.25rem',
+  border: "none",
+  borderRadius: "20px",
   overflow: 'hidden',
 });
 
@@ -50,7 +55,7 @@ const calHeaderCss = css({
 
 const calTitleCss = css({
   fontSize: '18px',
-  fontWeight: '900',
+  fontWeight: "700",
   color: colors.textPrimary,
   letterSpacing: '0.02em',
 });
@@ -72,27 +77,27 @@ const navBtnCss = css({
 
 const dayHeaderRowCss = css({
   display: 'grid',
-  gridTemplateColumns: 'repeat(7, 1fr)',
+  gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
   borderBottom: `1px solid ${colors.borderLight}`,
 });
 
 const dayLabelCss = css({
   textAlign: 'center',
-  fontSize: '11px',
+  fontSize: '12px',
   fontWeight: '700',
-  letterSpacing: '0.05em',
   paddingBlock: '10px',
-  color: colors.textDimmer,
+  color: colors.textMuted,
 });
 
 const gridCss = css({
   display: 'grid',
-  gridTemplateColumns: 'repeat(7, 1fr)',
+  gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
 });
 
 const cellCss = css({
   minHeight: '80px',
   padding: '6px',
+  minWidth: '0',
   borderRight: `1px solid ${colors.borderFaint}`,
   borderBottom: `1px solid ${colors.borderFaint}`,
   position: 'relative',
@@ -117,9 +122,9 @@ const dateNumTodayCss = css({
   height: '20px',
   borderRadius: '9999px',
   backgroundColor: colors.brand,
-  color: colors.bgPage,
+  color: colors.onInk,
   fontSize: '11px',
-  fontWeight: '900',
+  fontWeight: "700",
 });
 
 const eventChipCss = css({
@@ -128,7 +133,7 @@ const eventChipCss = css({
   fontWeight: '700',
   paddingInline: '6px',
   paddingBlock: '2px',
-  borderRadius: '4px',
+  borderRadius: '6px',
   marginBottom: '2px',
   cursor: 'pointer',
   whiteSpace: 'nowrap',
@@ -146,8 +151,8 @@ const legendCss = css({
   gap: '16px',
   flexWrap: 'wrap',
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderLight}`,
-  borderRadius: '1rem',
+  border: "none",
+  borderRadius: "20px",
   padding: '16px 20px',
 });
 
@@ -169,8 +174,8 @@ const legendDotCss = css({
 
 const listCardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderLight}`,
-  borderRadius: '1rem',
+  border: "none",
+  borderRadius: "20px",
   overflow: 'hidden',
   flex: '1',
 });
@@ -179,10 +184,9 @@ const listHeaderCss = css({
   padding: '16px 20px',
   borderBottom: `1px solid ${colors.borderLight}`,
   fontSize: '13px',
-  fontWeight: '900',
+  fontWeight: "700",
   color: colors.textMuted,
-  letterSpacing: '0.05em',
-  textTransform: 'uppercase',
+  letterSpacing: "0",
 });
 
 const listItemCss = css({
@@ -204,7 +208,7 @@ const listItemLinkCss = css({
   borderBottom: `1px solid ${colors.borderFaint}`,
   textDecoration: 'none',
   transition: 'background-color 0.15s',
-  _hover: { backgroundColor: 'rgba(245,158,11,0.05)' },
+  _hover: { backgroundColor: 'rgba(15,17,21,0.06)' },
   _last: { borderBottom: 'none' },
 });
 
@@ -345,7 +349,7 @@ export default function SchedulePage() {
             <div className={dayHeaderRowCss}>
               {DAY_LABELS.map(d => (
                 <div key={d} className={dayLabelCss}
-                  style={d === '일' ? { color: '#f87171' } : d === '토' ? { color: '#60a5fa' } : {}}>
+                  style={d === '일' ? { color: colors.danger } : d === '토' ? { color: colors.info } : {}}>
                   {d}
                 </div>
               ))}
@@ -373,7 +377,7 @@ export default function SchedulePage() {
                         {today_ ? (
                           <span className={dateNumTodayCss}>{date.getDate()}</span>
                         ) : (
-                          <span style={dow === 0 ? { color: '#f87171' } : dow === 6 ? { color: '#60a5fa' } : {}}>
+                          <span style={dow === 0 ? { color: colors.danger } : dow === 6 ? { color: colors.info } : {}}>
                             {date.getDate()}
                           </span>
                         )}
@@ -386,8 +390,8 @@ export default function SchedulePage() {
                             params={{ id: String(ev.archiveId) }}
                             className={eventChipCss}
                             style={{
-                              backgroundColor: `${TYPE_COLOR[ev.type]}22`,
-                              color: TYPE_COLOR[ev.type],
+                              backgroundColor: TYPE_COLOR[ev.type],
+                              color: TYPE_TEXT[ev.type],
                             }}
                           >
                             {ev.title}
@@ -397,8 +401,8 @@ export default function SchedulePage() {
                             key={ev.id}
                             className={eventChipCss}
                             style={{
-                              backgroundColor: `${TYPE_COLOR[ev.type]}22`,
-                              color: TYPE_COLOR[ev.type],
+                              backgroundColor: TYPE_COLOR[ev.type],
+                              color: TYPE_TEXT[ev.type],
                               cursor: 'default',
                             }}
                           >
@@ -434,7 +438,7 @@ export default function SchedulePage() {
               {isLoading ? (
                 <div className={emptyListCss}>일정을 불러오는 중...</div>
               ) : isError ? (
-                <div className={emptyListCss} style={{ color: '#f87171' }}>
+                <div className={emptyListCss} style={{ color: colors.danger }}>
                   일정을 불러올 수 없습니다.
                 </div>
               ) : monthEvents.length === 0 ? (

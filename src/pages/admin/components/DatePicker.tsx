@@ -47,16 +47,16 @@ const triggerCss = css({
   alignItems: "center",
   gap: "10px",
   width: "100%",
-  backgroundColor: "rgba(0,0,0,0.35)",
-  border: `1px solid ${colors.borderInput}`,
-  borderRadius: "0.75rem",
+  backgroundColor: colors.bgSection,
+  border: "1px solid transparent",
+  borderRadius: "14px",
   paddingInline: "14px",
   paddingBlock: "11px",
   cursor: "pointer",
   transition: "border-color 0.2s",
-  _hover: { borderColor: "rgba(245,158,11,0.4)" },
+  _hover: { borderColor: colors.borderStrong },
 });
-const triggerOpenCss = css({ borderColor: colors.brand });
+const triggerOpenCss = css({ borderColor: colors.textPrimary });
 const triggerIconCss = css({ color: colors.textFaint, flexShrink: "0" });
 const triggerTextCss = css({
   flex: "1 1 0%",
@@ -74,11 +74,11 @@ const dropCss = css({
   left: "0",
   zIndex: "100",
   backgroundColor: colors.bgCard,
-  border: `1px solid rgba(255,255,255,0.08)`,
-  borderRadius: "1rem",
+  // 그림자 대신 진한 가는 선으로 아래 내용과 나눈다
+  border: `1px solid ${colors.borderStrong}`,
+  borderRadius: "20px",
   padding: "20px",
   width: "300px",
-  boxShadow: "0 16px 48px rgba(0,0,0,0.6)",
 });
 
 // ─── Calendar header ───────────────────────────────────────────
@@ -94,17 +94,17 @@ const calNavBtnCss = css({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  borderRadius: "0.5rem",
+  borderRadius: "10px",
   border: "none",
   background: "none",
   cursor: "pointer",
   color: colors.textMuted,
   transition: "all 0.15s",
-  _hover: { backgroundColor: "rgba(255,255,255,0.06)", color: colors.textPrimary },
+  _hover: { backgroundColor: colors.bgSection, color: colors.textPrimary },
 });
 const calMonthCss = css({
   fontSize: "15px",
-  fontWeight: "900",
+  fontWeight: "700",
   color: colors.textPrimary,
   letterSpacing: "-0.01em",
 });
@@ -121,8 +121,8 @@ const dayHeaderCss = css({
   fontWeight: "700",
   paddingBlock: "4px",
 });
-const daySunCss = css({ color: "rgba(239,68,68,0.6)" });
-const daySatCss = css({ color: "rgba(96,165,250,0.6)" });
+const daySunCss = css({ color: colors.danger });
+const daySatCss = css({ color: colors.info });
 const dayWeekCss = css({ color: colors.textDimmer });
 
 // ─── Date grid ─────────────────────────────────────────────────
@@ -151,36 +151,36 @@ const dateBtnBaseCss = css({
   fontWeight: "500",
   color: colors.textSecondary,
   transition: "all 0.15s",
-  _hover: { backgroundColor: "rgba(245,158,11,0.1)", color: colors.brand },
+  _hover: { backgroundColor: colors.bgSection, color: colors.textPrimary },
 });
 const dateBtnTodayCss = css({
-  border: `1.5px solid rgba(245,158,11,0.5)`,
-  color: colors.brand,
+  border: `1.5px solid ${colors.textPrimary}`,
+  color: colors.textPrimary,
   fontWeight: "700",
 });
 const dateBtnSelectedCss = css({
   backgroundColor: colors.brand,
-  color: colors.bgPage,
-  fontWeight: "900",
+  color: colors.onInk,
+  fontWeight: "700",
   _hover: { backgroundColor: colors.brandHover },
 });
 const dateBtnOutsideCss = css({ color: colors.textDimmest, opacity: "0.35" });
-const dateBtnSunCss = css({ color: "rgba(239,68,68,0.55)" });
-const dateBtnSatCss = css({ color: "rgba(96,165,250,0.55)" });
+const dateBtnSunCss = css({ color: colors.danger });
+const dateBtnSatCss = css({ color: colors.info });
 
 // ─── Clear button ──────────────────────────────────────────────
 const clearBtnCss = css({
   width: "100%",
   marginTop: "12px",
   paddingBlock: "7px",
-  borderRadius: "0.5rem",
+  borderRadius: "10px",
   border: `1px solid ${colors.borderInput}`,
   background: "none",
   color: colors.textFaint,
   fontSize: "12px",
   cursor: "pointer",
   transition: "all 0.15s",
-  _hover: { borderColor: colors.danger, color: "rgba(239,68,68,0.7)" },
+  _hover: { borderColor: colors.danger, color: colors.danger },
 });
 
 // ─── Component ────────────────────────────────────────────────

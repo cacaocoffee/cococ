@@ -39,7 +39,7 @@ const notFoundLinkCss = css({
   fontWeight: "700",
   textDecoration: "none",
   transition: "all 0.2s",
-  _hover: { backgroundColor: colors.brand, color: colors.bgPage },
+  _hover: { backgroundColor: colors.brand, color: colors.onInk },
 });
 
 function NotFoundPage() {
@@ -79,6 +79,8 @@ import ApplyPage from "./pages/apply/index";
 import SchedulePage from "./pages/schedule/index";
 import AdminPage from "./pages/admin/index";
 import ApplicationsTab from "./pages/admin/applications/index";
+import MembersTab from "./pages/admin/members/index";
+import DuesTab from "./pages/admin/dues/index";
 import PeriodTab from "./pages/admin/period/index";
 import ScheduleTab from "./pages/admin/schedule/index";
 import ArchiveTab from "./pages/admin/archive/index";
@@ -92,11 +94,16 @@ const marqueeStyle = `
 `;
 
 // ─── Root layout ───
+const rootLayoutCss = css({
+  minHeight: "100vh",
+  backgroundColor: colors.bgPage,
+  color: colors.textPrimary,
+});
 function RootLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isAdmin = pathname.startsWith("/admin");
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-amber-500 selection:text-black">
+    <div className={rootLayoutCss}>
       <TopProgressBar />
       {!isAdmin && <Navbar />}
       <main>
@@ -167,6 +174,16 @@ const adminApplicationsRoute = createRoute({
   path: "/applications",
   component: ApplicationsTab,
 });
+const adminMembersRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: "/members",
+  component: MembersTab,
+});
+const adminDuesRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: "/dues",
+  component: DuesTab,
+});
 const adminPeriodRoute = createRoute({
   getParentRoute: () => adminRoute,
   path: "/period",
@@ -200,6 +217,8 @@ const routeTree = rootRoute.addChildren([
   adminRoute.addChildren([
     adminIndexRoute,
     adminApplicationsRoute,
+    adminMembersRoute,
+    adminDuesRoute,
     adminPeriodRoute,
     adminScheduleRoute,
     adminArchiveRoute,

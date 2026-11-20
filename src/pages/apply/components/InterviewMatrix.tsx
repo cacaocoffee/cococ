@@ -54,13 +54,14 @@ const btnBaseCss = css({
   fontSize: "11px",
   fontWeight: "800",
   color: "transparent",
-  _hover: { borderColor: "rgba(245,158,11,0.5)", backgroundColor: "rgba(245,158,11,0.08)" },
+  _hover: { borderColor: colors.borderStrong, backgroundColor: colors.bgPressed },
 });
 
 const btnActiveCss = css({
-  backgroundColor: "rgba(245,158,11,0.18)",
-  borderColor: "rgba(245,158,11,0.5)",
-  color: "rgba(245,158,11,0.9)",
+  // 고른 칸: 라임 바탕에 잉크 글자
+  backgroundColor: colors.lime,
+  borderColor: colors.textPrimary,
+  color: colors.brand,
 });
 
 const emptyMsgCss = css({
@@ -69,7 +70,7 @@ const emptyMsgCss = css({
   paddingBlock: "16px",
   textAlign: "center",
   border: `1px dashed ${colors.borderInput}`,
-  borderRadius: "0.75rem",
+  borderRadius: "14px",
 });
 
 /**

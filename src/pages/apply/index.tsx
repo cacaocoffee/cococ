@@ -6,6 +6,7 @@ import SectionTitle from "@/components/ui/SectionTitle";
 import { applyService } from "@/domain/apply/apply-service";
 import type { ApplyPeriod } from "@/domain/apply/apply-dto";
 import { AlertModal, useAlert } from "@/components/ui/Modal";
+import LoadingButton from "@/components/ui/LoadingButton";
 import { css } from "@/lib/css";
 import { colors, shadows } from "@/lib/tokens";
 import { INIT, stepVariants } from "./constants";
@@ -26,31 +27,33 @@ const pageCss = css({
   "@md": { paddingInline: "48px" },
 });
 
-const headerCss = css({ textAlign: "center", marginBottom: "48px" });
+const headerCss = css({ textAlign: "center", marginBottom: "56px" });
 const eyebrowCss = css({
-  color: colors.brand,
-  fontSize: "11px",
-  fontWeight: "900",
-  letterSpacing: "4px",
-  textTransform: "uppercase",
-  marginBottom: "12px",
+  color: colors.textMuted,
+  fontSize: "12px",
+  fontWeight: "700",
+  letterSpacing: "0",
+  marginBottom: "16px",
 });
 const pageTitleCss = css({
-  fontSize: "48px",
-  fontWeight: "900",
+  fontFamily: "'Space Grotesk', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif",
+  fontSize: "clamp(36px, 4.6vw, 56px)",
+  fontWeight: "700",
   color: colors.textPrimary,
-  marginBottom: "12px",
+  marginBottom: "14px",
+  letterSpacing: "-0.014em",
+  lineHeight: "1.08",
 });
-const pageSubCss = css({ color: colors.textMuted, fontSize: "14px" });
+const pageSubCss = css({ color: colors.textMuted, fontSize: "15px", lineHeight: "1.6" });
 
 const formBoxCss = css({
   backgroundColor: colors.bgCard,
-  borderRadius: "1.5rem",
+  borderRadius: "20px",
   overflow: "hidden",
-  border: `1px solid ${colors.borderSubtle}`,
-  maxWidth: "42rem",
+  border: "none",
+  maxWidth: "44rem",
   marginInline: "auto",
-  marginBottom: "80px",
+  marginBottom: "96px",
   boxShadow: shadows.card,
 });
 
@@ -63,16 +66,16 @@ const formTopRowCss = css({
   marginBottom: "32px",
 });
 const stepLabelCss = css({
-  fontSize: "10px",
-  fontWeight: "900",
-  color: colors.brand,
-  textTransform: "uppercase",
-  letterSpacing: "3px",
+  fontSize: "12px",
+  fontWeight: "700",
+  color: colors.textMuted,
+  letterSpacing: "0",
 });
 const stepCountCss = css({
   color: colors.textFaint,
-  fontSize: "12px",
+  fontSize: "11px",
   fontWeight: "700",
+  letterSpacing: "0.16em",
 });
 
 const formNavCss = css({
@@ -86,49 +89,49 @@ const formNavCss = css({
 const prevBtnCss = css({
   paddingInline: "24px",
   paddingBlock: "12px",
-  borderRadius: "0.75rem",
-  fontWeight: "700",
+  borderRadius: "10px",
+  fontWeight: "600",
   fontSize: "14px",
   transition: "all 0.2s",
-  backgroundColor: "rgba(255,255,255,0.05)",
+  backgroundColor: "transparent",
   color: colors.textMuted,
-  border: "none",
+  border: `1px solid ${colors.borderMedium}`,
   cursor: "pointer",
-  _hover: { color: colors.textPrimary },
+  _hover: { color: colors.textPrimary, borderColor: colors.borderStrong },
 });
 
 const nextBtnCss = css({
-  backgroundColor: colors.brand,
-  color: colors.bgPage,
-  paddingInline: "40px",
+  backgroundColor: colors.textPrimary,
+  color: colors.onInk,
+  paddingInline: "32px",
   paddingBlock: "12px",
-  borderRadius: "0.75rem",
-  fontWeight: "900",
+  borderRadius: "10px",
+  fontWeight: "700",
   fontSize: "14px",
   transition: "all 0.2s",
   border: "none",
   cursor: "pointer",
-  _hover: { backgroundColor: colors.brandHover },
+  _hover: { backgroundColor: colors.brand },
 });
 
 const nextBtnDisabledCss = css({
-  backgroundColor: "rgba(255,255,255,0.08)",
+  backgroundColor: "transparent",
   color: colors.textDimmer,
   cursor: "not-allowed",
 });
 
 const submitBtnCss = css({
   backgroundColor: colors.brand,
-  color: colors.bgPage,
-  paddingInline: "40px",
+  color: colors.onInk,
+  paddingInline: "32px",
   paddingBlock: "12px",
-  borderRadius: "0.75rem",
-  fontWeight: "900",
+  borderRadius: "10px",
+  fontWeight: "700",
   fontSize: "14px",
   transition: "background-color 0.2s",
   border: "none",
   cursor: "pointer",
-  boxShadow: shadows.amberMd,
+  boxShadow: shadows.amberSm,
   _hover: { backgroundColor: colors.brandHover },
 });
 
@@ -144,21 +147,23 @@ const successInnerCss = css({ textAlign: "center", maxWidth: "28rem" });
 const successIconWrapCss = css({
   width: "96px",
   height: "96px",
-  backgroundColor: "rgba(245,158,11,0.1)",
-  color: colors.brand,
+  backgroundColor: colors.lime,
+  color: colors.textPrimary,
   borderRadius: "9999px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   marginInline: "auto",
   marginBottom: "32px",
-  fontSize: "48px",
+  fontSize: "44px",
 });
 const successTitleCss = css({
-  fontSize: "36px",
-  fontWeight: "900",
+  fontFamily: "'Space Grotesk', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif",
+  fontSize: "40px",
+  fontWeight: "700",
   color: colors.textPrimary,
   marginBottom: "16px",
+  letterSpacing: "-0.014em",
 });
 const successDescCss = css({
   color: colors.textMuted,
@@ -169,8 +174,8 @@ const successDescCss = css({
 const successNameCss = css({ color: colors.textPrimary, fontWeight: "700" });
 const successCardCss = css({
   backgroundColor: colors.bgCard,
-  border: `1px solid ${colors.borderSubtle}`,
-  borderRadius: "1rem",
+  border: "none",
+  borderRadius: "20px",
   padding: "24px",
   textAlign: "left",
   display: "flex",
@@ -264,7 +269,10 @@ export default function ApplyPage() {
     goTo(step + 1);
   };
 
+  const [submitting, setSubmitting] = useState(false);
+
   const handleSubmit = async () => {
+    if (submitting) return;
     if (!form.privacyAgree) {
       openAlert({
         title: "개인정보 동의 필요",
@@ -273,6 +281,7 @@ export default function ApplyPage() {
       });
       return;
     }
+    setSubmitting(true);
     try {
       await applyService.saveApplication(form);
       setSubmitted(true);
@@ -282,6 +291,8 @@ export default function ApplyPage() {
         description: "잠시 후 다시 시도해 주세요.",
         type: "error",
       });
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -444,14 +455,14 @@ export default function ApplyPage() {
                   다음
                 </motion.button>
               ) : (
-                <motion.button
+                <LoadingButton
                   onClick={handleSubmit}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
+                  loading={submitting}
+                  whileHover={submitting ? undefined : { scale: 1.03 }}
                   className={submitBtnCss}
                 >
-                  최종 제출
-                </motion.button>
+                  {submitting ? "제출 중…" : "최종 제출"}
+                </LoadingButton>
               )}
             </div>
           </div>
